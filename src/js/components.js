@@ -36,7 +36,7 @@ export function createPropertyCard(property, options = {}) {
   const isSaved = favorites.includes(String(property.id));
   const isCompared = compareList.includes(String(property.id));
   const prices = formatPrices(property.priceByn, property.priceUsd, currency);
-  const detailUrl = `/property.html?id=${encodeURIComponent(property.id)}`;
+  const detailUrl = `./property.html?id=${encodeURIComponent(property.id)}`;
 
   const card = document.createElement('article');
   card.className = 'property-card';
@@ -210,7 +210,7 @@ export function openBelarusMapModal(properties) {
                   <button type="button" class="belarus-map__item ${String(p.id) === String(activeId) ? 'is-active' : ''}" data-select-id="${p.id}">
                     <strong>${p.title[lang]}</strong>
                     <span>${p.city[lang]} · ${pr.primary}</span>
-                    <a href="/property.html?id=${encodeURIComponent(p.id)}" style="color:var(--accent-primary);font-size:0.8rem;font-weight:600;margin-top:4px;">
+                    <a href="./property.html?id=${encodeURIComponent(p.id)}" style="color:var(--accent-primary);font-size:0.8rem;font-weight:600;margin-top:4px;">
                       ${t('detailsBtn', lang)} →
                     </a>
                   </button>

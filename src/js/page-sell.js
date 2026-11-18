@@ -3,7 +3,6 @@
 // Включает 3-шаговый калькулятор оценки, пакеты и форму с загрузкой фото
 // ==========================================================================
 
-import '../scss/main.scss';
 import {showToast} from './components.js';
 import {formatPrices, t} from './i18n.js';
 import {initLayout} from './layout.js';

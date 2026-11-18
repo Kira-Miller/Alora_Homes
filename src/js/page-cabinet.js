@@ -3,7 +3,6 @@
 // Поддерживает режим гостя и авторизованного пользователя
 // ==========================================================================
 
-import '../scss/main.scss';
 import {createPropertyCard, showToast} from './components.js';
 import {formatPrices, t} from './i18n.js';
 import {initLayout, openAuthModal} from './layout.js';
@@ -132,7 +131,7 @@ function renderCabinet() {
         <div class="empty-state">
           <h3>${lang === 'ru' ? 'В избранном пока пусто' : 'No saved properties yet'}</h3>
           <p>${lang === 'ru' ? 'Добавьте понравившиеся объекты из каталога, чтобы вернуться к ним позже.' : 'Save listings from the catalog to review them here.'}</p>
-          <a href="/catalog.html" class="btn btn--primary">${t('navCatalog', lang)}</a>
+          <a href="./catalog.html" class="btn btn--primary">${t('navCatalog', lang)}</a>
         </div>
       `;
       return;
@@ -171,7 +170,7 @@ function renderCabinet() {
         <div class="empty-state">
           <h3>${lang === 'ru' ? 'Список сравнения пуст' : 'Comparison list is empty'}</h3>
           <p>${lang === 'ru' ? 'Нажмите кнопку «⚖» на карточках в каталоге, чтобы сравнить характеристики.' : 'Click the compare button on catalog cards to compare specs.'}</p>
-          <a href="/catalog.html" class="btn btn--primary">${t('navCatalog', lang)}</a>
+          <a href="./catalog.html" class="btn btn--primary">${t('navCatalog', lang)}</a>
         </div>
       `;
       return;
@@ -188,7 +187,7 @@ function renderCabinet() {
                   (p) => `
                 <td>
                   <strong style="display:block;margin-bottom:6px;">
-                    <a href="/property.html?id=${encodeURIComponent(p.id)}" style="color:var(--accent-primary);">${p.title[lang]}</a>
+                    <a href="./property.html?id=${encodeURIComponent(p.id)}" style="color:var(--accent-primary);">${p.title[lang]}</a>
                   </strong>
                   <button type="button" class="btn btn--secondary btn--sm js-rm-cmp" data-id="${p.id}">${t('removeSaved', lang)}</button>
                 </td>
@@ -245,7 +244,7 @@ function renderCabinet() {
       <div class="empty-state">
         <h3>${lang === 'ru' ? 'У вас пока нет заявок на показ' : 'No viewing requests yet'}</h3>
         <p>${lang === 'ru' ? 'Выберите объект в каталоге и запишитесь на удобное время.' : 'Choose a property in the catalog and schedule a tour.'}</p>
-        <a href="/catalog.html" class="btn btn--primary">${t('navCatalog', lang)}</a>
+        <a href="./catalog.html" class="btn btn--primary">${t('navCatalog', lang)}</a>
       </div>
     `;
     return;
@@ -261,7 +260,7 @@ function renderCabinet() {
             <div class="request-row">
               <div>
                 <strong style="font-size:1.05rem;">
-                  <a href="/property.html?id=${encodeURIComponent(req.propertyId)}">${title}</a>
+                  <a href="./property.html?id=${encodeURIComponent(req.propertyId)}">${title}</a>
                 </strong>
                 <p style="color:var(--text-secondary);font-size:0.875rem;margin-top:4px;">
                   ${req.name} · ${req.phone} · ${t('inputDate', lang)}: <strong class="tabular">${req.date}</strong>

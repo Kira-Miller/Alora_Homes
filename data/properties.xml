@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  База данных объектов недвижимости агентства Alora Homes (Республика Беларусь).
+  Используется для динамической загрузки и фильтрации объектов через DOMParser.
+-->
+<catalog agency="Alora Homes" country="Belarus" updated="2026-11-18" rateUsdToByn="3.23">
+  <property id="1" featured="true" dealGroup="residential">
+    <category>houses</category>
+    <subcategory ru="Загородный дом" en="Country House" />
+    <region>minsk-region</region>
+    <city ru="Минская область, пос. Ратомка" en="Minsk Region, Ratomka" />
+    <title ru="Современная вилла с панорамным видом" en="Modern Villa with Panoramic View" />
+    <badge type="urgent" ru="Срочная продажа" en="Urgent Sale" />
+    <price byn="1226762" usd="380000" />
+    <specs>
+      <area>364.8</area>
+      <livingArea>240</livingArea>
+      <plotArea>15.5</plotArea>
+      <rooms>6</rooms>
+      <floors>3</floors>
+      <floor>3</floor>
+      <mkadDistance>7</mkadDistance>
+      <year>2024</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>villa-pine</visualTheme>
+    <mapCoords x="255" y="180" />
+    <description
+      ru="Современная вилла с панорамным остеклением в престижном посёлке Ратомка в 7 км от МКАД. Архитектура сочетает натуральный термобрус, архитектурный бетон и просторные террасы с видом на хвойный массив."
+      en="Modern villa with floor-to-ceiling glazing in prestigious Ratomka village, 7 km from Minsk Ring Road. Combines natural timber, architectural concrete, and wide terraces overlooking pine forest." />
+    <features>
+      <feature ru="Панорамное остекление" en="Panoramic glazing" />
+      <feature ru="Тёплый гараж на 2 авто" en="Heated 2-car garage" />
+      <feature ru="Собственная SPA-зона" en="Private SPA zone" />
+      <feature ru="Умный дом" en="Smart home system" />
+    </features>
+  </property>
+
+  <property id="2" featured="true" dealGroup="residential">
+    <category>apartments</category>
+    <subcategory ru="Квартира" en="Apartment" />
+    <region>minsk</region>
+    <city ru="г. Минск, просп. Независимости" en="Minsk, Independence Ave" />
+    <title ru="Апартаменты премиум-класса в центре" en="Premium Downtown Apartments" />
+    <badge type="new" ru="Новинка" en="New Listing" />
+    <price byn="487500" usd="151000" />
+    <specs>
+      <area>112.5</area>
+      <livingArea>74</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>3</rooms>
+      <floors>20</floors>
+      <floor>15</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2025</year>
+      <newbuild>true</newbuild>
+    </specs>
+    <visualTheme>minsk-tower</visualTheme>
+    <mapCoords x="275" y="190" />
+    <description
+      ru="Видовые трёхкомнатные апартаменты в новом доме бизнес-класса на проспекте Независимости. Высокие потолки 3,1 м, дизайнерская отделка, консьерж-сервис и подземный паркинг."
+      en="Three-room panoramic apartment in a new business-class residence on Independence Avenue. 3.1 m ceilings, designer finish, concierge service, and underground parking." />
+    <features>
+      <feature ru="Новостройка 2025 года" en="New build 2025" />
+      <feature ru="Подземный паркинг" en="Underground parking" />
+      <feature ru="Консьерж 24/7" en="24/7 Concierge" />
+      <feature ru="Вид на центр Минска" en="Central Minsk skyline view" />
+    </features>
+  </property>
+
+  <property id="3" featured="true" dealGroup="residential">
+    <category>houses</category>
+    <subcategory ru="Таунхаус" en="Townhouse" />
+    <region>minsk</region>
+    <city ru="г. Минск, Серебрянка" en="Minsk, Serebryanka" />
+    <title ru="Элитный таунхаус в закрытом комплексе" en="Luxury Townhouse in Gated Complex" />
+    <badge type="top" ru="Топ предложение" en="Top Pick" />
+    <price byn="895000" usd="277000" />
+    <specs>
+      <area>220</area>
+      <livingArea>158</livingArea>
+      <plotArea>6</plotArea>
+      <rooms>4</rooms>
+      <floors>2</floors>
+      <floor>2</floor>
+      <mkadDistance>4</mkadDistance>
+      <year>2024</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>townhouse-dusk</visualTheme>
+    <mapCoords x="285" y="205" />
+    <description
+      ru="Двухуровневый таунхаус в охраняемом клубном квартале. Собственный благоустроенный участок, зона барбекю, два парковочных места и быстрый выезд к центру города."
+      en="Two-level townhouse in a gated club quarter. Private landscaped yard, BBQ patio, two parking bays, and quick access to downtown Minsk." />
+    <features>
+      <feature ru="Закрытая охраняемая территория" en="Gated security" />
+      <feature ru="Собственная терраса" en="Private terrace" />
+      <feature ru="Тёплые полы" en="Underfloor heating" />
+      <feature ru="Готов к заселению" en="Move-in ready" />
+    </features>
+  </property>
+
+  <property id="4" featured="true" dealGroup="residential">
+    <category>houses</category>
+    <subcategory ru="Коттедж" en="Cottage" />
+    <region>minsk-region</region>
+    <city ru="Минская область, Раубичи" en="Minsk Region, Raubichi" />
+    <title ru="Семейный коттедж среди сосен" en="Family Cottage Among Pines" />
+    <badge type="agent" ru="Выбор агента" en="Agent's Choice" />
+    <price byn="638000" usd="197500" />
+    <specs>
+      <area>286</area>
+      <livingArea>195</livingArea>
+      <plotArea>18</plotArea>
+      <rooms>5</rooms>
+      <floors>2</floors>
+      <floor>2</floor>
+      <mkadDistance>23</mkadDistance>
+      <year>2023</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>forest-cottage</visualTheme>
+    <mapCoords x="305" y="168" />
+    <description
+      ru="Просторный семейный коттедж в экологически чистом районе Раубичи. Большая гостиная со вторым светом и камином, банный комплекс и собственный выход к лесному массиву."
+      en="Spacious family cottage in eco-friendly Raubichi. Double-height living room with fireplace, private sauna pavilion, and direct forest access." />
+    <features>
+      <feature ru="Каминная гостиная" en="Fireplace lounge" />
+      <feature ru="Отдельная баня" en="Private bathhouse" />
+      <feature ru="Участок 18 соток" en="18-acre pine plot" />
+      <feature ru="Рядом спортивный комплекс" en="Near sports complex" />
+    </features>
+  </property>
+
+  <property id="5" featured="true" dealGroup="commercial">
+    <category>commercial</category>
+    <subcategory ru="Офис" en="Office Space" />
+    <region>minsk</region>
+    <city ru="г. Минск, ул. Кальварийская" en="Minsk, Kalvaryiskaya St" />
+    <title ru="Светлый офис с видом на проспект" en="Bright Avenue-View Office" />
+    <badge type="commercial" ru="Коммерция" en="Commercial" />
+    <price byn="512400" usd="158700" />
+    <specs>
+      <area>148</area>
+      <livingArea>148</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>4</rooms>
+      <floors>12</floors>
+      <floor>6</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2022</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>glass-office</visualTheme>
+    <mapCoords x="262" y="188" />
+    <description
+      ru="Современное офисное пространство формата open-space с переговорными комнатами в бизнес-центре класса А. Высокоскоростной интернет, система приточно-вытяжной вентиляции и шаговая доступность до метро."
+      en="Modern open-space office suite with meeting rooms in a Class A business center. Fiber optic internet, HVAC climate system, and walking distance to metro." />
+    <features>
+      <feature ru="Бизнес-центр класса A" en="Class A Business Center" />
+      <feature ru="2 переговорные комнаты" en="2 Meeting rooms" />
+      <feature ru="Выделенный паркинг" en="Dedicated parking" />
+      <feature ru="3 минуты до метро" en="3 min walk to metro" />
+    </features>
+  </property>
+
+  <property id="6" featured="true" dealGroup="residential">
+    <category>apartments</category>
+    <subcategory ru="Лофт" en="Loft Apartment" />
+    <region>minsk</region>
+    <city ru="г. Минск, ул. Орловская" en="Minsk, Orlovskaya St" />
+    <title ru="Дизайнерский лофт у воды" en="Designer Waterfront Loft" />
+    <badge type="exclusive" ru="Эксклюзив" en="Exclusive" />
+    <price byn="411900" usd="127500" />
+    <specs>
+      <area>86.2</area>
+      <livingArea>56</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>2</rooms>
+      <floors>16</floors>
+      <floor>9</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2024</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>waterfront-loft</visualTheme>
+    <mapCoords x="270" y="176" />
+    <description
+      ru="Стильный дизайнерский лофт рядом с Комсомольским озером и парком Победы. Панорамные окна, авторская кухня, встроенная техника и продуманные сценарии освещения."
+      en="Stylish designer loft near Komsomolskoye Lake and Victory Park. Panoramic windows, bespoke kitchen, built-in appliances, and layered ambient lighting." />
+    <features>
+      <feature ru="Вид на парк и воду" en="Park &amp; water view" />
+      <feature ru="Дизайнерский ремонт" en="Designer interior" />
+      <feature ru="Панорамные окна" en="Floor-to-ceiling windows" />
+      <feature ru="Велопарковка" en="Bike storage" />
+    </features>
+  </property>
+
+  <property id="7" featured="false" dealGroup="residential">
+    <category>apartments</category>
+    <subcategory ru="Апартаменты" en="Residence" />
+    <region>minsk</region>
+    <city ru="г. Минск, ул. Сторожовская" en="Minsk, Storozhovskaya St" />
+    <title ru="Видовая резиденция у Свислочи" en="Riverfront Residence by Svisloch" />
+    <badge type="top" ru="Топ предложение" en="Top Pick" />
+    <price byn="742900" usd="230000" />
+    <specs>
+      <area>142</area>
+      <livingArea>96</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>4</rooms>
+      <floors>18</floors>
+      <floor>11</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2025</year>
+      <newbuild>true</newbuild>
+    </specs>
+    <visualTheme>minsk-tower</visualTheme>
+    <mapCoords x="278" y="185" />
+    <description
+      ru="Просторная четырёхкомнатная резиденция в историческом центре Минска у набережной реки Свислочь. Две мастер-спальни, панорамная лоджия и клубный уровень приватности."
+      en="Spacious four-room residence in central Minsk along the Svisloch embankment. Two master suites, panoramic loggia, and boutique privacy." />
+    <features>
+      <feature ru="Набережная Свислочи" en="Svisloch embankment" />
+      <feature ru="2 мастер-спальни" en="2 Master bedrooms" />
+      <feature ru="Новостройка бизнес-класса" en="Business-class new build" />
+    </features>
+  </property>
+
+  <property id="8" featured="false" dealGroup="residential">
+    <category>houses</category>
+    <subcategory ru="Коттедж" en="Cottage" />
+    <region>grodno</region>
+    <city ru="г. Гродно, мкр. Зарица" en="Grodno, Zaritsa District" />
+    <title ru="Современный коттедж в районе «Зарица»" en="Modern Cottage in Zaritsa" />
+    <badge type="new" ru="Новинка" en="New Listing" />
+    <price byn="468350" usd="145000" />
+    <specs>
+      <area>198</area>
+      <livingArea>135</livingArea>
+      <plotArea>12</plotArea>
+      <rooms>4</rooms>
+      <floors>2</floors>
+      <floor>2</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2024</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>villa-pine</visualTheme>
+    <mapCoords x="108" y="212" />
+    <description
+      ru="Энергоэффективный двухэтажный коттедж в зелёном районе Гродно. Газовое отопление, центральное водоснабжение, просторная крытая терраса и ландшафтный дизайн участка."
+      en="Energy-efficient two-story cottage in a leafy Grodno neighborhood. Gas heating, municipal water, covered terrace, and landscaped garden." />
+    <features>
+      <feature ru="Центральные коммуникации" en="Central utilities" />
+      <feature ru="Крытая терраса" en="Covered patio" />
+      <feature ru="Асфальтированный подъезд" en="Paved road access" />
+    </features>
+  </property>
+
+  <property id="9" featured="false" dealGroup="residential">
+    <category>apartments</category>
+    <subcategory ru="Квартира" en="Apartment" />
+    <region>brest</region>
+    <city ru="г. Брест, ул. Советская" en="Brest, Sovetskaya St" />
+    <title ru="Просторная квартира в историческом центре" en="Spacious Historic Center Apartment" />
+    <badge type="agent" ru="Выбор агента" en="Agent's Choice" />
+    <price byn="316540" usd="98000" />
+    <specs>
+      <area>94.5</area>
+      <livingArea>62</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>3</rooms>
+      <floors>5</floors>
+      <floor>4</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2021</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>waterfront-loft</visualTheme>
+    <mapCoords x="105" y="325" />
+    <description
+      ru="Светлая трёхкомнатная квартира на главной пешеходной улице Бреста. Кирпичный дом, потолки 3,2 м, свежий скандинавский ремонт и тихий закрытый двор."
+      en="Bright three-room apartment on Brest's signature pedestrian avenue. Brick building, 3.2 m ceilings, fresh Scandinavian interior, and quiet courtyard." />
+    <features>
+      <feature ru="Пешеходный центр" en="Pedestrian center" />
+      <feature ru="Кирпичный дом" en="Solid brick construction" />
+      <feature ru="Тихий двор" en="Quiet courtyard" />
+    </features>
+  </property>
+
+  <property id="10" featured="false" dealGroup="commercial">
+    <category>commercial</category>
+    <subcategory ru="Торговое помещение" en="Retail &amp; Office" />
+    <region>vitebsk</region>
+    <city ru="г. Витебск, просп. Фрунзе" en="Vitebsk, Frunze Ave" />
+    <title ru="Торгово-офисное пространство у Двины" en="Retail &amp; Office Hub by Dvina" />
+    <badge type="commercial" ru="Коммерция" en="Commercial" />
+    <price byn="371450" usd="115000" />
+    <specs>
+      <area>175</area>
+      <livingArea>175</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>3</rooms>
+      <floors>9</floors>
+      <floor>1</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2023</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>glass-office</visualTheme>
+    <mapCoords x="392" y="102" />
+    <description
+      ru="Помещение первого этажа с отдельным входом и витринным остеклением на оживлённой магистрали Витебска. Идеально подходит под клинику, шоурум или представительство компании."
+      en="Ground-floor commercial space with private street entrance and showcase windows on a busy Vitebsk avenue. Ideal for a clinic, showroom, or flagship office." />
+    <features>
+      <feature ru="Отдельный вход с улицы" en="Direct street entrance" />
+      <feature ru="Витринные окна" en="Showcase storefront" />
+      <feature ru="Высокий трафик" en="High foot traffic" />
+    </features>
+  </property>
+
+  <property id="11" featured="false" dealGroup="residential">
+    <category>apartments</category>
+    <subcategory ru="Пентхаус" en="Penthouse" />
+    <region>minsk-region</region>
+    <city ru="Минская область, Новая Боровая" en="Minsk Region, Novaya Borovaya" />
+    <title ru="Пентхаус с террасой в «Новой Боровой»" en="Terrace Penthouse in Novaya Borovaya" />
+    <badge type="exclusive" ru="Эксклюзив" en="Exclusive" />
+    <price byn="549100" usd="170000" />
+    <specs>
+      <area>118</area>
+      <livingArea>78</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>3</rooms>
+      <floors>12</floors>
+      <floor>12</floor>
+      <mkadDistance>2</mkadDistance>
+      <year>2025</year>
+      <newbuild>true</newbuild>
+    </specs>
+    <visualTheme>townhouse-dusk</visualTheme>
+    <mapCoords x="292" y="172" />
+    <description
+      ru="Двухуровневый пентхаус в современном квартале Новая Боровая с собственной эксплуатируемой террасой 32 м², безбарьерным двором без машин и развитой инфраструктурой."
+      en="Duplex penthouse in Novaya Borovaya with a private 32 sq.m rooftop terrace, car-free courtyard, and modern neighborhood amenities." />
+    <features>
+      <feature ru="Терраса 32 м²" en="32 sq.m rooftop terrace" />
+      <feature ru="Двор без машин" en="Car-free courtyard" />
+      <feature ru="Новостройка 2025" en="New build 2025" />
+    </features>
+  </property>
+
+  <property id="12" featured="false" dealGroup="residential">
+    <category>houses</category>
+    <subcategory ru="Усадьба" en="Estate" />
+    <region>gomel</region>
+    <city ru="г. Гомель, Чёнковский р-н" en="Gomel, Chyonki District" />
+    <title ru="Усадьба у соснового озера" en="Pine Lake Residence" />
+    <badge type="urgent" ru="Срочная продажа" en="Urgent Sale" />
+    <price byn="387600" usd="120000" />
+    <specs>
+      <area>184</area>
+      <livingArea>128</livingArea>
+      <plotArea>14</plotArea>
+      <rooms>4</rooms>
+      <floors>2</floors>
+      <floor>2</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2023</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>forest-cottage</visualTheme>
+    <mapCoords x="405" y="315" />
+    <description
+      ru="Уютный загородный дом в курортной зоне Чёнки под Гомелем. Благоустроенный участок с фруктовым садом, панорамная веранда и быстрая дорога до центра города."
+      en="Cozy country residence in the Chyonki resort area near Gomel. Landscaped orchard grounds, glass veranda, and quick commute to city center." />
+    <features>
+      <feature ru="Курортная зона у реки" en="Resort riverfront area" />
+      <feature ru="Панорамная веранда" en="Panoramic veranda" />
+      <feature ru="Плодовый сад" en="Private orchard" />
+    </features>
+  </property>
+</catalog>

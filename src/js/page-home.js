@@ -2,7 +2,6 @@
 // Контроллер главной страницы (index.html)
 // ==========================================================================
 
-import '../scss/main.scss';
 import {createPropertyCard, openBelarusMapModal, showToast} from './components.js';
 import {pluralObjects, t} from './i18n.js';
 import {initLayout} from './layout.js';
@@ -164,7 +163,7 @@ function bindHomeInteractions() {
     if (f.areaMin) params.set('areaMin', f.areaMin);
     if (f.areaMax) params.set('areaMax', f.areaMax);
     if (f.mkadMax) params.set('mkadMax', f.mkadMax);
-    window.location.href = `/catalog.html?${params.toString()}`;
+    window.location.href = `./catalog.html?${params.toString()}`;
   });
 
   // Кнопка "На карте Беларуси"

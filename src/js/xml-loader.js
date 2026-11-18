@@ -12,7 +12,7 @@ export async function loadPropertiesFromXml() {
     return cachedCatalog;
   }
 
-  const response = await fetch('/data/properties.xml', {cache: 'no-cache'});
+  const response = await fetch('./data/properties.xml', {cache: 'no-cache'});
   if (!response.ok) {
     throw new Error(`XML load failed: ${response.status}`);
   }

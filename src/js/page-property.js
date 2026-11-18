@@ -2,7 +2,6 @@
 // Контроллер детальной страницы объекта (property.html)
 // ==========================================================================
 
-import '../scss/main.scss';
 import {showToast} from './components.js';
 import {formatPrices, t} from './i18n.js';
 import {initLayout} from './layout.js';
@@ -45,11 +44,11 @@ function renderPropertyPage() {
 
   rootEl.innerHTML = `
     <nav class="breadcrumbs" aria-label="Breadcrumb">
-      <a href="/index.html">${t('crumbHome', lang)}</a>
+      <a href="./index.html">${t('crumbHome', lang)}</a>
       <span aria-hidden="true">/</span>
-      <a href="/catalog.html">${t('crumbCatalog', lang)}</a>
+      <a href="./catalog.html">${t('crumbCatalog', lang)}</a>
       <span aria-hidden="true">/</span>
-      <a href="/catalog.html?category=${encodeURIComponent(p.category)}">${p.subcategory[lang]}</a>
+      <a href="./catalog.html?category=${encodeURIComponent(p.category)}">${p.subcategory[lang]}</a>
       <span aria-hidden="true">/</span>
       <span>${p.title[lang]}</span>
     </nav>
@@ -242,7 +241,7 @@ async function initPropertyDetail() {
     renderPropertyPage();
   } catch (err) {
     if (rootEl) {
-      rootEl.innerHTML = `<div class="empty-state"><h2>Объект не найден</h2><a href="/catalog.html" class="btn btn--primary">Вернуться в каталог</a></div>`;
+      rootEl.innerHTML = `<div class="empty-state"><h2>Объект не найден</h2><a href="./catalog.html" class="btn btn--primary">Вернуться в каталог</a></div>`;
     }
     console.error(err);
   }

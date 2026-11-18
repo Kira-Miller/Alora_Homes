@@ -2,7 +2,6 @@
 // Контроллер страницы о компании и контактах (about.html)
 // ==========================================================================
 
-import '../scss/main.scss';
 import {showToast} from './components.js';
 import {initLayout} from './layout.js';
 import {getState} from './state.js';

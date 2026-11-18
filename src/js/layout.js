@@ -42,16 +42,16 @@ function renderHeader(activePage) {
   const userLabel = isRegistered ? user.name.split(' ')[0] : t('guestLabel', lang);
 
   const navItems = [
-    {id: 'catalog', href: '/catalog.html', label: t('navCatalog', lang)},
-    {id: 'sell', href: '/sell.html', label: t('navSell', lang)},
-    {id: 'about', href: '/about.html', label: t('navAbout', lang)},
-    {id: 'contacts', href: '/about.html#contacts', label: t('navContacts', lang)},
+    {id: 'catalog', href: './catalog.html', label: t('navCatalog', lang)},
+    {id: 'sell', href: './sell.html', label: t('navSell', lang)},
+    {id: 'about', href: './about.html', label: t('navAbout', lang)},
+    {id: 'contacts', href: './about.html#contacts', label: t('navContacts', lang)},
   ];
 
   headerEl.className = 'site-header';
   headerEl.innerHTML = `
     <div class="container site-header__inner">
-      <a href="/index.html" class="site-header__brand" aria-label="Alora Homes">
+      <a href="./index.html" class="site-header__brand" aria-label="Alora Homes">
         ${getBrandLogoSvg(34)}
         <span>Alora <span class="site-header__brand-accent">Homes</span></span>
       </a>
@@ -76,7 +76,7 @@ function renderHeader(activePage) {
           <span class="hide-xs">${theme === 'dark' ? t('themeDark', lang) : t('themeLight', lang)}</span>
         </button>
 
-        <a href="/cabinet.html" class="icon-btn" aria-label="${t('navCabinet', lang)}" title="${t('navCabinet', lang)}">
+        <a href="./cabinet.html" class="icon-btn" aria-label="${t('navCabinet', lang)}" title="${t('navCabinet', lang)}">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
           </svg>
@@ -105,7 +105,7 @@ function renderHeader(activePage) {
               `<a href="${item.href}" class="mobile-drawer__link ${activePage === item.id ? 'is-active' : ''}">${item.label}<span>→</span></a>`
           )
           .join('')}
-        <a href="/cabinet.html" class="mobile-drawer__link ${activePage === 'cabinet' ? 'is-active' : ''}">
+        <a href="./cabinet.html" class="mobile-drawer__link ${activePage === 'cabinet' ? 'is-active' : ''}">
           ${t('navCabinet', lang)} (${favorites.length})<span>→</span>
         </a>
       </nav>
@@ -148,35 +148,35 @@ function renderFooter() {
     <div class="container">
       <div class="site-footer__grid">
         <div>
-          <a href="/index.html" class="site-header__brand">
+          <a href="./index.html" class="site-header__brand">
             ${getBrandLogoSvg(32)}
             <span>Alora <span class="site-header__brand-accent">Homes</span></span>
           </a>
           <p class="site-footer__tagline">${t('footerTagline', lang)}</p>
           <div class="site-footer__socials">
-            <a href="/about.html#contacts" class="icon-btn" aria-label="Telegram">TG</a>
-            <a href="/about.html#contacts" class="icon-btn" aria-label="Instagram">IG</a>
-            <a href="/about.html#contacts" class="icon-btn" aria-label="LinkedIn">IN</a>
+            <a href="./about.html#contacts" class="icon-btn" aria-label="Telegram">TG</a>
+            <a href="./about.html#contacts" class="icon-btn" aria-label="Instagram">IG</a>
+            <a href="./about.html#contacts" class="icon-btn" aria-label="LinkedIn">IN</a>
           </div>
         </div>
 
         <div>
           <div class="site-footer__col-title">${t('footerNav', lang)}</div>
           <ul class="site-footer__list">
-            <li><a href="/catalog.html">${t('navCatalog', lang)}</a></li>
-            <li><a href="/sell.html">${t('navSell', lang)}</a></li>
-            <li><a href="/cabinet.html">${t('navCabinet', lang)}</a></li>
-            <li><a href="/about.html">${t('navAbout', lang)}</a></li>
+            <li><a href="./catalog.html">${t('navCatalog', lang)}</a></li>
+            <li><a href="./sell.html">${t('navSell', lang)}</a></li>
+            <li><a href="./cabinet.html">${t('navCabinet', lang)}</a></li>
+            <li><a href="./about.html">${t('navAbout', lang)}</a></li>
           </ul>
         </div>
 
         <div>
           <div class="site-footer__col-title">${t('footerServices', lang)}</div>
           <ul class="site-footer__list">
-            <li><a href="/catalog.html?category=apartments">${t('catApartments', lang)}</a></li>
-            <li><a href="/catalog.html?category=houses">${t('catHouses', lang)}</a></li>
-            <li><a href="/catalog.html?category=commercial">${t('catCommercial', lang)}</a></li>
-            <li><a href="/sell.html#calculator">${t('calcTitle', lang)}</a></li>
+            <li><a href="./catalog.html?category=apartments">${t('catApartments', lang)}</a></li>
+            <li><a href="./catalog.html?category=houses">${t('catHouses', lang)}</a></li>
+            <li><a href="./catalog.html?category=commercial">${t('catCommercial', lang)}</a></li>
+            <li><a href="./sell.html#calculator">${t('calcTitle', lang)}</a></li>
           </ul>
         </div>
 
@@ -206,8 +206,8 @@ function renderFooter() {
       <div class="site-footer__bottom">
         <span>${t('footerCopy', lang)}</span>
         <div class="site-footer__legal">
-          <a href="/about.html#legal">${t('footerPrivacy', lang)}</a>
-          <a href="/about.html#legal">${t('footerTerms', lang)}</a>
+          <a href="./about.html#legal">${t('footerPrivacy', lang)}</a>
+          <a href="./about.html#legal">${t('footerTerms', lang)}</a>
         </div>
       </div>
     </div>
@@ -250,7 +250,7 @@ export function openAuthModal(defaultTab = 'register') {
             ${user.email}${user.phone ? ` · ${user.phone}` : ''}
           </p>
           <div style="display:flex;flex-direction:column;gap:10px;">
-            <a href="/cabinet.html" class="btn btn--primary btn--full">${t('navCabinet', lang)}</a>
+            <a href="./cabinet.html" class="btn btn--primary btn--full">${t('navCabinet', lang)}</a>
             <button type="button" class="btn btn--secondary btn--full js-logout">${t('signOut', lang)}</button>
           </div>
         </div>

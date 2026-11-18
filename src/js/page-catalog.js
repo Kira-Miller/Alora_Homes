@@ -2,7 +2,6 @@
 // Контроллер страницы каталога (catalog.html)
 // ==========================================================================
 
-import '../scss/main.scss';
 import {createPropertyCard, openBelarusMapModal} from './components.js';
 import {pluralObjects, t} from './i18n.js';
 import {initLayout} from './layout.js';
@@ -81,7 +80,7 @@ function resetAllFilters() {
   if (roomsSelect) roomsSelect.value = 'any';
   if (priceMaxInput) priceMaxInput.value = '';
   if (sortSelect) sortSelect.value = 'default';
-  window.history.replaceState({}, '', '/catalog.html');
+  window.history.replaceState({}, '', './catalog.html');
   renderCatalog();
 }
 
