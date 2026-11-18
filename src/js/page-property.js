@@ -4,8 +4,8 @@
 
 import {showToast} from './components.js';
 import {formatPrices, t} from './i18n.js';
-import {initLayout} from './layout.js';
-import {addViewingRequest, getState, subscribe, toggleFavorite} from './state.js';
+import {initLayout, openAuthModal, openGuestGateModal} from './layout.js';
+import {addViewingRequest, getState, isGuest, subscribe, toggleFavorite} from './state.js';
 import {getPropertySvg} from './svg-art.js';
 import {loadPropertiesFromXml} from './xml-loader.js';
 
@@ -154,38 +154,50 @@ function renderPropertyPage() {
           <p style="font-size:0.84rem;color:var(--text-secondary);">${t('bookingSubtitle', lang)}</p>
         </div>
 
-        <form id="viewing-form" style="display:flex;flex-direction:column;gap:12px;">
-          <div class="field">
-            <label class="field__label" for="view-name">${t('inputName', lang)}</label>
-            <input
-              id="view-name"
-              class="field__control"
-              type="text"
-              required
-              value="${user.mode === 'registered' ? user.name : ''}"
-              placeholder="${t('inputNamePlaceholder', lang)}"
-            />
+        ${
+          isGuest()
+            ? `
+          <div class="guest-gate__notice" style="font-size:0.84rem;">
+            ${t('guestGateBookDesc', lang)}
           </div>
-          <div class="field">
-            <label class="field__label" for="view-phone">${t('inputPhone', lang)}</label>
-            <input
-              id="view-phone"
-              class="field__control"
-              type="tel"
-              required
-              value="${user.mode === 'registered' ? user.phone : ''}"
-              placeholder="+375 (29) ___-__-__"
-            />
-          </div>
-          <div class="field">
-            <label class="field__label" for="view-date">${t('inputDate', lang)}</label>
-            <input id="view-date" class="field__control" type="date" required value="2026-11-24" />
-          </div>
-          <button type="submit" class="btn btn--primary btn--full">${t('bookViewing', lang)}</button>
-          <p style="font-size:0.78rem;color:var(--text-muted);text-align:center;">
-            ${t('bookingNote', lang)}
-          </p>
-        </form>
+          <button type="button" class="btn btn--primary btn--full js-sidebar-reg">${t('registerBtn', lang)}</button>
+          <a href="tel:+375297745210" class="btn btn--secondary btn--full">📞 +375 (29) 774-52-10</a>
+        `
+            : `
+          <form id="viewing-form" style="display:flex;flex-direction:column;gap:12px;">
+            <div class="field">
+              <label class="field__label" for="view-name">${t('inputName', lang)}</label>
+              <input
+                id="view-name"
+                class="field__control"
+                type="text"
+                required
+                value="${user.name}"
+                placeholder="${t('inputNamePlaceholder', lang)}"
+              />
+            </div>
+            <div class="field">
+              <label class="field__label" for="view-phone">${t('inputPhone', lang)}</label>
+              <input
+                id="view-phone"
+                class="field__control"
+                type="tel"
+                required
+                value="${user.phone}"
+                placeholder="+375 (29) ___-__-__"
+              />
+            </div>
+            <div class="field">
+              <label class="field__label" for="view-date">${t('inputDate', lang)}</label>
+              <input id="view-date" class="field__control" type="date" required value="2026-11-24" />
+            </div>
+            <button type="submit" class="btn btn--primary btn--full">${t('bookViewing', lang)}</button>
+            <p style="font-size:0.78rem;color:var(--text-muted);text-align:center;">
+              ${t('bookingNote', lang)}
+            </p>
+          </form>
+        `
+        }
       </aside>
     </div>
   `;
@@ -198,6 +210,10 @@ function renderPropertyPage() {
   });
 
   document.getElementById('detail-fav-btn')?.addEventListener('click', () => {
+    if (isGuest()) {
+      openGuestGateModal('favorite');
+      return;
+    }
     const added = toggleFavorite(p.id);
     showToast(
       added
@@ -211,8 +227,14 @@ function renderPropertyPage() {
     );
   });
 
+  rootEl.querySelector('.js-sidebar-reg')?.addEventListener('click', () => openAuthModal('register'));
+
   document.getElementById('viewing-form')?.addEventListener('submit', (e) => {
     e.preventDefault();
+    if (isGuest()) {
+      openGuestGateModal('booking');
+      return;
+    }
     const name = document.getElementById('view-name').value.trim();
     const phone = document.getElementById('view-phone').value.trim();
     const date = document.getElementById('view-date').value;

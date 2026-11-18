@@ -42,6 +42,7 @@ export default defineConfig(() => {
           main: path.resolve(__dirname, 'index.html'),
           catalog: path.resolve(__dirname, 'catalog.html'),
           property: path.resolve(__dirname, 'property.html'),
+          services: path.resolve(__dirname, 'services.html'),
           sell: path.resolve(__dirname, 'sell.html'),
           cabinet: path.resolve(__dirname, 'cabinet.html'),
           about: path.resolve(__dirname, 'about.html'),

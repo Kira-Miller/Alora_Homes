@@ -3,7 +3,8 @@
 // ==========================================================================
 
 import {formatPrices, t} from './i18n.js';
-import {getState, toggleCompare, toggleFavorite} from './state.js';
+import {openGuestGateModal} from './layout.js';
+import {getState, isGuest, toggleCompare, toggleFavorite} from './state.js';
 import {getBelarusMapSvg, getPropertySvg} from './svg-art.js';
 
 /**
@@ -129,10 +130,14 @@ export function createPropertyCard(property, options = {}) {
     </div>
   `;
 
-  // Обработка добавления/удаления из избранного
+  // Обработка добавления/удаления из избранного (недоступно в режиме гостя)
   const favBtn = card.querySelector('.property-card__fav');
   favBtn?.addEventListener('click', (e) => {
     e.preventDefault();
+    if (isGuest()) {
+      openGuestGateModal('favorite');
+      return;
+    }
     const added = toggleFavorite(property.id);
     showToast(
       added

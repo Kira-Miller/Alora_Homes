@@ -82,6 +82,74 @@
     }
   }
 
+  &__dropdown {
+    position: relative;
+
+    &-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      padding-block: 6px;
+      white-space: nowrap;
+      transition: color $transition-fast;
+
+      &:hover,
+      &.is-active {
+        color: var(--text-primary);
+      }
+
+      svg {
+        transition: transform $transition-fast;
+      }
+    }
+
+    &.is-open &-trigger svg {
+      transform: rotate(180deg);
+    }
+
+    &-menu {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      min-width: 260px;
+      padding: 8px;
+      border-radius: $radius-md;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow-card);
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+      z-index: $z-dropdown;
+    }
+
+    &.is-open &-menu,
+    &:hover &-menu,
+    &:focus-within &-menu {
+      display: flex;
+    }
+
+    &-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: $radius-xs;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: background-color $transition-fast, color $transition-fast;
+
+      &:hover {
+        background: var(--accent-primary-soft);
+        color: var(--text-primary);
+      }
+    }
+  }
+
   &__actions {
     display: flex;
     align-items: center;
@@ -873,3 +941,80 @@
     }
   }
 }
+
+// --------------------------------------------------------------------------
+// Социальные сети (иконки Telegram, Instagram, Viber, LinkedIn)
+// --------------------------------------------------------------------------
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-xs;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-elevated);
+  color: var(--text-secondary);
+  transition: transform $transition-fast, border-color $transition-fast, color $transition-fast, background-color $transition-fast;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    color: #ffffff;
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+  }
+
+  &--labeled {
+    width: auto;
+    padding: 0 14px;
+    gap: 8px;
+    font-size: 0.84rem;
+    font-weight: 600;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Окно ограничения гостевого режима (Регистрация или звонок в центр)
+// --------------------------------------------------------------------------
+.guest-gate {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__notice {
+    padding: 14px 16px;
+    border-radius: $radius-sm;
+    background: var(--accent-primary-soft);
+    border: 1px solid var(--border-accent);
+    font-size: 0.9rem;
+    color: var(--text-primary);
+  }
+
+  &__call-box {
+    padding: 16px;
+    border-radius: $radius-sm;
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__phones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+

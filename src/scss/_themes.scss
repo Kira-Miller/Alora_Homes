@@ -1,6 +1,5 @@
 // ==========================================================================
-// Цветовые темы (Тёмная по умолчанию согласно макету + Светлая тема)
-// Реализовано через CSS Custom Properties для мгновенного переключения
+// Цветовые темы (Тёмная с глубокими бликами + Светлая с атмосферным градиентом)
 // ==========================================================================
 
 :root {
@@ -8,8 +7,10 @@
 
   // Базовый холст (60%)
   --bg-canvas: #090910;
-  --bg-canvas-radial-1: rgba(139, 92, 246, 0.16);
-  --bg-canvas-radial-2: rgba(34, 211, 238, 0.10);
+  --bg-canvas-radial-1: rgba(139, 92, 246, 0.20);
+  --bg-canvas-radial-2: rgba(34, 211, 238, 0.13);
+  --bg-canvas-radial-3: rgba(168, 85, 247, 0.10);
+  --bg-grid-dot: rgba(255, 255, 255, 0.035);
 
   // Поверхности (30%)
   --bg-surface: #11111c;
@@ -59,15 +60,18 @@
 [data-theme='light'] {
   color-scheme: light;
 
-  --bg-canvas: #f5f6fa;
-  --bg-canvas-radial-1: rgba(124, 58, 237, 0.08);
-  --bg-canvas-radial-2: rgba(14, 165, 233, 0.07);
+  // Светлый холст с выразительными мягкими лавандовыми и бирюзовыми бликами
+  --bg-canvas: #f3f4fa;
+  --bg-canvas-radial-1: rgba(124, 58, 237, 0.17);
+  --bg-canvas-radial-2: rgba(14, 165, 233, 0.15);
+  --bg-canvas-radial-3: rgba(217, 70, 239, 0.10);
+  --bg-grid-dot: rgba(109, 40, 217, 0.055);
 
-  --bg-surface: #ffffff;
-  --bg-surface-elevated: #f9fafd;
-  --bg-surface-hover: #eff1f8;
-  --bg-input: #f2f4fa;
-  --bg-header: rgba(245, 246, 250, 0.9);
+  --bg-surface: rgba(255, 255, 255, 0.92);
+  --bg-surface-elevated: #f8f9fe;
+  --bg-surface-hover: #edeff9;
+  --bg-input: #f2f4fb;
+  --bg-header: rgba(243, 244, 250, 0.88);
 
   --border-subtle: rgba(17, 24, 39, 0.09);
   --border-strong: rgba(17, 24, 39, 0.18);
@@ -79,10 +83,10 @@
 
   --accent-primary: #7c3aed;
   --accent-primary-hover: #6d28d9;
-  --accent-primary-soft: rgba(124, 58, 237, 0.10);
+  --accent-primary-soft: rgba(124, 58, 237, 0.11);
   --accent-cyan: #0284c7;
-  --accent-cyan-soft: rgba(2, 132, 199, 0.10);
+  --accent-cyan-soft: rgba(2, 132, 199, 0.11);
 
-  --shadow-card: 0 10px 30px rgba(17, 24, 39, 0.07);
-  --shadow-glow: 0 8px 24px rgba(124, 58, 237, 0.18);
+  --shadow-card: 0 12px 32px rgba(76, 29, 149, 0.08);
+  --shadow-glow: 0 8px 24px rgba(124, 58, 237, 0.22);
 }

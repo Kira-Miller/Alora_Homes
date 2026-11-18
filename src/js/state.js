@@ -1,9 +1,9 @@
 // ==========================================================================
 // Управление состоянием приложения и хранение данных в localStorage
-// Поддерживает режим гостя, регистрацию пользователей, избранное, сравнение
+// В режиме гостя избранное и запись на показ ограничены
 // ==========================================================================
 
-const STORAGE_KEY = 'alora_homes_state_v1';
+const STORAGE_KEY = 'alora_homes_state_v2';
 
 const DEFAULT_STATE = {
   theme: 'dark',
@@ -16,20 +16,11 @@ const DEFAULT_STATE = {
     phone: '',
   },
   registeredUsers: [],
-  favorites: ['1', '2', '3'],
-  compareList: ['1', '2', '3'],
-  viewingRequests: [
-    {
-      id: 'req-init-1',
-      propertyId: '1',
-      name: 'Ксения Савёнкова',
-      phone: '+375 (29) 555-12-34',
-      date: '2026-11-22',
-      status: 'confirmed',
-      createdAt: '2026-11-18',
-    },
-  ],
+  favorites: [],
+  compareList: ['1', '2'],
+  viewingRequests: [],
   sellRequests: [],
+  consultationRequests: [],
 };
 
 let state = loadState();
@@ -59,6 +50,10 @@ function saveState() {
 
 export function getState() {
   return state;
+}
+
+export function isGuest() {
+  return state.user.mode !== 'registered';
 }
 
 export function subscribe(fn) {
@@ -100,6 +95,7 @@ export function toggleCurrency() {
 }
 
 export function toggleFavorite(propertyId) {
+  if (isGuest()) return null;
   const id = String(propertyId);
   const exists = state.favorites.includes(id);
   if (exists) {
@@ -128,6 +124,7 @@ export function toggleCompare(propertyId) {
 }
 
 export function addViewingRequest({propertyId, name, phone, date}) {
+  if (isGuest()) return null;
   const newReq = {
     id: `req-${Date.now()}`,
     propertyId: String(propertyId),
@@ -154,6 +151,17 @@ export function addSellRequest(payload) {
     createdAt: new Date().toISOString().slice(0, 10),
   };
   state.sellRequests = [newReq, ...state.sellRequests];
+  notify();
+  return newReq;
+}
+
+export function addConsultationRequest(payload) {
+  const newReq = {
+    id: `consult-${Date.now()}`,
+    ...payload,
+    createdAt: new Date().toISOString().slice(0, 10),
+  };
+  state.consultationRequests = [newReq, ...state.consultationRequests];
   notify();
   return newReq;
 }
@@ -206,6 +214,8 @@ export function continueAsGuest() {
     email: '',
     phone: '',
   };
+  state.favorites = [];
+  state.viewingRequests = [];
   notify();
 }
 

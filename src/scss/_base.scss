@@ -28,8 +28,11 @@ body {
   color: var(--text-primary);
   background-color: var(--bg-canvas);
   background-image:
-    radial-gradient(ellipse 65% 45% at 20% 0%, var(--bg-canvas-radial-1), transparent 70%),
-    radial-gradient(ellipse 55% 40% at 85% 5%, var(--bg-canvas-radial-2), transparent 70%);
+    radial-gradient(ellipse 60% 42% at 15% 0%, var(--bg-canvas-radial-1), transparent 70%),
+    radial-gradient(ellipse 55% 40% at 88% 8%, var(--bg-canvas-radial-2), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 50% 85%, var(--bg-canvas-radial-3), transparent 72%),
+    radial-gradient(var(--bg-grid-dot) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px;
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;

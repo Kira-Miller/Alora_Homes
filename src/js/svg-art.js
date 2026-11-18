@@ -224,3 +224,93 @@ export function getBelarusMapSvg(properties, lang = 'ru', activeId = null) {
     </svg>
   `;
 }
+
+/**
+ * Иконки социальных сетей в формате SVG (Telegram, Instagram, Viber, LinkedIn)
+ */
+export function getSocialLinksHtml(labeled = false) {
+  const items = [
+    {
+      name: 'Telegram',
+      href: 'https://t.me/alorahomes_by',
+      svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>`,
+    },
+    {
+      name: 'Instagram',
+      href: 'https://instagram.com/alorahomes.by',
+      svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
+    },
+    {
+      name: 'Viber',
+      href: 'tel:+375297745210',
+      svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.58 2.81.7A2 2 0 0 1 22 16.92z"/><path d="M14.5 5a4.5 4.5 0 0 1 4.5 4.5"/><path d="M14.5 2a7.5 7.5 0 0 1 7.5 7.5"/></svg>`,
+    },
+    {
+      name: 'LinkedIn',
+      href: 'https://linkedin.com',
+      svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`,
+    },
+  ];
+
+  return `
+    <div class="social-links">
+      ${items
+        .map(
+          (item) => `
+        <a
+          href="${item.href}"
+          target="${item.href.startsWith('http') ? '_blank' : '_self'}"
+          rel="noopener noreferrer"
+          class="social-link ${labeled ? 'social-link--labeled' : ''}"
+          aria-label="${item.name}"
+          title="${item.name}"
+        >
+          ${item.svg}
+          ${labeled ? `<span>${item.name}</span>` : ''}
+        </a>
+      `
+        )
+        .join('')}
+    </div>
+  `;
+}
+
+/**
+ * Генерирует векторный портрет-иллюстрацию риэлтора для блока команды
+ */
+export function getRealtorPortraitSvg(index = 0) {
+  const palettes = [
+    {bg1: '#231845', bg2: '#13243b', suit: '#1e293b', accent: '#8b5cf6', hair: '#27201e'},
+    {bg1: '#182b3a', bg2: '#151526', suit: '#334155', accent: '#22d3ee', hair: '#3b2820'},
+    {bg1: '#2d193d', bg2: '#162032', suit: '#1f2937', accent: '#a855f7', hair: '#4a3728'},
+  ];
+  const p = palettes[index % palettes.length];
+  return `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 270" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Realtor portrait">
+      <defs>
+        <linearGradient id="rpBg${index}" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="${p.bg1}" />
+          <stop offset="100%" stop-color="${p.bg2}" />
+        </linearGradient>
+      </defs>
+      <rect width="360" height="270" fill="url(#rpBg${index})" />
+      <circle cx="290" cy="55" r="70" fill="${p.accent}" opacity="0.18" />
+      <!-- Силуэт офиса на фоне -->
+      <rect x="28" y="34" width="90" height="170" rx="4" fill="#ffffff" opacity="0.04" />
+      <rect x="242" y="48" width="90" height="156" rx="4" fill="#ffffff" opacity="0.04" />
+      <!-- Костюм и плечи -->
+      <path d="M88 270 C92 205 130 185 180 185 C230 185 268 205 272 270 Z" fill="${p.suit}" />
+      <polygon points="160,185 180,235 200,185" fill="#f8fafc" />
+      <polygon points="175,195 180,248 185,195" fill="${p.accent}" />
+      <!-- Голова и причёска -->
+      <rect x="164" y="152" width="32" height="36" rx="12" fill="#e6b89c" />
+      <ellipse cx="180" cy="116" rx="42" ry="48" fill="#f1c7ad" />
+      <path d="M138 110 C138 68 222 68 222 110 C215 84 145 84 138 110 Z" fill="${p.hair}" />
+      <!-- Черты лица -->
+      <circle cx="165" cy="116" r="3" fill="#1e293b" />
+      <circle cx="195" cy="116" r="3" fill="#1e293b" />
+      <path d="M168 138 Q180 146 192 138" stroke="#9a5b4a" stroke-width="2.5" fill="none" stroke-linecap="round" />
+    </svg>
+  `;
+}
+

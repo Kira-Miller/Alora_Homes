@@ -1,14 +1,14 @@
 // ==========================================================================
-// Контроллер страницы продажи недвижимости (sell.html)
-// Включает 3-шаговый калькулятор оценки, пакеты и форму с загрузкой фото
+// Контроллер страницы услуг и продажи недвижимости (services.html)
+// Объединяет каталог услуг, 3-шаговый калькулятор оценки, пакеты и заявки
 // ==========================================================================
 
 import {showToast} from './components.js';
 import {formatPrices, t} from './i18n.js';
 import {initLayout} from './layout.js';
-import {addSellRequest, getState, subscribe} from './state.js';
+import {addConsultationRequest, addSellRequest, getState, subscribe} from './state.js';
 
-initLayout('sell');
+initLayout('services');
 
 let calcStep = 1;
 const calcData = {
@@ -20,6 +20,24 @@ const calcData = {
 
 const wizardRoot = document.getElementById('sell-wizard-body');
 const uploadedFiles = [];
+
+function applyUrlServiceParam() {
+  const params = new URLSearchParams(window.location.search);
+  const srv = params.get('service');
+  if (srv === 'sell-house') calcData.type = 'house';
+  else if (srv === 'sell-land') calcData.type = 'land';
+  else if (srv === 'sell-apartment') calcData.type = 'apartment';
+
+  const typeSelect = document.getElementById('sell-type');
+  if (typeSelect && ['apartment', 'house', 'land'].includes(calcData.type)) {
+    typeSelect.value = calcData.type;
+  }
+
+  if (srv === 'exchange') {
+    const exRadio = document.querySelector('input[name="srv-intent"][value="exchange"]');
+    if (exRadio) exRadio.checked = true;
+  }
+}
 
 function calculateEstimate() {
   const basePerSqmUsd = {
@@ -165,7 +183,6 @@ function renderWizard() {
     return;
   }
 
-  // Шаг 3: Оценка
   const est = calculateEstimate();
   const lowFmt = formatPrices(est.lowByn, est.lowUsd, currency);
   const highFmt = formatPrices(est.highByn, est.highUsd, currency);
@@ -204,14 +221,23 @@ function renderWizard() {
   });
 }
 
-function bindPackagesAndForm() {
+function bindServicesInteractions() {
+  document.querySelectorAll('.js-preset-type').forEach((link) => {
+    link.addEventListener('click', () => {
+      const preset = link.getAttribute('data-preset');
+      if (preset) {
+        calcData.type = preset;
+        calcStep = 1;
+        renderWizard();
+      }
+    });
+  });
+
   document.querySelectorAll('[data-select-package]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const pkg = btn.getAttribute('data-select-package');
       const pkgSelect = document.getElementById('sell-package');
-      if (pkgSelect && pkg) {
-        pkgSelect.value = pkg;
-      }
+      if (pkgSelect && pkg) pkgSelect.value = pkg;
       document.getElementById('sell-application')?.scrollIntoView({behavior: 'smooth'});
       showToast(
         getState().lang === 'ru' ? 'Пакет выбран в форме заявки' : 'Package selected in form',
@@ -220,31 +246,31 @@ function bindPackagesAndForm() {
     });
   });
 
-  // Dropzone загрузки фотографий
   const dropzone = document.getElementById('sell-dropzone');
   const fileInput = document.getElementById('sell-file-input');
   const previewBox = document.getElementById('sell-previews');
 
   const handleFiles = (files) => {
-    Array.from(files).slice(0, 6).forEach((file) => {
-      if (!file.type.startsWith('image/')) return;
-      uploadedFiles.push(file.name);
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const thumb = document.createElement('div');
-        thumb.className = 'dropzone__thumb';
-        thumb.innerHTML = `<img src="${ev.target?.result}" alt="${file.name}" />`;
-        previewBox?.appendChild(thumb);
-      };
-      reader.readAsDataURL(file);
-    });
+    Array.from(files)
+      .slice(0, 6)
+      .forEach((file) => {
+        if (!file.type.startsWith('image/')) return;
+        uploadedFiles.push(file.name);
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const thumb = document.createElement('div');
+          thumb.className = 'dropzone__thumb';
+          thumb.innerHTML = `<img src="${ev.target?.result}" alt="${file.name}" />`;
+          previewBox?.appendChild(thumb);
+        };
+        reader.readAsDataURL(file);
+      });
   };
 
   dropzone?.addEventListener('click', () => fileInput?.click());
   fileInput?.addEventListener('change', (e) => {
     if (e.target.files) handleFiles(e.target.files);
   });
-
   dropzone?.addEventListener('dragover', (e) => {
     e.preventDefault();
     dropzone.classList.add('is-dragover');
@@ -256,7 +282,6 @@ function bindPackagesAndForm() {
     if (e.dataTransfer?.files) handleFiles(e.dataTransfer.files);
   });
 
-  // Отправка заявки на продажу
   const sellForm = document.getElementById('sell-form');
   sellForm?.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -287,8 +312,31 @@ function bindPackagesAndForm() {
       'success'
     );
   });
+
+  const consultForm = document.getElementById('services-consult-form');
+  consultForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const {lang} = getState();
+    const intent = consultForm.querySelector('input[name="srv-intent"]:checked')?.value || 'sell';
+    const name = document.getElementById('srv-consult-name').value.trim();
+    const phone = document.getElementById('srv-consult-phone').value.trim();
+    const city = document.getElementById('srv-consult-city').value.trim();
+    if (name.length < 2 || phone.length < 7) {
+      showToast(lang === 'ru' ? 'Введите имя и номер телефона' : 'Please enter name and phone');
+      return;
+    }
+    addConsultationRequest({intent, name, phone: `+375 ${phone}`, city});
+    consultForm.reset();
+    showToast(
+      lang === 'ru'
+        ? 'Заявка на консультацию принята! Специалист скоро позвонит.'
+        : 'Consultation request submitted!',
+      'success'
+    );
+  });
 }
 
+applyUrlServiceParam();
 renderWizard();
-bindPackagesAndForm();
+bindServicesInteractions();
 subscribe(() => renderWizard());

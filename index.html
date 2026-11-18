@@ -307,6 +307,74 @@
           </ol>
         </div>
       </section>
+      <!-- Квалифицированные риэлторы -->
+      <section class="section">
+        <div class="container">
+          <span class="section-kicker" data-i18n="realtorsKicker">Команда экспертов</span>
+          <h2 class="section-title" data-i18n="realtorsTitle">Квалифицированные риэлторы с большим опытом</h2>
+          <div class="realtors-grid" id="home-realtors"></div>
+        </div>
+      </section>
+
+      <!-- Отзывы клиентов -->
+      <section class="section">
+        <div class="container">
+          <span class="section-kicker" data-i18n="reviewsKicker">Реальные сделки</span>
+          <h2 class="section-title" data-i18n="reviewsTitle">Отзывы наших клиентов</h2>
+          <div class="reviews-grid" id="home-reviews"></div>
+        </div>
+      </section>
+
+      <!-- Ответим на ваши вопросы -->
+      <section class="section">
+        <div class="container">
+          <form class="consult-box" id="home-consult-form">
+            <div>
+              <h2 class="consult-box__title" data-i18n="consultTitle">Ответим на ваши вопросы</h2>
+              <p class="section-subtitle" data-i18n="consultSubtitle">
+                Оставьте заявку, и в кратчайшие сроки наш специалист свяжется с вами и проконсультирует по любым вопросам
+              </p>
+            </div>
+
+            <div class="consult-box__intent">
+              <span data-i18n="consultWant">Вы хотите:</span>
+              <label class="radio-pill">
+                <input type="radio" name="consult-intent" value="buy" checked />
+                <span data-i18n="intentBuy">Купить</span>
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="consult-intent" value="sell" />
+                <span data-i18n="intentSell">Продать</span>
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="consult-intent" value="exchange" />
+                <span data-i18n="intentExchange">Обменять</span>
+              </label>
+            </div>
+
+            <div class="consult-box__grid">
+              <input id="consult-name" class="field__control" type="text" required placeholder="Имя" />
+              <div class="phone-prefix-wrap">
+                <span class="phone-prefix-wrap__flag">🇧🇾 +375</span>
+                <input id="consult-phone" type="tel" required placeholder="29 491-19-11" />
+              </div>
+            </div>
+
+            <div class="consult-box__bottom">
+              <input
+                id="consult-city"
+                class="field__control"
+                type="text"
+                data-i18n-placeholder="consultCityPlaceholder"
+                placeholder="Город (Минск, Брест, Гродно...)"
+              />
+              <button type="submit" class="btn btn--primary" data-i18n="consultBtn">
+                Получить консультацию
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
     </main>
 
     <!-- Семантический подвал сайта -->

@@ -11,6 +11,7 @@ import {
   cancelViewingRequest,
   continueAsGuest,
   getState,
+  isGuest,
   subscribe,
   toggleCompare,
   toggleFavorite,
@@ -125,6 +126,22 @@ function renderCabinet() {
     });
 
     const grid = document.getElementById('cab-saved-grid');
+    if (isGuest()) {
+      grid.style.display = 'block';
+      grid.innerHTML = `
+        <div class="empty-state">
+          <h3>${t('guestGateTitle', lang)}</h3>
+          <p>${t('guestGateFavDesc', lang)}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+            <button type="button" class="btn btn--primary js-cab-guest-reg">${t('registerBtn', lang)}</button>
+            <a href="tel:+375297745210" class="btn btn--secondary">📞 +375 (29) 774-52-10</a>
+          </div>
+        </div>
+      `;
+      grid.querySelector('.js-cab-guest-reg')?.addEventListener('click', () => openAuthModal('register'));
+      return;
+    }
+
     if (!savedProps.length) {
       grid.style.display = 'block';
       grid.innerHTML = `
@@ -239,6 +256,21 @@ function renderCabinet() {
   }
 
   // Вкладка заявок на показ
+  if (isGuest()) {
+    panel.innerHTML = `
+      <div class="empty-state">
+        <h3>${t('guestGateTitle', lang)}</h3>
+        <p>${t('guestGateBookDesc', lang)}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+          <button type="button" class="btn btn--primary js-cab-req-reg">${t('registerBtn', lang)}</button>
+          <a href="tel:+375297745210" class="btn btn--secondary">📞 +375 (29) 774-52-10</a>
+        </div>
+      </div>
+    `;
+    panel.querySelector('.js-cab-req-reg')?.addEventListener('click', () => openAuthModal('register'));
+    return;
+  }
+
   if (!viewingRequests.length) {
     panel.innerHTML = `
       <div class="empty-state">

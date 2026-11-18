@@ -1,6 +1,6 @@
 // ==========================================================================
-// Общий макет сайта: шапка (Header), мобильное меню, подвал (Footer)
-// и модальное окно входа/регистрации (Гость / Пользователь)
+// Общий макет сайта: шапка (с выпадающим меню «Услуги»), мобильное меню,
+// подвал с SVG-иконками соцсетей и модальные окна авторизации / гостя
 // ==========================================================================
 
 import {showToast} from './components.js';
@@ -15,15 +15,12 @@ import {
   toggleLang,
   toggleTheme,
 } from './state.js';
-import {getBrandLogoSvg} from './svg-art.js';
+import {getBrandLogoSvg, getSocialLinksHtml} from './svg-art.js';
 
-/**
- * Инициализирует общую шапку, подвал и модальное окно авторизации на текущей странице
- */
 export function initLayout(activePage = 'home') {
   renderHeader(activePage);
   renderFooter();
-  ensureAuthModal();
+  ensureModals();
   applyStaticTranslations(getState().lang);
 
   subscribe(() => {
@@ -33,6 +30,18 @@ export function initLayout(activePage = 'home') {
   });
 }
 
+function getServiceLinks(lang) {
+  return [
+    {href: './services.html?service=sell-apartment#calculator', label: t('srvSellApt', lang)},
+    {href: './services.html?service=sell-house#calculator', label: t('srvSellHouse', lang)},
+    {href: './services.html?service=sell-land#calculator', label: t('srvSellLand', lang)},
+    {href: './services.html#calculator', label: t('srvValuation', lang)},
+    {href: './services.html?service=exchange#consultation', label: t('srvExchange', lang)},
+    {href: './catalog.html', label: t('srvBuy', lang)},
+    {href: './catalog.html?category=commercial', label: t('srvCommercial', lang)},
+  ];
+}
+
 function renderHeader(activePage) {
   const headerEl = document.getElementById('site-header');
   if (!headerEl) return;
@@ -40,13 +49,7 @@ function renderHeader(activePage) {
   const {lang, currency, theme, favorites, user} = getState();
   const isRegistered = user.mode === 'registered';
   const userLabel = isRegistered ? user.name.split(' ')[0] : t('guestLabel', lang);
-
-  const navItems = [
-    {id: 'catalog', href: './catalog.html', label: t('navCatalog', lang)},
-    {id: 'sell', href: './sell.html', label: t('navSell', lang)},
-    {id: 'about', href: './about.html', label: t('navAbout', lang)},
-    {id: 'contacts', href: './about.html#contacts', label: t('navContacts', lang)},
-  ];
+  const serviceLinks = getServiceLinks(lang);
 
   headerEl.className = 'site-header';
   headerEl.innerHTML = `
@@ -57,12 +60,37 @@ function renderHeader(activePage) {
       </a>
 
       <nav class="site-header__nav" aria-label="Main navigation">
-        ${navItems
-          .map(
-            (item) =>
-              `<a href="${item.href}" class="site-header__link ${activePage === item.id ? 'is-active' : ''}">${item.label}</a>`
-          )
-          .join('')}
+        <a href="./catalog.html" class="site-header__link ${activePage === 'catalog' ? 'is-active' : ''}">
+          ${t('navCatalog', lang)}
+        </a>
+
+        <div class="site-header__dropdown" id="services-dropdown">
+          <a
+            href="./services.html"
+            class="site-header__dropdown-trigger ${activePage === 'services' ? 'is-active' : ''}"
+            aria-haspopup="true"
+          >
+            <span>${t('navServices', lang)}</span>
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </a>
+          <div class="site-header__dropdown-menu" role="menu">
+            ${serviceLinks
+              .map(
+                (srv) =>
+                  `<a href="${srv.href}" class="site-header__dropdown-item" role="menuitem">${srv.label}<span>→</span></a>`
+              )
+              .join('')}
+          </div>
+        </div>
+
+        <a href="./about.html" class="site-header__link ${activePage === 'about' ? 'is-active' : ''}">
+          ${t('navAbout', lang)}
+        </a>
+        <a href="./about.html#contacts" class="site-header__link">
+          ${t('navContacts', lang)}
+        </a>
       </nav>
 
       <div class="site-header__actions">
@@ -99,12 +127,18 @@ function renderHeader(activePage) {
 
     <div class="mobile-drawer" id="mobile-drawer">
       <nav class="mobile-drawer__nav" aria-label="Mobile navigation">
-        ${navItems
-          .map(
-            (item) =>
-              `<a href="${item.href}" class="mobile-drawer__link ${activePage === item.id ? 'is-active' : ''}">${item.label}<span>→</span></a>`
-          )
-          .join('')}
+        <a href="./catalog.html" class="mobile-drawer__link ${activePage === 'catalog' ? 'is-active' : ''}">
+          ${t('navCatalog', lang)}<span>→</span>
+        </a>
+        <a href="./services.html" class="mobile-drawer__link ${activePage === 'services' ? 'is-active' : ''}">
+          ${t('navServices', lang)}<span>→</span>
+        </a>
+        <a href="./about.html" class="mobile-drawer__link ${activePage === 'about' ? 'is-active' : ''}">
+          ${t('navAbout', lang)}<span>→</span>
+        </a>
+        <a href="./about.html#contacts" class="mobile-drawer__link">
+          ${t('navContacts', lang)}<span>→</span>
+        </a>
         <a href="./cabinet.html" class="mobile-drawer__link ${activePage === 'cabinet' ? 'is-active' : ''}">
           ${t('navCabinet', lang)} (${favorites.length})<span>→</span>
         </a>
@@ -153,10 +187,8 @@ function renderFooter() {
             <span>Alora <span class="site-header__brand-accent">Homes</span></span>
           </a>
           <p class="site-footer__tagline">${t('footerTagline', lang)}</p>
-          <div class="site-footer__socials">
-            <a href="./about.html#contacts" class="icon-btn" aria-label="Telegram">TG</a>
-            <a href="./about.html#contacts" class="icon-btn" aria-label="Instagram">IG</a>
-            <a href="./about.html#contacts" class="icon-btn" aria-label="LinkedIn">IN</a>
+          <div style="margin-top:18px;">
+            ${getSocialLinksHtml(false)}
           </div>
         </div>
 
@@ -164,7 +196,7 @@ function renderFooter() {
           <div class="site-footer__col-title">${t('footerNav', lang)}</div>
           <ul class="site-footer__list">
             <li><a href="./catalog.html">${t('navCatalog', lang)}</a></li>
-            <li><a href="./sell.html">${t('navSell', lang)}</a></li>
+            <li><a href="./services.html">${t('navServices', lang)}</a></li>
             <li><a href="./cabinet.html">${t('navCabinet', lang)}</a></li>
             <li><a href="./about.html">${t('navAbout', lang)}</a></li>
           </ul>
@@ -173,10 +205,10 @@ function renderFooter() {
         <div>
           <div class="site-footer__col-title">${t('footerServices', lang)}</div>
           <ul class="site-footer__list">
-            <li><a href="./catalog.html?category=apartments">${t('catApartments', lang)}</a></li>
-            <li><a href="./catalog.html?category=houses">${t('catHouses', lang)}</a></li>
-            <li><a href="./catalog.html?category=commercial">${t('catCommercial', lang)}</a></li>
-            <li><a href="./sell.html#calculator">${t('calcTitle', lang)}</a></li>
+            <li><a href="./services.html?service=sell-apartment#calculator">${t('srvSellApt', lang)}</a></li>
+            <li><a href="./services.html?service=sell-house#calculator">${t('srvSellHouse', lang)}</a></li>
+            <li><a href="./services.html#calculator">${t('srvValuation', lang)}</a></li>
+            <li><a href="./services.html?service=exchange#consultation">${t('srvExchange', lang)}</a></li>
           </ul>
         </div>
 
@@ -185,15 +217,15 @@ function renderFooter() {
           <ul class="site-footer__list">
             <li class="site-footer__contact-item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.58 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              <span>+375 (17) 240-18-90</span>
+              <a href="tel:+375172401890">+375 (17) 240-18-90</a>
             </li>
             <li class="site-footer__contact-item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.58 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              <span>+375 (29) 774-52-10</span>
+              <a href="tel:+375297745210">+375 (29) 774-52-10</a>
             </li>
             <li class="site-footer__contact-item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              <span>info@alorahomes.by</span>
+              <a href="mailto:info@alorahomes.by">info@alorahomes.by</a>
             </li>
             <li class="site-footer__contact-item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -214,22 +246,78 @@ function renderFooter() {
   `;
 }
 
-function ensureAuthModal() {
-  if (document.getElementById('auth-modal')) return;
-  const modal = document.createElement('div');
-  modal.id = 'auth-modal';
-  modal.className = 'modal-backdrop';
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) modal.classList.remove('is-open');
-  });
-  document.body.appendChild(modal);
+function ensureModals() {
+  if (!document.getElementById('auth-modal')) {
+    const authModal = document.createElement('div');
+    authModal.id = 'auth-modal';
+    authModal.className = 'modal-backdrop';
+    authModal.addEventListener('click', (e) => {
+      if (e.target === authModal) authModal.classList.remove('is-open');
+    });
+    document.body.appendChild(authModal);
+  }
+
+  if (!document.getElementById('guest-gate-modal')) {
+    const gateModal = document.createElement('div');
+    gateModal.id = 'guest-gate-modal';
+    gateModal.className = 'modal-backdrop';
+    gateModal.addEventListener('click', (e) => {
+      if (e.target === gateModal) gateModal.classList.remove('is-open');
+    });
+    document.body.appendChild(gateModal);
+  }
 }
 
 /**
- * Открывает модальное окно авторизации / регистрации / переключения в режим гостя
+ * Показывает гостю окно с предложением зарегистрироваться или позвонить в контакт-центр
  */
+export function openGuestGateModal(actionType = 'favorite') {
+  ensureModals();
+  const modal = document.getElementById('guest-gate-modal');
+  if (!modal) return;
+  const {lang} = getState();
+  const desc = actionType === 'booking' ? t('guestGateBookDesc', lang) : t('guestGateFavDesc', lang);
+
+  modal.innerHTML = `
+    <div class="modal-dialog" role="dialog" aria-modal="true">
+      <div class="modal-dialog__header">
+        <h2 class="modal-dialog__title">${t('guestGateTitle', lang)}</h2>
+        <button type="button" class="modal-dialog__close js-close-gate" aria-label="Close">✕</button>
+      </div>
+      <div class="guest-gate">
+        <div class="guest-gate__notice">${desc}</div>
+        <button type="button" class="btn btn--primary btn--full js-gate-register">
+          ${t('registerBtn', lang)}
+        </button>
+
+        <div class="guest-gate__call-box">
+          <strong style="font-size:0.95rem;">${t('guestGateCallTitle', lang)}</strong>
+          <span style="font-size:0.82rem;color:var(--text-secondary);">${t('guestGateHours', lang)}</span>
+          <div class="guest-gate__phones">
+            <a href="tel:+375297745210" class="btn btn--secondary btn--sm">+375 (29) 774-52-10</a>
+            <a href="tel:+375172401890" class="btn btn--secondary btn--sm">+375 (17) 240-18-90</a>
+          </div>
+          <div style="margin-top:6px;">
+            ${getSocialLinksHtml(false)}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  modal.querySelector('.js-close-gate')?.addEventListener('click', () => {
+    modal.classList.remove('is-open');
+  });
+  modal.querySelector('.js-gate-register')?.addEventListener('click', () => {
+    modal.classList.remove('is-open');
+    openAuthModal('register');
+  });
+
+  modal.classList.add('is-open');
+}
+
 export function openAuthModal(defaultTab = 'register') {
-  ensureAuthModal();
+  ensureModals();
   const modal = document.getElementById('auth-modal');
   if (!modal) return;
 
