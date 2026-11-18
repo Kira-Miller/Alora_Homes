@@ -166,18 +166,23 @@ function renderHeader(activePage) {
           <span>${userLabel}</span>
         </button>
 
-        <button type="button" class="site-header__burger js-toggle-drawer" aria-label="Menu" aria-expanded="false">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+        <button type="button" class="site-header__burger js-toggle-drawer" aria-label="Menu" aria-expanded="false" style="display:inline-flex;align-items:center;gap:6px;padding:0 12px;width:auto;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <line x1="3" y1="6" x2="21" y2="6"/>
             <line x1="3" y1="12" x2="21" y2="12"/>
             <line x1="3" y1="18" x2="21" y2="18"/>
           </svg>
+          <span style="font-size:0.8125rem;font-weight:600;">Меню</span>
         </button>
       </div>
     </div>
 
     <div class="mobile-drawer" id="mobile-drawer">
-      <nav class="mobile-drawer__nav" aria-label="Mobile navigation">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--border-subtle);">
+        <span style="font-weight:700;font-size:1.05rem;color:var(--text-primary);">Навигация Alora Homes</span>
+        <button type="button" class="modal-dialog__close js-close-drawer" aria-label="Close" style="background:none;border:none;color:var(--text-primary);font-size:1.25rem;cursor:pointer;">✕</button>
+      </div>
+      <nav class="mobile-drawer__nav" aria-label="Mobile navigation" style="margin-top:12px;">
         <a href="./catalog.html" class="mobile-drawer__link ${activePage === 'catalog' ? 'is-active' : ''}">
           ${t('navCatalog', lang)}<span>→</span>
         </a>
@@ -223,6 +228,11 @@ function renderHeader(activePage) {
   burger?.addEventListener('click', () => {
     const opened = drawer?.classList.toggle('is-open');
     burger.setAttribute('aria-expanded', String(Boolean(opened)));
+  });
+
+  headerEl.querySelector('.js-close-drawer')?.addEventListener('click', () => {
+    drawer?.classList.remove('is-open');
+    burger?.setAttribute('aria-expanded', 'false');
   });
 
   headerEl.querySelectorAll('.js-nav-contacts').forEach((link) => {

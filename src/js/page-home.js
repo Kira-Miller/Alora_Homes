@@ -13,7 +13,7 @@ import {filterProperties, loadPropertiesFromXml} from './xml-loader.js';
 initLayout('home');
 
 let allProperties = [];
-let activeDealGroup = 'residential';
+let activeDealGroup = 'all';
 let activeFeaturedTab = 'all';
 let featuredPage = 0;
 const FEATURED_PAGE_SIZE = 6;
@@ -143,6 +143,28 @@ const REVIEWS = [
     metaRu: 'Загородная недвижимость · Волковыск · 08.10.2026',
     metaEn: 'Country Property · Volkovysk · 08.10.2026',
     rating: 5,
+  },
+  {
+    authorRu: 'Евгений Макаров',
+    authorEn: 'Evgeny Makarov',
+    textRu:
+      'Хорошее агентство, помогли быстро подобрать квартиру в Минске. Снижаю одну звезду только за то, что в офисе было немного людно в день подписания договора, но в остальном всё на высоте.',
+    textEn:
+      'Good agency, helped quickly find an apartment in Minsk. Deducting one star only because the office was a bit crowded on signing day, but otherwise top notch.',
+    metaRu: 'Покупка квартиры · Минск · 14.11.2026',
+    metaEn: 'Apartment Purchase · Minsk · 14.11.2026',
+    rating: 4,
+  },
+  {
+    authorRu: 'Наталья Воронова',
+    authorEn: 'Natalia Voronova',
+    textRu:
+      'Продавали загородный дом через Алису Шестак. Сделка прошла успешно, профессионально и без нервов. Хотелось бы чуть больше гибкости по времени показов, но результат отличный!',
+    textEn:
+      'Sold our country house through Alisa Shestak. Smooth and professional. Would have liked slightly more flexibility on viewing times, but great results!',
+    metaRu: 'Продажа дома · Минский р-н · 10.11.2026',
+    metaEn: 'House Sale · Minsk Region · 10.11.2026',
+    rating: 4,
   },
   {
     authorRu: 'Артур Семёнов',
