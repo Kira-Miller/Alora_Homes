@@ -23,6 +23,7 @@ import {
   validateEmail,
   validateName,
   validatePassword,
+  attachPhoneMask,
 } from './validation.js';
 
 let layoutGlobalListenersBound = false;
@@ -513,6 +514,7 @@ export function openAuthModal(defaultTab = 'register') {
     });
 
     const form = modal.querySelector('#auth-form');
+    attachPhoneMask(modal.querySelector('#auth-phone'));
     form?.querySelectorAll('input').forEach((input) => {
       input.addEventListener('input', () => {
         setFieldError(input, '');

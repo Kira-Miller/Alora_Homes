@@ -553,7 +553,7 @@ export function getFloorPlanData(property, lang = 'ru') {
       },
       {
         id: 'f1-bath',
-        nameRu: 'Санузел и постирочная',
+        nameRu: 'Санузел / Хозблок',
         nameEn: 'Guest Bath & Utility',
         raw: 11,
         x: 199,
@@ -1128,7 +1128,7 @@ export function getFloorPlanSvg(floorData, activeRoomId, lang = 'ru') {
     .map((room) => {
       const isSelected = String(room.id) === String(activeRoomId);
       const roomName = lang === 'ru' ? room.nameRu : room.nameEn;
-      const shortName = roomName.length > 21 ? `${roomName.slice(0, 19)}…` : roomName;
+      const shortName = roomName.length > 15 ? `${roomName.slice(0, 13)}…` : roomName;
       const areaLabel = `${room.area} ${lang === 'ru' ? 'м²' : 'm²'}`;
 
       const windowMarkup = (room.windows || [])

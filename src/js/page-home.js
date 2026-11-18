@@ -7,7 +7,7 @@ import {pluralObjects, t} from './i18n.js';
 import {initLayout} from './layout.js';
 import {addConsultationRequest, getState, setCurrency, subscribe} from './state.js';
 import {getIconSvg, getRealtorPortraitSvg} from './svg-art.js';
-import {clearFormErrors, setFieldError, validateBelarusPhone, validateName} from './validation.js';
+import {clearFormErrors, setFieldError, validateBelarusPhone, validateName, attachPhoneMask} from './validation.js';
 import {filterProperties, loadPropertiesFromXml} from './xml-loader.js';
 
 initLayout('home');
@@ -142,6 +142,18 @@ const REVIEWS = [
       'Grateful for help buying a cozy cottage in Volkovysk. A rare agency that truly advocates for the buyer at every step.',
     metaRu: 'Загородная недвижимость · Волковыск · 08.10.2026',
     metaEn: 'Country Property · Volkovysk · 08.10.2026',
+    rating: 5,
+  },
+  {
+    authorRu: 'Артур Семёнов',
+    authorEn: 'Arthur Semyonov',
+    textRu:
+      'Слишком крутые и всё оформляют в два счёта — аж бесят! Хотел придраться хоть к чему-нибудь или поторговаться, а они всё сделали идеально и быстрее, чем я успел выпить кофе. Невозможно работать с такими профессионалами!',
+    textEn:
+      'Too cool and fast, which is annoying! Wanted to find something to nitpick or bargain over, but they did everything perfectly before I finished my coffee.',
+    metaRu: 'Покупка апартаментов · Минск · 16.11.2026',
+    metaEn: 'Apartment Purchase · Minsk · 16.11.2026',
+    rating: 1,
   },
 ];
 
@@ -322,17 +334,20 @@ function renderRealtorsAndReviews() {
 
   const reviewsEl = document.getElementById('home-reviews');
   if (reviewsEl) {
-    const starsHtml = Array.from({length: 5}, () => getIconSvg('star', 15)).join('');
-    reviewsEl.innerHTML = REVIEWS.map(
-      (rev) => `
+    reviewsEl.innerHTML = REVIEWS.map((rev) => {
+      const rating = rev.rating || 5;
+      const starsHtml = Array.from({length: 5}, (_, idx) =>
+        `<span style="color:${idx < rating ? '#f59e0b' : 'var(--border-subtle)'};display:inline-flex;">${getIconSvg('star', 15)}</span>`
+      ).join('');
+      return `
       <article class="review-card">
         <strong>${lang === 'ru' ? rev.authorRu : rev.authorEn}</strong>
-        <div class="review-card__stars" aria-label="5 stars" style="display:flex;gap:4px;">${starsHtml}</div>
+        <div class="review-card__stars" aria-label="${rating} stars" style="display:flex;gap:4px;">${starsHtml}</div>
         <p class="review-card__text">${lang === 'ru' ? rev.textRu : rev.textEn}</p>
         <div class="review-card__meta">${lang === 'ru' ? rev.metaRu : rev.metaEn}</div>
       </article>
-    `
-    ).join('');
+    `;
+    }).join('');
     syncReviewCarouselButtons();
   }
 }
@@ -435,6 +450,7 @@ function bindHomeInteractions() {
 
   // Форма консультации «Ответим на ваши вопросы» с проверкой вводимых данных
   const consultForm = document.getElementById('home-consult-form');
+  attachPhoneMask(document.getElementById('consult-phone'));
   consultForm?.querySelectorAll('input').forEach((inp) => {
     inp.addEventListener('input', () => setFieldError(inp, ''));
   });
