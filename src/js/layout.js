@@ -3,8 +3,8 @@
 // подвал с SVG-иконками соцсетей и модальные окна авторизации / гостя
 // ==========================================================================
 
-import {showToast} from './components.js';
 import {applyStaticTranslations, t} from './i18n.js';
+import {showToast} from './toast.js';
 import {
   continueAsGuest,
   getState,

@@ -170,11 +170,19 @@ export function getPropertySvg(theme = 'villa-pine', viewType = 'exterior', uid 
 }
 
 /**
- * Генерирует интерактивную SVG-карту Республики Беларусь с маркерами объектов
+ * Генерирует интерактивную SVG-карту Республики Беларусь с поддержкой масштабирования (zoom/pan)
  */
-export function getBelarusMapSvg(properties, lang = 'ru', activeId = null) {
+export function getBelarusMapSvg(
+  properties,
+  lang = 'ru',
+  activeId = null,
+  viewBox = {x: 0, y: 0, w: 520, h: 400}
+) {
+  const zoomScale = viewBox.w / 520;
+  const isMinskZoom = viewBox.w <= 280;
+
   const cities = [
-    {name: lang === 'ru' ? 'Минск' : 'Minsk', x: 274, y: 186},
+    {name: lang === 'ru' ? 'Минск' : 'Minsk', x: 278, y: 185},
     {name: lang === 'ru' ? 'Брест' : 'Brest', x: 105, y: 325},
     {name: lang === 'ru' ? 'Гродно' : 'Grodno', x: 108, y: 212},
     {name: lang === 'ru' ? 'Витебск' : 'Vitebsk', x: 392, y: 102},
@@ -182,12 +190,46 @@ export function getBelarusMapSvg(properties, lang = 'ru', activeId = null) {
     {name: lang === 'ru' ? 'Могилёв' : 'Mogilev', x: 395, y: 205},
   ];
 
+  const minskDistricts = isMinskZoom
+    ? `
+      <g class="belarus-map__minsk-layer">
+        <!-- Кольцо МКАД -->
+        <ellipse
+          cx="275" cy="186" rx="26" ry="20"
+          fill="rgba(34, 211, 238, 0.06)"
+          stroke="rgba(34, 211, 238, 0.45)"
+          stroke-width="${1.2 * zoomScale}"
+          stroke-dasharray="${3 * zoomScale} ${2.5 * zoomScale}"
+        />
+        <!-- Река Свислочь -->
+        <path
+          d="M240 162 Q265 178 276 186 T304 218"
+          fill="none"
+          stroke="rgba(56, 189, 248, 0.42)"
+          stroke-width="${1.8 * zoomScale}"
+          stroke-linecap="round"
+        />
+        <text x="275" y="182" text-anchor="middle" fill="#cbd5e1" font-size="${7.5 * zoomScale}" font-weight="700">МКАД / Центр</text>
+        <text x="244" y="160" text-anchor="middle" fill="#94a3b8" font-size="${6.5 * zoomScale}">${lang === 'ru' ? 'Ратомка' : 'Ratomka'}</text>
+        <text x="316" y="150" text-anchor="middle" fill="#94a3b8" font-size="${6.5 * zoomScale}">${lang === 'ru' ? 'Раубичи' : 'Raubichi'}</text>
+        <text x="298" y="163" text-anchor="middle" fill="#94a3b8" font-size="${6.5 * zoomScale}">${lang === 'ru' ? 'Новая Боровая' : 'Novaya Borovaya'}</text>
+        <text x="292" y="217" text-anchor="middle" fill="#94a3b8" font-size="${6.5 * zoomScale}">${lang === 'ru' ? 'Серебрянка' : 'Serebryanka'}</text>
+      </g>
+    `
+    : '';
+
   const pins = properties
     .map((p) => {
       const isSelected = String(p.id) === String(activeId);
+      const r = (isSelected ? 9.5 : 6.5) * zoomScale;
+      const strokeW = 2 * zoomScale;
+      const pulse = isSelected
+        ? `<circle r="${15 * zoomScale}" fill="rgba(34, 211, 238, 0.24)" stroke="rgba(34, 211, 238, 0.65)" stroke-width="${1 * zoomScale}" />`
+        : '';
       return `
         <g class="belarus-map__pin" data-map-id="${p.id}" transform="translate(${p.mapCoords.x}, ${p.mapCoords.y})">
-          <circle r="${isSelected ? 10 : 7}" fill="${isSelected ? '#22d3ee' : '#8b5cf6'}" stroke="#ffffff" stroke-width="2" />
+          ${pulse}
+          <circle r="${r}" fill="${isSelected ? '#22d3ee' : '#8b5cf6'}" stroke="#ffffff" stroke-width="${strokeW}" />
         </g>
       `;
     })
@@ -196,29 +238,30 @@ export function getBelarusMapSvg(properties, lang = 'ru', activeId = null) {
   const cityLabels = cities
     .map(
       (c) => `
-      <text x="${c.x}" y="${c.y - 12}" text-anchor="middle" fill="#a1a4b8" font-size="11" font-weight="600">${c.name}</text>
+      <text x="${c.x}" y="${c.y - 13 * zoomScale}" text-anchor="middle" fill="#a1a4b8" font-size="${11 * zoomScale}" font-weight="600">${c.name}</text>
     `
     )
     .join('');
 
   return `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" role="img" aria-label="Map of Belarus">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}" role="img" aria-label="Map of Belarus">
       <!-- Стилизованный контур Республики Беларусь -->
       <path
         d="M128 118 L195 92 L265 62 L352 44 L428 78 L468 148 L452 222 L462 292 L416 346 L334 342 L264 358 L178 344 L96 352 L68 292 L84 224 L62 174 Z"
         fill="rgba(139, 92, 246, 0.12)"
         stroke="rgba(139, 92, 246, 0.55)"
-        stroke-width="2.5"
+        stroke-width="${2.2 * zoomScale}"
         stroke-linejoin="round"
       />
       <!-- Административные связи к столице -->
-      <g stroke="rgba(255,255,255,0.09)" stroke-dasharray="4 4" stroke-width="1.2">
-        <line x1="274" y1="186" x2="105" y2="325" />
-        <line x1="274" y1="186" x2="108" y2="212" />
-        <line x1="274" y1="186" x2="392" y2="102" />
-        <line x1="274" y1="186" x2="405" y2="315" />
-        <line x1="274" y1="186" x2="395" y2="205" />
+      <g stroke="rgba(148, 163, 184, 0.22)" stroke-dasharray="${4 * zoomScale} ${4 * zoomScale}" stroke-width="${1.2 * zoomScale}">
+        <line x1="278" y1="185" x2="105" y2="325" />
+        <line x1="278" y1="185" x2="108" y2="212" />
+        <line x1="278" y1="185" x2="392" y2="102" />
+        <line x1="278" y1="185" x2="405" y2="315" />
+        <line x1="278" y1="185" x2="395" y2="205" />
       </g>
+      ${minskDistricts}
       ${cityLabels}
       ${pins}
     </svg>

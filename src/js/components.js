@@ -1,33 +1,14 @@
 // ==========================================================================
-// Повторно используемые DOM-компоненты: карточки объектов, тосты и карта
+// Повторно используемые DOM-компоненты: карточки объектов и карта Беларуси
 // ==========================================================================
 
 import {formatPrices, t} from './i18n.js';
 import {openGuestGateModal} from './layout.js';
 import {getState, isGuest, toggleCompare, toggleFavorite} from './state.js';
 import {getBelarusMapSvg, getPropertySvg} from './svg-art.js';
+import {showToast} from './toast.js';
 
-/**
- * Показывает всплывающее уведомление (Toast)
- */
-export function showToast(message, type = 'default') {
-  let container = document.getElementById('toast-container');
-  if (!container) {
-    container = document.createElement('div');
-    container.id = 'toast-container';
-    container.className = 'toast-container';
-    document.body.appendChild(container);
-  }
-  const toast = document.createElement('div');
-  toast.className = `toast ${type === 'success' ? 'toast--success' : ''}`;
-  toast.setAttribute('role', 'status');
-  toast.textContent = message;
-  container.appendChild(toast);
-
-  setTimeout(() => {
-    toast.remove();
-  }, 3200);
-}
+export {showToast};
 
 /**
  * Создаёт DOM-элемент карточки объекта недвижимости <article class="property-card">
@@ -43,7 +24,6 @@ export function createPropertyCard(property, options = {}) {
   card.className = 'property-card';
   card.dataset.propertyId = property.id;
 
-  // Формирование 4 кратких характеристик в зависимости от типа недвижимости
   const s = property.specs;
   const specItems = [];
   if (s.plotArea > 0) {
@@ -130,7 +110,6 @@ export function createPropertyCard(property, options = {}) {
     </div>
   `;
 
-  // Обработка добавления/удаления из избранного (недоступно в режиме гостя)
   const favBtn = card.querySelector('.property-card__fav');
   favBtn?.addEventListener('click', (e) => {
     e.preventDefault();
@@ -151,7 +130,6 @@ export function createPropertyCard(property, options = {}) {
     );
   });
 
-  // Обработка добавления/удаления из сравнения
   const cmpBtn = card.querySelector('.js-compare-btn');
   cmpBtn?.addEventListener('click', (e) => {
     e.preventDefault();
@@ -177,7 +155,8 @@ export function createPropertyCard(property, options = {}) {
 }
 
 /**
- * Открывает модальное окно с интерактивной SVG-картой объектов по Беларуси
+ * Открывает интерактивную карту Беларуси с масштабированием, панорамированием
+ * и карточкой выбранного объекта справа
  */
 export function openBelarusMapModal(properties) {
   let modal = document.getElementById('belarus-map-modal');
@@ -188,62 +167,310 @@ export function openBelarusMapModal(properties) {
     document.body.appendChild(modal);
   }
 
-  const {lang, currency} = getState();
+  const BASE_W = 520;
+  const BASE_H = 400;
   let activeId = properties[0]?.id || null;
+  let activePreset = 'all';
+  let viewBox = {x: 0, y: 0, w: BASE_W, h: BASE_H};
 
-  const renderMapContent = () => {
-    modal.innerHTML = `
-      <div class="modal-dialog modal-dialog--wide" role="dialog" aria-modal="true" aria-label="${t('onMap', lang)}">
-        <div class="modal-dialog__header">
-          <div>
-            <h2 class="modal-dialog__title">${t('onMap', lang)}</h2>
-            <p style="color:var(--text-secondary);font-size:0.9rem;margin-top:4px;">
-              ${lang === 'ru' ? 'Выберите маркер на карте или объект из списка справа' : 'Select a marker on the map or an item from the list'}
-            </p>
-          </div>
-          <button type="button" class="modal-dialog__close js-close-map" aria-label="Close">✕</button>
-        </div>
-        <div class="belarus-map">
-          <div class="belarus-map__canvas">
-            ${getBelarusMapSvg(properties, lang, activeId)}
-          </div>
-          <div class="belarus-map__sidebar">
-            ${properties
-              .map((p) => {
-                const pr = formatPrices(p.priceByn, p.priceUsd, currency);
-                return `
-                  <button type="button" class="belarus-map__item ${String(p.id) === String(activeId) ? 'is-active' : ''}" data-select-id="${p.id}">
-                    <strong>${p.title[lang]}</strong>
-                    <span>${p.city[lang]} · ${pr.primary}</span>
-                    <a href="./property.html?id=${encodeURIComponent(p.id)}" style="color:var(--accent-primary);font-size:0.8rem;font-weight:600;margin-top:4px;">
-                      ${t('detailsBtn', lang)} →
-                    </a>
-                  </button>
-                `;
-              })
-              .join('')}
-          </div>
-        </div>
-      </div>
-    `;
+  const clampViewBox = (vb) => {
+    const w = Math.max(120, Math.min(BASE_W, vb.w));
+    const h = (w * BASE_H) / BASE_W;
+    const x = Math.max(-20, Math.min(BASE_W - w + 20, vb.x));
+    const y = Math.max(-20, Math.min(BASE_H - h + 20, vb.y));
+    return {x, y, w, h};
+  };
 
-    modal.querySelector('.js-close-map')?.addEventListener('click', () => {
-      modal.classList.remove('is-open');
+  const applyPreset = (preset) => {
+    activePreset = preset;
+    if (preset === 'minsk') {
+      viewBox = clampViewBox({x: 208, y: 132, w: 150, h: (150 * BASE_H) / BASE_W});
+    } else if (preset === 'brest') {
+      viewBox = clampViewBox({x: 45, y: 245, w: 185, h: (185 * BASE_H) / BASE_W});
+    } else if (preset === 'grodno') {
+      viewBox = clampViewBox({x: 45, y: 140, w: 185, h: (185 * BASE_H) / BASE_W});
+    } else if (preset === 'vitebsk') {
+      viewBox = clampViewBox({x: 300, y: 35, w: 195, h: (195 * BASE_H) / BASE_W});
+    } else if (preset === 'gomel') {
+      viewBox = clampViewBox({x: 310, y: 230, w: 195, h: (195 * BASE_H) / BASE_W});
+    } else {
+      viewBox = {x: 0, y: 0, w: BASE_W, h: BASE_H};
+    }
+  };
+
+  const zoomAt = (factor, cx = viewBox.x + viewBox.w / 2, cy = viewBox.y + viewBox.h / 2) => {
+    activePreset = 'custom';
+    const nextW = Math.max(120, Math.min(BASE_W, viewBox.w / factor));
+    const nextH = (nextW * BASE_H) / BASE_W;
+    const ratioX = (cx - viewBox.x) / viewBox.w;
+    const ratioY = (cy - viewBox.y) / viewBox.h;
+    viewBox = clampViewBox({
+      x: cx - ratioX * nextW,
+      y: cy - ratioY * nextH,
+      w: nextW,
+      h: nextH,
+    });
+  };
+
+  const renderMapBody = () => {
+    const {lang} = getState();
+    const canvas = modal.querySelector('#belarus-map-canvas');
+    const zoomLabel = modal.querySelector('#belarus-map-zoom');
+    if (!canvas) return;
+
+    canvas.innerHTML = getBelarusMapSvg(properties, lang, activeId, viewBox);
+    if (zoomLabel) {
+      zoomLabel.textContent = `${(BASE_W / viewBox.w).toFixed(1)}×`;
+    }
+
+    modal.querySelectorAll('[data-map-preset]').forEach((btn) => {
+      btn.classList.toggle('is-active', btn.getAttribute('data-map-preset') === activePreset);
     });
 
-    modal.querySelectorAll('[data-map-id], [data-select-id]').forEach((el) => {
-      el.addEventListener('click', (e) => {
-        if (e.target.closest('a')) return;
-        activeId = el.getAttribute('data-map-id') || el.getAttribute('data-select-id');
-        renderMapContent();
+    canvas.querySelectorAll('[data-map-id]').forEach((pin) => {
+      pin.addEventListener('click', (e) => {
+        e.stopPropagation();
+        activeId = pin.getAttribute('data-map-id');
+        renderMapBody();
+        renderSidebar();
       });
     });
   };
+
+  const renderSidebar = () => {
+    const {lang, currency, favorites} = getState();
+    const selectedWrap = modal.querySelector('#belarus-map-selected');
+    const listWrap = modal.querySelector('#belarus-map-list');
+    const selectedProp = properties.find((p) => String(p.id) === String(activeId)) || properties[0];
+
+    if (selectedWrap && selectedProp) {
+      const pr = formatPrices(selectedProp.priceByn, selectedProp.priceUsd, currency);
+      const isSaved = favorites.includes(String(selectedProp.id));
+      const detailUrl = `./property.html?id=${encodeURIComponent(selectedProp.id)}`;
+      const s = selectedProp.specs;
+
+      selectedWrap.innerHTML = `
+        <div class="belarus-map__selected-card">
+          <div class="belarus-map__selected-media">
+            ${getPropertySvg(selectedProp.visualTheme, 'exterior', `map-${selectedProp.id}`)}
+            <span class="property-card__badge property-card__badge--${selectedProp.badge.type}">
+              ${selectedProp.badge[lang]}
+            </span>
+            <button
+              type="button"
+              class="property-card__fav js-map-fav ${isSaved ? 'is-saved' : ''}"
+              aria-label="${isSaved ? t('inFav', lang) : t('addToFav', lang)}"
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="belarus-map__selected-body">
+            <div class="property-card__meta-line">
+              <span>${selectedProp.subcategory[lang]}</span>
+              <span aria-hidden="true">·</span>
+              <span>${s.year}</span>
+            </div>
+            <h3 class="property-card__title">
+              <a href="${detailUrl}">${selectedProp.title[lang]}</a>
+            </h3>
+            <div class="property-card__location">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <span>${selectedProp.city[lang]}</span>
+            </div>
+            <div class="belarus-map__selected-specs">
+              <span>${s.area} ${t('areaUnit', lang)}</span>
+              <span>${s.rooms} ${t('roomsShort', lang)}</span>
+              <span>${s.floor}/${s.floors} ${t('floorLabel', lang)}</span>
+              <span>${s.plotArea > 0 ? `${t('specPlotArea', lang)}: ${s.plotArea} ${t('plotUnit', lang)}` : s.mkadDistance > 0 ? `${t('mkadLabel', lang)} ${s.mkadDistance} ${t('kmUnit', lang)}` : `${s.year}`}</span>
+            </div>
+            <div class="belarus-map__selected-footer">
+              <div>
+                <div class="property-card__price-main">${pr.primary}</div>
+                <div class="property-card__price-sub">${pr.secondary}</div>
+              </div>
+              <a href="${detailUrl}" class="btn btn--primary btn--sm">
+                ${t('detailsBtn', lang)} →
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+
+      selectedWrap.querySelector('.js-map-fav')?.addEventListener('click', () => {
+        if (isGuest()) {
+          openGuestGateModal('favorite');
+          return;
+        }
+        const added = toggleFavorite(selectedProp.id);
+        showToast(
+          added
+            ? lang === 'ru'
+              ? 'Объект добавлен в избранное'
+              : 'Added to saved properties'
+            : lang === 'ru'
+              ? 'Удалено из избранного'
+              : 'Removed from saved',
+          added ? 'success' : 'default'
+        );
+        renderSidebar();
+      });
+    }
+
+    if (listWrap) {
+      listWrap.innerHTML = properties
+        .map((p) => {
+          const pr = formatPrices(p.priceByn, p.priceUsd, currency);
+          return `
+            <button type="button" class="belarus-map__item ${String(p.id) === String(activeId) ? 'is-active' : ''}" data-select-id="${p.id}">
+              <div>
+                <strong>${p.title[lang]}</strong>
+                <span>${p.city[lang]}</span>
+              </div>
+              <span style="font-weight:700;color:var(--text-primary);white-space:nowrap;">${pr.primary}</span>
+            </button>
+          `;
+        })
+        .join('');
+
+      listWrap.querySelectorAll('[data-select-id]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeId = btn.getAttribute('data-select-id');
+          renderMapBody();
+          renderSidebar();
+        });
+      });
+    }
+  };
+
+  const {lang} = getState();
+  modal.innerHTML = `
+    <div class="modal-dialog modal-dialog--map" role="dialog" aria-modal="true" aria-label="${t('onMap', lang)}">
+      <div class="modal-dialog__header">
+        <div>
+          <h2 class="modal-dialog__title">${t('onMap', lang)}</h2>
+          <p style="color:var(--text-secondary);font-size:0.88rem;margin-top:4px;">
+            ${lang === 'ru' ? 'Нажмите на маркер или выберите регион — справа откроется карточка объекта' : 'Click any marker or zoom into a region to preview the property card on the right'}
+          </p>
+        </div>
+        <button type="button" class="modal-dialog__close js-close-map" aria-label="Close">✕</button>
+      </div>
+
+      <div class="belarus-map">
+        <div class="belarus-map__stage">
+          <div class="belarus-map__toolbar">
+            <div class="belarus-map__presets">
+              <button type="button" class="belarus-map__tool-btn is-active" data-map-preset="all">${t('mapAllBelarus', lang)}</button>
+              <button type="button" class="belarus-map__tool-btn" data-map-preset="minsk">${t('mapMinskZoom', lang)}</button>
+              <button type="button" class="belarus-map__tool-btn" data-map-preset="brest">${lang === 'ru' ? 'Брест' : 'Brest'}</button>
+              <button type="button" class="belarus-map__tool-btn" data-map-preset="grodno">${lang === 'ru' ? 'Гродно' : 'Grodno'}</button>
+              <button type="button" class="belarus-map__tool-btn" data-map-preset="vitebsk">${lang === 'ru' ? 'Витебск' : 'Vitebsk'}</button>
+              <button type="button" class="belarus-map__tool-btn" data-map-preset="gomel">${lang === 'ru' ? 'Гомель' : 'Gomel'}</button>
+            </div>
+            <div class="belarus-map__zoom-controls">
+              <button type="button" class="belarus-map__tool-btn belarus-map__tool-btn--icon" id="map-zoom-out" aria-label="Zoom out">−</button>
+              <span class="belarus-map__zoom-badge" id="belarus-map-zoom">1.0×</span>
+              <button type="button" class="belarus-map__tool-btn belarus-map__tool-btn--icon" id="map-zoom-in" aria-label="Zoom in">+</button>
+            </div>
+          </div>
+
+          <div class="belarus-map__canvas" id="belarus-map-canvas"></div>
+          <span class="belarus-map__hint">${t('mapHint', lang)}</span>
+        </div>
+
+        <div class="belarus-map__sidebar">
+          <div id="belarus-map-selected"></div>
+          <div class="belarus-map__list-label">${t('mapObjectsList', lang)} (${properties.length})</div>
+          <div class="belarus-map__list" id="belarus-map-list"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  modal.querySelector('.js-close-map')?.addEventListener('click', () => {
+    modal.classList.remove('is-open');
+  });
+
+  modal.querySelectorAll('[data-map-preset]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      applyPreset(btn.getAttribute('data-map-preset') || 'all');
+      renderMapBody();
+    });
+  });
+
+  modal.querySelector('#map-zoom-in')?.addEventListener('click', () => {
+    zoomAt(1.38);
+    renderMapBody();
+  });
+
+  modal.querySelector('#map-zoom-out')?.addEventListener('click', () => {
+    zoomAt(1 / 1.38);
+    renderMapBody();
+  });
+
+  const canvasEl = modal.querySelector('#belarus-map-canvas');
+  let dragState = null;
+
+  canvasEl?.addEventListener(
+    'wheel',
+    (e) => {
+      e.preventDefault();
+      const rect = canvasEl.getBoundingClientRect();
+      const fx = viewBox.x + ((e.clientX - rect.left) / rect.width) * viewBox.w;
+      const fy = viewBox.y + ((e.clientY - rect.top) / rect.height) * viewBox.h;
+      zoomAt(e.deltaY < 0 ? 1.22 : 1 / 1.22, fx, fy);
+      renderMapBody();
+    },
+    {passive: false}
+  );
+
+  canvasEl?.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('[data-map-id]')) return;
+    dragState = {
+      clientX: e.clientX,
+      clientY: e.clientY,
+      startX: viewBox.x,
+      startY: viewBox.y,
+    };
+    canvasEl.classList.add('is-panning');
+    canvasEl.setPointerCapture?.(e.pointerId);
+  });
+
+  canvasEl?.addEventListener('pointermove', (e) => {
+    if (!dragState) return;
+    const rect = canvasEl.getBoundingClientRect();
+    const dx = ((e.clientX - dragState.clientX) / rect.width) * viewBox.w;
+    const dy = ((e.clientY - dragState.clientY) / rect.height) * viewBox.h;
+    activePreset = 'custom';
+    viewBox = clampViewBox({
+      x: dragState.startX - dx,
+      y: dragState.startY - dy,
+      w: viewBox.w,
+      h: viewBox.h,
+    });
+    const svg = canvasEl.querySelector('svg');
+    if (svg) {
+      svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+    }
+  });
+
+  const stopPan = () => {
+    if (!dragState) return;
+    dragState = null;
+    canvasEl?.classList.remove('is-panning');
+  };
+  canvasEl?.addEventListener('pointerup', stopPan);
+  canvasEl?.addEventListener('pointercancel', stopPan);
 
   modal.onclick = (e) => {
     if (e.target === modal) modal.classList.remove('is-open');
   };
 
-  renderMapContent();
+  renderMapBody();
+  renderSidebar();
   modal.classList.add('is-open');
 }

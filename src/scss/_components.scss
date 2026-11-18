@@ -874,11 +874,15 @@
 }
 
 // --------------------------------------------------------------------------
-// Интерактивная SVG-карта Беларуси
+// Интерактивная SVG-карта Беларуси с масштабированием и карточкой объекта
 // --------------------------------------------------------------------------
+.modal-dialog--map {
+  max-width: 1020px;
+}
+
 .belarus-map {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  grid-template-columns: 1.38fr 1fr;
   gap: 20px;
   align-items: start;
 
@@ -886,57 +890,198 @@
     grid-template-columns: 1fr;
   }
 
+  &__stage {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  &__presets,
+  &__zoom-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__tool-btn {
+    min-height: 34px;
+    padding: 4px 11px;
+    border-radius: $radius-xs;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface-elevated);
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: border-color $transition-fast, background-color $transition-fast, color $transition-fast;
+
+    &:hover,
+    &.is-active {
+      border-color: var(--accent-primary);
+      background: var(--accent-primary-soft);
+      color: var(--text-primary);
+    }
+
+    &--icon {
+      width: 34px;
+      padding: 0;
+      font-size: 1rem;
+      @include flex-center(0);
+    }
+  }
+
+  &__zoom-badge {
+    min-width: 46px;
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    @include tabular-numbers;
+  }
+
   &__canvas {
+    position: relative;
     background: var(--bg-input);
     border: 1px solid var(--border-subtle);
     border-radius: $radius-md;
-    padding: 16px;
+    padding: 10px;
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+
+    &.is-panning {
+      cursor: grabbing;
+    }
 
     svg {
       width: 100%;
       height: auto;
+      display: block;
     }
   }
 
-  &__sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 380px;
-    overflow-y: auto;
+  &__hint {
+    font-size: 0.76rem;
+    color: var(--text-muted);
   }
 
   &__pin {
     cursor: pointer;
-    transition: transform $transition-fast;
+
+    circle {
+      transition: fill $transition-fast, stroke-width $transition-fast;
+    }
 
     &:hover circle {
       fill: var(--accent-cyan);
     }
   }
 
-  &__item {
-    padding: 12px 14px;
-    border-radius: $radius-sm;
-    border: 1px solid var(--border-subtle);
-    background: var(--bg-surface-elevated);
+  &__sidebar {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 12px;
+  }
+
+  &__selected-card {
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-accent);
+    border-radius: $radius-md;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__selected-media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--bg-input);
+    overflow: hidden;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__selected-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__selected-specs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-subtle);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    @include tabular-numbers;
+  }
+
+  &__selected-footer {
+    padding-top: 10px;
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  &__list-label {
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 175px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  &__item {
+    padding: 9px 12px;
+    border-radius: $radius-xs;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-input);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
     text-align: left;
-    transition: border-color $transition-fast;
+    transition: border-color $transition-fast, background-color $transition-fast;
 
     &:hover,
     &.is-active {
       border-color: var(--accent-primary);
+      background: var(--accent-primary-soft);
     }
 
     strong {
-      font-size: 0.88rem;
+      font-size: 0.82rem;
+      display: block;
     }
 
     span {
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       color: var(--text-secondary);
     }
   }

@@ -123,8 +123,9 @@
   &__input-row {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     min-height: 28px;
+    min-width: 0;
 
     input,
     select {
@@ -136,6 +137,13 @@
       font-size: 0.875rem;
       font-weight: 500;
       min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &::placeholder {
+        color: var(--text-muted);
+      }
     }
 
     select option {
@@ -158,6 +166,10 @@
       color: var(--text-primary);
       font-size: 0.875rem;
       @include tabular-numbers;
+
+      &::placeholder {
+        color: var(--text-muted);
+      }
     }
 
     span {
@@ -171,6 +183,8 @@
     font-weight: 600;
     white-space: nowrap;
     flex-shrink: 0;
+    padding-left: 10px;
+    border-left: 1px solid var(--border-subtle);
 
     &:hover {
       text-decoration: underline;
@@ -1219,11 +1233,18 @@
   input {
     border: none;
     background: transparent;
+    color: var(--text-primary);
+    font-size: 0.9rem;
     padding: 10px 14px;
     min-height: 44px;
     width: 100%;
+    min-width: 0;
     outline: none;
     @include tabular-numbers;
+
+    &::placeholder {
+      color: var(--text-muted);
+    }
   }
 }
 

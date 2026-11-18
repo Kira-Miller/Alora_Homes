@@ -24,7 +24,7 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>villa-pine</visualTheme>
-    <mapCoords x="255" y="180" />
+    <mapCoords x="244" y="168" />
     <description
       ru="Современная вилла с панорамным остеклением в престижном посёлке Ратомка в 7 км от МКАД. Архитектура сочетает натуральный термобрус, архитектурный бетон и просторные террасы с видом на хвойный массив."
       en="Modern villa with floor-to-ceiling glazing in prestigious Ratomka village, 7 km from Minsk Ring Road. Combines natural timber, architectural concrete, and wide terraces overlooking pine forest." />
@@ -56,7 +56,7 @@
       <newbuild>true</newbuild>
     </specs>
     <visualTheme>minsk-tower</visualTheme>
-    <mapCoords x="275" y="190" />
+    <mapCoords x="282" y="186" />
     <description
       ru="Видовые трёхкомнатные апартаменты в новом доме бизнес-класса на проспекте Независимости. Высокие потолки 3,1 м, дизайнерская отделка, консьерж-сервис и подземный паркинг."
       en="Three-room panoramic apartment in a new business-class residence on Independence Avenue. 3.1 m ceilings, designer finish, concierge service, and underground parking." />
@@ -88,7 +88,7 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>townhouse-dusk</visualTheme>
-    <mapCoords x="285" y="205" />
+    <mapCoords x="292" y="208" />
     <description
       ru="Двухуровневый таунхаус в охраняемом клубном квартале. Собственный благоустроенный участок, зона барбекю, два парковочных места и быстрый выезд к центру города."
       en="Two-level townhouse in a gated club quarter. Private landscaped yard, BBQ patio, two parking bays, and quick access to downtown Minsk." />
@@ -120,7 +120,7 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>forest-cottage</visualTheme>
-    <mapCoords x="305" y="168" />
+    <mapCoords x="316" y="158" />
     <description
       ru="Просторный семейный коттедж в экологически чистом районе Раубичи. Большая гостиная со вторым светом и камином, банный комплекс и собственный выход к лесному массиву."
       en="Spacious family cottage in eco-friendly Raubichi. Double-height living room with fireplace, private sauna pavilion, and direct forest access." />
@@ -152,7 +152,7 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>glass-office</visualTheme>
-    <mapCoords x="262" y="188" />
+    <mapCoords x="258" y="192" />
     <description
       ru="Современное офисное пространство формата open-space с переговорными комнатами в бизнес-центре класса А. Высокоскоростной интернет, система приточно-вытяжной вентиляции и шаговая доступность до метро."
       en="Modern open-space office suite with meeting rooms in a Class A business center. Fiber optic internet, HVAC climate system, and walking distance to metro." />
@@ -184,7 +184,7 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>waterfront-loft</visualTheme>
-    <mapCoords x="270" y="176" />
+    <mapCoords x="268" y="172" />
     <description
       ru="Стильный дизайнерский лофт рядом с Комсомольским озером и парком Победы. Панорамные окна, авторская кухня, встроенная техника и продуманные сценарии освещения."
       en="Stylish designer loft near Komsomolskoye Lake and Victory Park. Panoramic windows, bespoke kitchen, built-in appliances, and layered ambient lighting." />
@@ -216,7 +216,7 @@
       <newbuild>true</newbuild>
     </specs>
     <visualTheme>minsk-tower</visualTheme>
-    <mapCoords x="278" y="185" />
+    <mapCoords x="275" y="184" />
     <description
       ru="Просторная четырёхкомнатная резиденция в историческом центре Минска у набережной реки Свислочь. Две мастер-спальни, панорамная лоджия и клубный уровень приватности."
       en="Spacious four-room residence in central Minsk along the Svisloch embankment. Two master suites, panoramic loggia, and boutique privacy." />
@@ -340,7 +340,7 @@
       <newbuild>true</newbuild>
     </specs>
     <visualTheme>townhouse-dusk</visualTheme>
-    <mapCoords x="292" y="172" />
+    <mapCoords x="298" y="170" />
     <description
       ru="Двухуровневый пентхаус в современном квартале Новая Боровая с собственной эксплуатируемой террасой 32 м², безбарьерным двором без машин и развитой инфраструктурой."
       en="Duplex penthouse in Novaya Borovaya with a private 32 sq.m rooftop terrace, car-free courtyard, and modern neighborhood amenities." />
