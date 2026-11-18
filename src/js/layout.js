@@ -61,6 +61,20 @@ export function initLayout(activePage = 'home') {
       renderHeader(currentActivePage);
       applyStaticTranslations(getState().lang);
     });
+    window.addEventListener(
+      'resize',
+      () => {
+        if (window.innerWidth >= 992) {
+          const drawer = document.getElementById('mobile-drawer');
+          const burger = document.querySelector('.site-header__burger');
+          if (drawer?.classList.contains('is-open')) {
+            drawer.classList.remove('is-open');
+            burger?.setAttribute('aria-expanded', 'false');
+          }
+        }
+      },
+      {passive: true}
+    );
   }
 
   subscribe(() => {
@@ -166,13 +180,13 @@ function renderHeader(activePage) {
           <span>${userLabel}</span>
         </button>
 
-        <button type="button" class="site-header__burger js-toggle-drawer" aria-label="Menu" aria-expanded="false" style="display:inline-flex;align-items:center;gap:6px;padding:0 12px;width:auto;">
+        <button type="button" class="site-header__burger js-toggle-drawer" aria-label="Menu" aria-expanded="false">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <line x1="3" y1="6" x2="21" y2="6"/>
             <line x1="3" y1="12" x2="21" y2="12"/>
             <line x1="3" y1="18" x2="21" y2="18"/>
           </svg>
-          <span style="font-size:0.8125rem;font-weight:600;">Меню</span>
+          <span>Меню</span>
         </button>
       </div>
     </div>
@@ -208,6 +222,10 @@ function renderHeader(activePage) {
         <button type="button" class="control-chip js-toggle-theme">
           ${theme === 'dark' ? t('themeDark', lang) : t('themeLight', lang)}
         </button>
+        <button type="button" class="control-chip js-open-auth" style="width:100%;justify-content:center;margin-top:4px;">
+          ${getIconSvg('user', 15)}
+          <span>${isRegistered ? user.name : t('authSignIn', lang) || 'Войти в кабинет'}</span>
+        </button>
       </div>
     </div>
   `;
@@ -221,10 +239,17 @@ function renderHeader(activePage) {
   headerEl.querySelectorAll('.js-toggle-theme').forEach((btn) =>
     btn.addEventListener('click', () => toggleTheme())
   );
-  headerEl.querySelector('.js-open-auth')?.addEventListener('click', () => openAuthModal());
-
   const burger = headerEl.querySelector('.js-toggle-drawer');
   const drawer = headerEl.querySelector('#mobile-drawer');
+
+  headerEl.querySelectorAll('.js-open-auth').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      drawer?.classList.remove('is-open');
+      burger?.setAttribute('aria-expanded', 'false');
+      openAuthModal();
+    })
+  );
+
   burger?.addEventListener('click', () => {
     const opened = drawer?.classList.toggle('is-open');
     burger.setAttribute('aria-expanded', String(Boolean(opened)));

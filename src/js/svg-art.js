@@ -236,25 +236,26 @@ export function getBelarusMapSvg(
   const isMinskZoom = viewBox.w <= 280;
 
   const cities = [
-    {name: lang === 'ru' ? 'Минск' : 'Minsk', x: 278, y: 185},
-    {name: lang === 'ru' ? 'Брест' : 'Brest', x: 105, y: 325},
-    {name: lang === 'ru' ? 'Гродно' : 'Grodno', x: 108, y: 212},
-    {name: lang === 'ru' ? 'Витебск' : 'Vitebsk', x: 392, y: 102},
-    {name: lang === 'ru' ? 'Гомель' : 'Gomel', x: 405, y: 315},
-    {name: lang === 'ru' ? 'Могилёв' : 'Mogilev', x: 395, y: 205},
+    {id: '2', name: lang === 'ru' ? 'Минск' : 'Minsk', x: 258, y: 184},
+    {id: '9', name: lang === 'ru' ? 'Брест' : 'Brest', x: 90, y: 305},
+    {id: '8', name: lang === 'ru' ? 'Гродно' : 'Grodno', x: 96, y: 202},
+    {id: '10', name: lang === 'ru' ? 'Витебск' : 'Vitebsk', x: 365, y: 104},
+    {id: '12', name: lang === 'ru' ? 'Гомель' : 'Gomel', x: 398, y: 285},
+    {id: '16', name: lang === 'ru' ? 'Могилёв' : 'Mogilev', x: 371, y: 188},
   ];
 
   const towns = [
-    {name: lang === 'ru' ? 'Слуцк' : 'Slutsk', x: 266, y: 246},
-    {name: lang === 'ru' ? 'Волковыск' : 'Volkovysk', x: 128, y: 248},
-    {name: lang === 'ru' ? 'Смиловичи' : 'Smilovichi', x: 318, y: 200},
-    {name: lang === 'ru' ? 'Пинск' : 'Pinsk', x: 205, y: 330},
-    {name: lang === 'ru' ? 'Полоцк' : 'Polotsk', x: 332, y: 88},
-    {name: lang === 'ru' ? 'Барановичи' : 'Baranavichy', x: 178, y: 255},
-    {name: lang === 'ru' ? 'Борисов' : 'Barysau', x: 326, y: 168},
-    {name: lang === 'ru' ? 'Бобруйск' : 'Babruysk', x: 352, y: 255},
-    {name: lang === 'ru' ? 'Лида' : 'Lida', x: 156, y: 196},
-    {name: lang === 'ru' ? 'Жлобин' : 'Zhlobin', x: 375, y: 280},
+    {id: '13', name: lang === 'ru' ? 'Слуцк' : 'Slutsk', x: 253, y: 244},
+    {id: '14', name: lang === 'ru' ? 'Волковыск' : 'Volkovysk', x: 122, y: 236},
+    {id: '15', name: lang === 'ru' ? 'Смиловичи' : 'Smilovichi', x: 278, y: 198},
+    {id: '19', name: lang === 'ru' ? 'Барановичи' : 'Baranavichy', x: 188, y: 238},
+    {id: '22', name: lang === 'ru' ? 'Лида' : 'Lida', x: 158, y: 188},
+    {id: '17', name: lang === 'ru' ? 'Пинск' : 'Pinsk', x: 192, y: 304},
+    {id: '18', name: lang === 'ru' ? 'Полоцк' : 'Polotsk', x: 305, y: 85},
+    {id: '20', name: lang === 'ru' ? 'Борисов' : 'Barysau', x: 293, y: 166},
+    {id: '21', name: lang === 'ru' ? 'Бобруйск' : 'Babruysk', x: 324, y: 237},
+    {id: '23', name: lang === 'ru' ? 'Новополоцк' : 'Novopolotsk', x: 300, y: 80},
+    {id: '24', name: lang === 'ru' ? 'Жлобин' : 'Zhlobin', x: 358, y: 253},
   ];
 
   const minskDistricts = isMinskZoom
@@ -262,25 +263,25 @@ export function getBelarusMapSvg(
       <g class="belarus-map__minsk-layer">
         <!-- Кольцо МКАД -->
         <ellipse
-          cx="275" cy="186" rx="26" ry="20"
-          fill="rgba(34, 211, 238, 0.06)"
-          stroke="rgba(34, 211, 238, 0.45)"
+          cx="258" cy="184" rx="20" ry="16"
+          fill="rgba(34, 211, 238, 0.07)"
+          stroke="rgba(34, 211, 238, 0.55)"
           stroke-width="${1.2 * zoomScale}"
           stroke-dasharray="${3 * zoomScale} ${2.5 * zoomScale}"
         />
         <!-- Река Свислочь -->
         <path
-          d="M240 162 Q265 178 276 186 T304 218"
+          d="M230 162 Q250 178 258 184 T280 212"
           fill="none"
-          stroke="rgba(56, 189, 248, 0.42)"
+          stroke="rgba(56, 189, 248, 0.45)"
           stroke-width="${1.8 * zoomScale}"
           stroke-linecap="round"
         />
-        <text x="275" y="182" text-anchor="middle" fill="#cbd5e1" font-size="${7.5 * zoomScale}" font-weight="700">МКАД / Центр</text>
-        <text x="244" y="160" text-anchor="middle" fill="#94a3b8" font-size="${6.5 * zoomScale}">${lang === 'ru' ? 'Ратомка' : 'Ratomka'}</text>
-        <text x="316" y="150" text-anchor="middle" fill="#94a3b8" font-size="${6.5 * zoomScale}">${lang === 'ru' ? 'Раубичи' : 'Raubichi'}</text>
-        <text x="298" y="163" text-anchor="middle" fill="#94a3b8" font-size="${6.5 * zoomScale}">${lang === 'ru' ? 'Новая Боровая' : 'Novaya Borovaya'}</text>
-        <text x="292" y="217" text-anchor="middle" fill="#94a3b8" font-size="${6.5 * zoomScale}">${lang === 'ru' ? 'Серебрянка' : 'Serebryanka'}</text>
+        <text x="258" y="180" text-anchor="middle" fill="#cbd5e1" font-size="${7.2 * zoomScale}" font-weight="700">МКАД / Центр</text>
+        <text x="238" y="174" text-anchor="middle" fill="#94a3b8" font-size="${6.2 * zoomScale}">${lang === 'ru' ? 'Ратомка' : 'Ratomka'}</text>
+        <text x="272" y="162" text-anchor="middle" fill="#94a3b8" font-size="${6.2 * zoomScale}">${lang === 'ru' ? 'Раубичи' : 'Raubichi'}</text>
+        <text x="278" y="176" text-anchor="middle" fill="#94a3b8" font-size="${6.2 * zoomScale}">${lang === 'ru' ? 'Новая Боровая' : 'Novaya Borovaya'}</text>
+        <text x="268" y="208" text-anchor="middle" fill="#94a3b8" font-size="${6.2 * zoomScale}">${lang === 'ru' ? 'Серебрянка' : 'Serebryanka'}</text>
       </g>
     `
     : '';
@@ -289,12 +290,14 @@ export function getBelarusMapSvg(
     .map((p) => {
       const isSelected = String(p.id) === String(activeId);
       const r = (isSelected ? 9.5 : 6.5) * zoomScale;
-      const strokeW = 2 * zoomScale;
+      const strokeW = (isSelected ? 2.5 : 1.8) * zoomScale;
       const pulse = isSelected
-        ? `<circle r="${15 * zoomScale}" fill="rgba(34, 211, 238, 0.24)" stroke="rgba(34, 211, 238, 0.65)" stroke-width="${1 * zoomScale}" />`
+        ? `<circle r="${18 * zoomScale}" fill="rgba(34, 211, 238, 0.28)" stroke="rgba(34, 211, 238, 0.75)" stroke-width="${1.2 * zoomScale}" />`
         : '';
       return `
-        <g class="belarus-map__pin" data-map-id="${p.id}" transform="translate(${p.mapCoords.x}, ${p.mapCoords.y})">
+        <g class="belarus-map__pin ${isSelected ? 'is-selected' : ''}" data-map-id="${p.id}" transform="translate(${p.mapCoords.x}, ${p.mapCoords.y})" role="button" tabindex="0" style="cursor:pointer;" aria-label="${p.city[lang] || ''}">
+          <!-- Увеличенная невидимая зона касания (hit area) -->
+          <circle r="${18 * zoomScale}" fill="transparent" />
           ${pulse}
           <circle r="${r}" fill="${isSelected ? '#22d3ee' : '#8b5cf6'}" stroke="#ffffff" stroke-width="${strokeW}" />
         </g>
@@ -305,7 +308,10 @@ export function getBelarusMapSvg(
   const cityLabels = cities
     .map(
       (c) => `
-      <text x="${c.x}" y="${c.y - 13 * zoomScale}" text-anchor="middle" fill="#a1a4b8" font-size="${11 * zoomScale}" font-weight="600">${c.name}</text>
+      <g class="belarus-map__text-label" data-map-id="${c.id}" role="button" tabindex="0" style="cursor:pointer;">
+        <rect x="${c.x - 30 * zoomScale}" y="${c.y - 24 * zoomScale}" width="${60 * zoomScale}" height="${16 * zoomScale}" rx="${4 * zoomScale}" fill="rgba(15, 23, 42, 0.8)" stroke="rgba(148, 163, 184, 0.4)" stroke-width="${1 * zoomScale}" />
+        <text x="${c.x}" y="${c.y - 12.5 * zoomScale}" text-anchor="middle" fill="#f1f5f9" font-size="${10.5 * zoomScale}" font-weight="700">${c.name}</text>
+      </g>
     `
     )
     .join('');
@@ -313,28 +319,31 @@ export function getBelarusMapSvg(
   const townLabels = towns
     .map(
       (tItem) => `
-      <text x="${tItem.x}" y="${tItem.y - 11 * zoomScale}" text-anchor="middle" fill="#8b95ab" font-size="${8.5 * zoomScale}" font-weight="500">${tItem.name}</text>
+      <g class="belarus-map__text-label" data-map-id="${tItem.id}" role="button" tabindex="0" style="cursor:pointer;">
+        <rect x="${tItem.x - 32 * zoomScale}" y="${tItem.y + 6 * zoomScale}" width="${64 * zoomScale}" height="${15 * zoomScale}" rx="${3.5 * zoomScale}" fill="rgba(15, 23, 42, 0.75)" stroke="rgba(139, 92, 246, 0.35)" stroke-width="${0.8 * zoomScale}" />
+        <text x="${tItem.x}" y="${tItem.y + 17 * zoomScale}" text-anchor="middle" fill="#cbd5e1" font-size="${7.8 * zoomScale}" font-weight="600">${tItem.name}</text>
+      </g>
     `
     )
     .join('');
 
   return `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}" role="img" aria-label="Map of Belarus">
-      <!-- Стилизованный контур Республики Беларусь -->
+      <!-- Сглаженный географически точный контур Республики Беларусь -->
       <path
-        d="M128 118 L195 92 L265 62 L352 44 L428 78 L468 148 L452 222 L462 292 L416 346 L334 342 L264 358 L178 344 L96 352 L68 292 L84 224 L62 174 Z"
+        d="M 280 40 C 296 40, 319 51, 336 56 C 353 61, 371 64, 382 70 C 394 76, 402 82, 405 92 C 408 102, 395 119, 398 132 C 401 145, 415 159, 425 172 C 435 185, 448 200, 456 210 C 465 220, 476 223, 476 232 C 476 241, 462 253, 455 262 C 448 271, 446 274, 436 288 C 426 302, 410 338, 395 346 C 380 354, 365 337, 348 334 C 331 331, 311 326, 293 326 C 275 326, 256 334, 238 334 C 221 334, 207 323, 188 324 C 169 325, 143 342, 124 340 C 105 338, 83 324, 74 314 C 65 304, 66 290, 68 278 C 70 266, 86 256, 88 244 C 90 232, 72 215, 78 204 C 84 193, 107 187, 122 178 C 137 169, 155 162, 168 152 C 181 142, 193 132, 202 120 C 211 108, 214 93, 220 82 C 226 71, 228 63, 238 56 C 248 49, 264 40, 280 40 Z"
         fill="rgba(139, 92, 246, 0.12)"
-        stroke="rgba(139, 92, 246, 0.55)"
-        stroke-width="${2.2 * zoomScale}"
+        stroke="rgba(139, 92, 246, 0.65)"
+        stroke-width="${2.4 * zoomScale}"
         stroke-linejoin="round"
       />
       <!-- Административные связи к столице -->
       <g stroke="rgba(148, 163, 184, 0.22)" stroke-dasharray="${4 * zoomScale} ${4 * zoomScale}" stroke-width="${1.2 * zoomScale}">
-        <line x1="278" y1="185" x2="105" y2="325" />
-        <line x1="278" y1="185" x2="108" y2="212" />
-        <line x1="278" y1="185" x2="392" y2="102" />
-        <line x1="278" y1="185" x2="405" y2="315" />
-        <line x1="278" y1="185" x2="395" y2="205" />
+        <line x1="258" y1="184" x2="90" y2="305" />
+        <line x1="258" y1="184" x2="96" y2="202" />
+        <line x1="258" y1="184" x2="365" y2="104" />
+        <line x1="258" y1="184" x2="398" y2="285" />
+        <line x1="258" y1="184" x2="371" y2="188" />
       </g>
       ${minskDistricts}
       ${cityLabels}

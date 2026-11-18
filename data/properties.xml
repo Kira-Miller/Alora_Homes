@@ -27,7 +27,7 @@
     <image>./assets/images/prop-1.jpg</image>
     <interiorImage>./assets/images/prop-1-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-1-terrace.jpg</terraceImage>
-    <mapCoords x="244" y="168" />
+    <mapCoords x="245" y="182" />
     <description
       ru="Современная вилла с панорамным остеклением в престижном посёлке Ратомка в 7 км от МКАД. Архитектура сочетает натуральный термобрус, архитектурный бетон и просторные террасы с видом на хвойный массив."
       en="Modern villa with floor-to-ceiling glazing in prestigious Ratomka village, 7 km from Minsk Ring Road. Combines natural timber, architectural concrete, and wide terraces overlooking pine forest." />
@@ -62,7 +62,7 @@
     <image>./assets/images/prop-2.jpg</image>
     <interiorImage>./assets/images/prop-2-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-2-terrace.jpg</terraceImage>
-    <mapCoords x="282" y="186" />
+    <mapCoords x="258" y="184" />
     <description
       ru="Видовые трёхкомнатные апартаменты в новом доме бизнес-класса на проспекте Независимости. Высокие потолки 3,1 м, дизайнерская отделка, консьерж-сервис и подземный паркинг."
       en="Three-room panoramic apartment in a new business-class residence on Independence Avenue. 3.1 m ceilings, designer finish, concierge service, and underground parking." />
@@ -97,7 +97,7 @@
     <image>./assets/images/prop-3.jpg</image>
     <interiorImage>./assets/images/prop-3-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-3-terrace.jpg</terraceImage>
-    <mapCoords x="292" y="208" />
+    <mapCoords x="262" y="194" />
     <description
       ru="Двухуровневый таунхаус в охраняемом клубном квартале. Собственный благоустроенный участок, зона барбекю, два парковочных места и быстрый выезд к центру города."
       en="Two-level townhouse in a gated club quarter. Private landscaped yard, BBQ patio, two parking bays, and quick access to downtown Minsk." />
@@ -132,7 +132,7 @@
     <image>./assets/images/prop-4.jpg</image>
     <interiorImage>./assets/images/prop-4-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-4-terrace.jpg</terraceImage>
-    <mapCoords x="316" y="158" />
+    <mapCoords x="264" y="172" />
     <description
       ru="Просторный семейный коттедж в экологически чистом районе Раубичи. Большая гостиная со вторым светом и камином, банный комплекс и собственный выход к лесному массиву."
       en="Spacious family cottage in eco-friendly Raubichi. Double-height living room with fireplace, private sauna pavilion, and direct forest access." />
@@ -167,7 +167,7 @@
     <image>./assets/images/prop-5.jpg</image>
     <interiorImage>./assets/images/prop-5-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-5-terrace.jpg</terraceImage>
-    <mapCoords x="258" y="192" />
+    <mapCoords x="250" y="186" />
     <description
       ru="Современное офисное пространство формата open-space с переговорными комнатами в бизнес-центре класса А. Высокоскоростной интернет, система приточно-вытяжной вентиляции и шаговая доступность до метро."
       en="Modern open-space office suite with meeting rooms in a Class A business center. Fiber optic internet, HVAC climate system, and walking distance to metro." />
@@ -202,7 +202,7 @@
     <image>./assets/images/prop-6.jpg</image>
     <interiorImage>./assets/images/prop-6-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-6-terrace.jpg</terraceImage>
-    <mapCoords x="268" y="172" />
+    <mapCoords x="252" y="178" />
     <description
       ru="Стильный дизайнерский лофт рядом с Комсомольским озером и парком Победы. Панорамные окна, авторская кухня, встроенная техника и продуманные сценарии освещения."
       en="Stylish designer loft near Komsomolskoye Lake and Victory Park. Panoramic windows, bespoke kitchen, built-in appliances, and layered ambient lighting." />
@@ -237,7 +237,7 @@
     <image>./assets/images/prop-7.jpg</image>
     <interiorImage>./assets/images/prop-7-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-7-terrace.jpg</terraceImage>
-    <mapCoords x="275" y="184" />
+    <mapCoords x="255" y="184" />
     <description
       ru="Просторная четырёхкомнатная резиденция в историческом центре Минска у набережной реки Свислочь. Две мастер-спальни, панорамная лоджия и клубный уровень приватности."
       en="Spacious four-room residence in central Minsk along the Svisloch embankment. Two master suites, panoramic loggia, and boutique privacy." />
@@ -271,7 +271,7 @@
     <image>./assets/images/prop-8.jpg</image>
     <interiorImage>./assets/images/prop-8-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-8-terrace.jpg</terraceImage>
-    <mapCoords x="108" y="212" />
+    <mapCoords x="96" y="202" />
     <description
       ru="Энергоэффективный двухэтажный коттедж в зелёном районе Гродно. Газовое отопление, центральное водоснабжение, просторная крытая терраса и ландшафтный дизайн участка."
       en="Energy-efficient two-story cottage in a leafy Grodno neighborhood. Gas heating, municipal water, covered terrace, and landscaped garden." />
@@ -305,7 +305,7 @@
     <image>./assets/images/prop-9.jpg</image>
     <interiorImage>./assets/images/prop-9-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-9-terrace.jpg</terraceImage>
-    <mapCoords x="105" y="325" />
+    <mapCoords x="90" y="305" />
     <description
       ru="Светлая трёхкомнатная квартира на главной пешеходной улице Бреста. Кирпичный дом, потолки 3,2 м, свежий скандинавский ремонт и тихий закрытый двор."
       en="Bright three-room apartment on Brest's signature pedestrian avenue. Brick building, 3.2 m ceilings, fresh Scandinavian interior, and quiet courtyard." />
@@ -339,7 +339,7 @@
     <image>./assets/images/prop-10.jpg</image>
     <interiorImage>./assets/images/prop-10-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-10-terrace.jpg</terraceImage>
-    <mapCoords x="392" y="102" />
+    <mapCoords x="365" y="104" />
     <description
       ru="Помещение первого этажа с отдельным входом и витринным остеклением на оживлённой магистрали Витебска. Идеально подходит под клинику, шоурум или представительство компании."
       en="Ground-floor commercial space with private street entrance and showcase windows on a busy Vitebsk avenue. Ideal for a clinic, showroom, or flagship office." />
@@ -373,7 +373,7 @@
     <image>./assets/images/prop-11.jpg</image>
     <interiorImage>./assets/images/prop-11-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-11-terrace.jpg</terraceImage>
-    <mapCoords x="298" y="170" />
+    <mapCoords x="265" y="178" />
     <description
       ru="Двухуровневый пентхаус в современном квартале Новая Боровая с собственной эксплуатируемой террасой 32 м², безбарьерным двором без машин и развитой инфраструктурой."
       en="Duplex penthouse in Novaya Borovaya with a private 32 sq.m rooftop terrace, car-free courtyard, and modern neighborhood amenities." />
@@ -407,7 +407,7 @@
     <image>./assets/images/prop-12.jpg</image>
     <interiorImage>./assets/images/prop-12-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-12-terrace.jpg</terraceImage>
-    <mapCoords x="405" y="315" />
+    <mapCoords x="398" y="285" />
     <description
       ru="Уютный загородный дом в курортной зоне Чёнки под Гомелем. Благоустроенный участок с фруктовым садом, панорамная веранда и быстрая дорога до центра города."
       en="Cozy country residence in the Chyonki resort area near Gomel. Landscaped orchard grounds, glass veranda, and quick commute to city center." />
@@ -441,7 +441,7 @@
     <image>./assets/images/prop-13.jpg</image>
     <interiorImage>./assets/images/prop-13-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-13-terrace.jpg</terraceImage>
-    <mapCoords x="266" y="246" />
+    <mapCoords x="253" y="244" />
     <description
       ru="Просторная трёхкомнатная квартира в благоустроенном малоэтажном квартале в центре Слуцка. Скандинавский ремонт, дубовый паркет, застеклённая тёплая лоджия с видом на зелёный сквер."
       en="Spacious three-room apartment in a well-kept low-rise quarter in central Slutsk. Scandinavian finish, oak parquet floors, and a glazed loggia overlooking a leafy town park." />
@@ -475,7 +475,7 @@
     <image>./assets/images/prop-14.jpg</image>
     <interiorImage>./assets/images/prop-14-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-14-terrace.jpg</terraceImage>
-    <mapCoords x="128" y="248" />
+    <mapCoords x="122" y="236" />
     <description
       ru="Двухэтажный кирпичный коттедж в тихом жилом секторе Волковыска. Каминная гостиная с деревянными балками, ухоженный участок 12 соток с крытой перголой и садом гортензий."
       en="Two-story brick family cottage in a peaceful residential quarter of Volkovysk. Exposed-beam fireplace lounge, landscaped 12-are garden with covered wooden pergola." />
@@ -509,7 +509,7 @@
     <image>./assets/images/prop-15.jpg</image>
     <interiorImage>./assets/images/prop-15-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-15-terrace.jpg</terraceImage>
-    <mapCoords x="306" y="200" />
+    <mapCoords x="278" y="198" />
     <description
       ru="Энергоэффективный скандинавский барнхаус 2025 года в 24 км от МКАД в Смиловичах. Второй свет с остеклением до конька, подвесной камин, просторная деревянная терраса с костровой чашей прямо у леса."
       en="2025 Nordic barnhouse just 24 km from Minsk Ring Road in Smilovichi. Vaulted gable windows, suspended wood stove, and spacious timber firepit deck bordering tall pines." />
@@ -543,7 +543,7 @@
     <image>./assets/images/prop-16.jpg</image>
     <interiorImage>./assets/images/prop-16-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-16-terrace.jpg</terraceImage>
-    <mapCoords x="395" y="205" />
+    <mapCoords x="371" y="188" />
     <description
       ru="Видовая трёхкомнатная квартира на 10 этаже современного жилого комплекса у набережной Днепра в Могилёве. Панорамные окна в пол и открытая видовая лоджия со стеклянным ограждением."
       en="High-floor three-room residence on the Dnieper embankment in Mogilev. Floor-to-ceiling river sunset views and an open glass-railed terrace balcony." />
@@ -577,7 +577,7 @@
     <image>./assets/images/prop-17.jpg</image>
     <interiorImage>./assets/images/prop-17-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-17-terrace.jpg</terraceImage>
-    <mapCoords x="205" y="330" />
+    <mapCoords x="192" y="304" />
     <description
       ru="Отдельно стоящее коммерческое здание в историческом центре Пинска с витринными окнами, современным шоурумом и собственным закрытым паркингом во внутреннем дворе."
       en="Standalone commercial building in central Pinsk featuring showcase street glazing, modern terrazzo reception lobby, and private gated courtyard parking." />
@@ -611,7 +611,7 @@
     <image>./assets/images/prop-18.jpg</image>
     <interiorImage>./assets/images/prop-18-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-18-terrace.jpg</terraceImage>
-    <mapCoords x="332" y="88" />
+    <mapCoords x="305" y="85" />
     <description
       ru="Двухуровневый таунхаус с видом на излучину Западной Двины и историческую панораму Полоцка. Воздушная дубовая лестница, панорамное остекление и приватная деревянная терраса."
       en="Two-level townhouse overlooking the Western Dvina bend and historic Polotsk skyline. Floating oak staircase, sliding glass walls, and private sunset deck." />
@@ -645,7 +645,7 @@
     <image>./assets/images/prop-19.jpg</image>
     <interiorImage>./assets/images/prop-19-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-19-terrace.jpg</interiorImage>
-    <mapCoords x="178" y="255" />
+    <mapCoords x="188" y="238" />
     <description
       ru="Просторная трёхкомнатная квартира с потолками 3,2 метра, дубовым паркетом «ёлочка» и французским балконом в зелёном центре Барановичей."
       en="Spacious 3-room apartment with 3.2 m ceilings, herringbone oak parquet, and French balcony overlooking a leafy courtyard in central Baranavichy." />
@@ -679,7 +679,7 @@
     <image>./assets/images/prop-20.jpg</image>
     <interiorImage>./assets/images/prop-20-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-20-terrace.jpg</interiorImage>
-    <mapCoords x="326" y="168" />
+    <mapCoords x="293" y="166" />
     <description
       ru="Светлый дом со вторым светом, панорамным остеклением, дровяным камином и просторной лесной террасой с костровой зоной в Борисове."
       en="Double-height Nordic residence with panoramic pine views, minimalist wood fireplace, and spacious timber deck with firepit near Barysau." />
@@ -713,7 +713,7 @@
     <image>./assets/images/prop-21.jpg</image>
     <interiorImage>./assets/images/prop-21-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-21-terrace.jpg</interiorImage>
-    <mapCoords x="352" y="255" />
+    <mapCoords x="324" y="237" />
     <description
       ru="Готовое коммерческое пространство на пешеходной улице Бобруйска с отдельным входом, кирпичными сводами, дизайнерским ресепшеном и тихим внутренним двориком."
       en="Turnkey street-level space on central Babruysk avenue featuring historic brick arches, travertine reception, glass meeting room, and landscaped inner courtyard." />
@@ -747,7 +747,7 @@
     <image>./assets/images/prop-22.jpg</image>
     <interiorImage>./assets/images/prop-22-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-22-terrace.jpg</interiorImage>
-    <mapCoords x="156" y="196" />
+    <mapCoords x="158" y="188" />
     <description
       ru="Двухэтажный кирпичный таунхаус в шаговой доступности от исторического центра Лиды. Светлая кухня-гостиная, дубовая лестница и приватная пергола во дворе."
       en="Two-story brick townhouse near historic Lida Castle. Open kitchen-living area, oak staircase, and private landscaped backyard with wooden pergola." />
@@ -781,7 +781,7 @@
     <image>./assets/images/prop-23.jpg</image>
     <interiorImage>./assets/images/prop-23-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-23-terrace.jpg</interiorImage>
-    <mapCoords x="316" y="84" />
+    <mapCoords x="300" y="80" />
     <description
       ru="Современная евро-двухкомнатная квартира в новом жилом комплексе Новополоцка с панорамными окнами в пол, тёплой лоджией и закрытым двором-парком."
       en="Contemporary open-plan apartment in a brand-new Navapolatsk residence featuring floor-to-ceiling glazing, insulated lounge loggia, and car-free park courtyard." />
@@ -815,7 +815,7 @@
     <image>./assets/images/prop-24.jpg</image>
     <interiorImage>./assets/images/prop-24-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-24-terrace.jpg</terraceImage>
-    <mapCoords x="375" y="280" />
+    <mapCoords x="358" y="253" />
     <description
       ru="Элегантный двухэтажный дом в Жлобине с собственной террасой, выходящей прямо на живописную пойму Днепра. Просторная гостиная, натуральная отделка и ландшафтный участок."
       en="Bright two-story home in Zhlobin with an expansive timber terrace overlooking the calm Dnieper river meadow. Glass walls, natural finishes, and landscaped garden." />

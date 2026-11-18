@@ -186,17 +186,17 @@ export function openBelarusMapModal(properties) {
   const applyPreset = (preset) => {
     activePreset = preset;
     if (preset === 'minsk') {
-      viewBox = clampViewBox({x: 208, y: 132, w: 150, h: (150 * BASE_H) / BASE_W});
+      viewBox = clampViewBox({x: 180, y: 110, w: 160, h: (160 * BASE_H) / BASE_W});
     } else if (preset === 'brest') {
-      viewBox = clampViewBox({x: 45, y: 245, w: 185, h: (185 * BASE_H) / BASE_W});
+      viewBox = clampViewBox({x: 30, y: 240, w: 170, h: (170 * BASE_H) / BASE_W});
     } else if (preset === 'grodno') {
-      viewBox = clampViewBox({x: 45, y: 140, w: 185, h: (185 * BASE_H) / BASE_W});
+      viewBox = clampViewBox({x: 35, y: 140, w: 170, h: (170 * BASE_H) / BASE_W});
     } else if (preset === 'vitebsk') {
-      viewBox = clampViewBox({x: 300, y: 35, w: 195, h: (195 * BASE_H) / BASE_W});
+      viewBox = clampViewBox({x: 285, y: 35, w: 175, h: (175 * BASE_H) / BASE_W});
     } else if (preset === 'gomel') {
-      viewBox = clampViewBox({x: 310, y: 230, w: 195, h: (195 * BASE_H) / BASE_W});
+      viewBox = clampViewBox({x: 315, y: 215, w: 175, h: (175 * BASE_H) / BASE_W});
     } else if (preset === 'mogilev') {
-      viewBox = clampViewBox({x: 315, y: 125, w: 190, h: (190 * BASE_H) / BASE_W});
+      viewBox = clampViewBox({x: 290, y: 115, w: 175, h: (175 * BASE_H) / BASE_W});
     } else {
       viewBox = {x: 0, y: 0, w: BASE_W, h: BASE_H};
     }
@@ -234,9 +234,13 @@ export function openBelarusMapModal(properties) {
     canvas.querySelectorAll('[data-map-id]').forEach((pin) => {
       pin.addEventListener('click', (e) => {
         e.stopPropagation();
-        activeId = pin.getAttribute('data-map-id');
-        renderMapBody();
-        renderSidebar();
+        const target = e.target.closest('[data-map-id]');
+        const nextId = target ? target.getAttribute('data-map-id') : pin.getAttribute('data-map-id');
+        if (nextId) {
+          activeId = nextId;
+          renderMapBody();
+          renderSidebar();
+        }
       });
     });
   };
