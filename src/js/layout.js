@@ -111,6 +111,9 @@ function renderHeader(activePage) {
           </div>
         </div>
 
+        <a href="./analytics.html" class="site-header__link ${activePage === 'analytics' ? 'is-active' : ''}">
+          ${t('navAnalytics', lang)}
+        </a>
         <a href="./about.html" class="site-header__link ${activePage === 'about' ? 'is-active' : ''}">
           ${t('navAbout', lang)}
         </a>
@@ -157,6 +160,9 @@ function renderHeader(activePage) {
         </a>
         <a href="./services.html" class="mobile-drawer__link ${activePage === 'services' ? 'is-active' : ''}">
           ${t('navServices', lang)}<span>→</span>
+        </a>
+        <a href="./analytics.html" class="mobile-drawer__link ${activePage === 'analytics' ? 'is-active' : ''}">
+          ${t('navAnalytics', lang)}<span>→</span>
         </a>
         <a href="./about.html" class="mobile-drawer__link ${activePage === 'about' ? 'is-active' : ''}">
           ${t('navAbout', lang)}<span>→</span>
@@ -249,6 +255,7 @@ function renderFooter() {
           <ul class="site-footer__list">
             <li><a href="./catalog.html">${t('navCatalog', lang)}</a></li>
             <li><a href="./services.html">${t('navServices', lang)}</a></li>
+            <li><a href="./analytics.html">${t('navAnalytics', lang)}</a></li>
             <li><a href="./cabinet.html">${t('navCabinet', lang)}</a></li>
             <li><a href="./about.html">${t('navAbout', lang)}</a></li>
           </ul>

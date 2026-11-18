@@ -7,6 +7,7 @@ export const DICT = {
     // Навигация и шапка
     navCatalog: 'Каталог',
     navServices: 'Услуги',
+    navAnalytics: 'Аналитика',
     navSell: 'Продать',
     navAbout: 'О компании',
     navContacts: 'Контакты',
@@ -108,6 +109,9 @@ export const DICT = {
     plotUnit: 'сот.',
     roomsShort: 'комн.',
     floorLabel: 'этаж',
+    floorWord1: 'этаж',
+    floorWord2: 'этажа',
+    floorWord5: 'этажей',
     floorsLabel: 'этажей',
     mkadLabel: 'До МКАД',
     kmUnit: 'км',
@@ -141,6 +145,11 @@ export const DICT = {
     viewExterior: 'Экстерьер',
     viewInterior: 'Интерьер',
     viewTerrace: 'Терраса и участок',
+    viewFloorplan: 'Планировка',
+    floorplanKicker: 'Архитектурный чертёж',
+    floorplanTitle: 'Интерактивная планировка этажей',
+    floorplanHint: 'Нажмите на комнату на схеме или в списке, чтобы посмотреть площадь и назначение',
+    floorLevelLabel: 'этаж',
     prevSlide: 'Предыдущая страница',
     nextSlide: 'Следующая страница',
     prevObject: 'Предыдущий объект',
@@ -288,6 +297,7 @@ export const DICT = {
   en: {
     navCatalog: 'Catalog',
     navServices: 'Services',
+    navAnalytics: 'Analytics',
     navSell: 'Sell',
     navAbout: 'About',
     navContacts: 'Contacts',
@@ -384,6 +394,9 @@ export const DICT = {
     plotUnit: 'a.',
     roomsShort: 'rms',
     floorLabel: 'floor',
+    floorWord1: 'floor',
+    floorWord2: 'floors',
+    floorWord5: 'floors',
     floorsLabel: 'floors',
     mkadLabel: 'To Ring Rd',
     kmUnit: 'km',
@@ -415,6 +428,11 @@ export const DICT = {
     viewExterior: 'Exterior',
     viewInterior: 'Interior',
     viewTerrace: 'Terrace & Grounds',
+    viewFloorplan: 'Floor Plan',
+    floorplanKicker: 'Architectural Blueprint',
+    floorplanTitle: 'Interactive Floor Plan',
+    floorplanHint: 'Click any room on the blueprint or list to inspect area and details',
+    floorLevelLabel: 'Floor',
     prevSlide: 'Previous page',
     nextSlide: 'Next page',
     prevObject: 'Previous property',
@@ -569,6 +587,19 @@ export function pluralObjects(count, lang = 'ru') {
   if (mod10 === 1) return t('objectsWord1', 'ru');
   if (mod10 >= 2 && mod10 <= 4) return t('objectsWord2', 'ru');
   return t('objectsWord5', 'ru');
+}
+
+export function pluralFloors(count, lang = 'ru') {
+  const n = Math.abs(Number(count)) || 0;
+  if (lang === 'en') {
+    return n === 1 ? t('floorWord1', 'en') : t('floorWord5', 'en');
+  }
+  const mod100 = n % 100;
+  const mod10 = n % 10;
+  if (mod100 >= 11 && mod100 <= 14) return t('floorWord5', 'ru');
+  if (mod10 === 1) return t('floorWord1', 'ru');
+  if (mod10 >= 2 && mod10 <= 4) return t('floorWord2', 'ru');
+  return t('floorWord5', 'ru');
 }
 
 /**

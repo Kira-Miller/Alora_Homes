@@ -6,7 +6,7 @@ import {showToast} from './components.js';
 import {formatPrices, t} from './i18n.js';
 import {initLayout, openAuthModal, openGuestGateModal} from './layout.js';
 import {addViewingRequest, getState, isGuest, subscribe, toggleFavorite} from './state.js';
-import {getIconSvg, getPropertySvg} from './svg-art.js';
+import {getFloorPlanData, getFloorPlanSvg, getIconSvg, getPropertySvg} from './svg-art.js';
 import {loadPropertiesFromXml} from './xml-loader.js';
 
 initLayout('catalog');
@@ -14,6 +14,8 @@ initLayout('catalog');
 let allCatalog = [];
 let currentProperty = null;
 let activeView = 'exterior';
+let activeFloorIdx = 0;
+let activeRoomId = null;
 
 const rootEl = document.getElementById('property-detail-root');
 
@@ -25,6 +27,15 @@ function renderPropertyPage() {
   const s = p.specs;
   const prices = formatPrices(p.priceByn, p.priceUsd, currency);
   const isSaved = favorites.includes(String(p.id));
+
+  const floorPlans = getFloorPlanData(p, lang);
+  if (activeFloorIdx >= floorPlans.length) activeFloorIdx = 0;
+  const currentFloor = floorPlans[activeFloorIdx];
+  if (!currentFloor.rooms.some((r) => r.id === activeRoomId)) {
+    activeRoomId = currentFloor.rooms[0]?.id || null;
+  }
+  const selectedRoom =
+    currentFloor.rooms.find((r) => r.id === activeRoomId) || currentFloor.rooms[0];
 
   const views = [
     {id: 'exterior', label: t('viewExterior', lang)},
@@ -100,9 +111,14 @@ function renderPropertyPage() {
           ${p.city[lang]}${s.mkadDistance > 0 ? ` · ${s.mkadDistance} ${t('kmUnit', lang)} ${t('specMkad', lang)}` : ''} · ${p.subcategory[lang]}
         </p>
       </div>
-      <span class="property-card__badge property-card__badge--${p.badge.type}" style="position:static;">
-        ${p.badge[lang]}
-      </span>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <a href="#floorplan-section" class="btn btn--secondary btn--sm">
+          ${t('viewFloorplan', lang)} ↓
+        </a>
+        <span class="property-card__badge property-card__badge--${p.badge.type}" style="position:static;">
+          ${p.badge[lang]}
+        </span>
+      </div>
     </div>
 
     <section class="gallery-bento" aria-label="Property gallery">
@@ -246,6 +262,84 @@ function renderPropertyPage() {
         }
       </aside>
     </div>
+
+    <section class="floorplan-section" id="floorplan-section" aria-label="${t('floorplanTitle', lang)}">
+      <div class="floorplan-section__header">
+        <div>
+          <span class="section-kicker">${t('floorplanKicker', lang)}</span>
+          <h2 class="section-title" style="font-size:1.65rem;margin-bottom:6px;">${t('floorplanTitle', lang)}</h2>
+          <p style="color:var(--text-secondary);font-size:0.9rem;">${t('floorplanHint', lang)}</p>
+        </div>
+        <div class="floorplan-tabs" role="tablist" aria-label="Floor levels">
+          ${floorPlans
+            .map(
+              (fl, idx) => `
+            <button
+              type="button"
+              role="tab"
+              aria-selected="${idx === activeFloorIdx ? 'true' : 'false'}"
+              class="tab-btn ${idx === activeFloorIdx ? 'is-active' : ''}"
+              data-floor-idx="${idx}"
+            >
+              ${lang === 'ru' ? fl.labelRu : fl.labelEn}
+            </button>
+          `
+            )
+            .join('')}
+        </div>
+      </div>
+
+      <div class="floorplan-layout">
+        <div class="floorplan-svg-wrap" id="floorplan-canvas">
+          ${getFloorPlanSvg(currentFloor, activeRoomId, lang)}
+          <div class="floorplan-meta-strip">
+            <span>${lang === 'ru' ? 'Площадь уровня' : 'Level area'}: <strong>${currentFloor.totalArea} ${t('areaUnit', lang)}</strong></span>
+            <span>·</span>
+            <span>${lang === 'ru' ? 'Высота потолков' : 'Ceiling height'}: <strong>${currentFloor.ceiling}</strong></span>
+            <span>·</span>
+            <span>${lang === 'ru' ? 'Помещений' : 'Zones'}: <strong>${currentFloor.rooms.length}</strong></span>
+          </div>
+        </div>
+
+        <div class="floorplan-inspector">
+          ${
+            selectedRoom
+              ? `
+            <div class="floorplan-inspector__card">
+              <span class="section-kicker" style="margin-bottom:4px;">${lang === 'ru' ? currentFloor.labelRu : currentFloor.labelEn}</span>
+              <div class="floorplan-inspector__top">
+                <h3>${lang === 'ru' ? selectedRoom.nameRu : selectedRoom.nameEn}</h3>
+                <strong>${selectedRoom.area} ${t('areaUnit', lang)}</strong>
+              </div>
+              <p class="floorplan-inspector__aspect">${lang === 'ru' ? selectedRoom.aspectRu : selectedRoom.aspectEn}</p>
+              <p class="floorplan-inspector__finish">
+                <span>${lang === 'ru' ? 'Отделка и инженерия:' : 'Finishes & MEP:'}</span>
+                ${lang === 'ru' ? selectedRoom.finishRu : selectedRoom.finishEn}
+              </p>
+            </div>
+          `
+              : ''
+          }
+
+          <div class="floorplan-rooms-list" role="list">
+            ${currentFloor.rooms
+              .map(
+                (room) => `
+              <button
+                type="button"
+                class="floorplan-room-btn ${room.id === activeRoomId ? 'is-active' : ''}"
+                data-select-room="${room.id}"
+              >
+                <span>${lang === 'ru' ? room.nameRu : room.nameEn}</span>
+                <strong>${room.area} ${t('areaUnit', lang)}</strong>
+              </button>
+            `
+              )
+              .join('')}
+          </div>
+        </div>
+      </div>
+    </section>
   `;
 
   rootEl.querySelectorAll('[data-switch-view]').forEach((btn) => {
@@ -263,6 +357,34 @@ function renderPropertyPage() {
       activeView = order[(idx + step + order.length) % order.length];
       renderPropertyPage();
     });
+  });
+
+  rootEl.querySelectorAll('[data-floor-idx]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeFloorIdx = Number(btn.getAttribute('data-floor-idx')) || 0;
+      activeRoomId = null;
+      renderPropertyPage();
+    });
+  });
+
+  const selectRoom = (roomId) => {
+    if (!roomId || roomId === activeRoomId) return;
+    activeRoomId = roomId;
+    renderPropertyPage();
+  };
+
+  rootEl.querySelectorAll('[data-room-id]').forEach((node) => {
+    node.addEventListener('click', () => selectRoom(node.getAttribute('data-room-id')));
+    node.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectRoom(node.getAttribute('data-room-id'));
+      }
+    });
+  });
+
+  rootEl.querySelectorAll('[data-select-room]').forEach((btn) => {
+    btn.addEventListener('click', () => selectRoom(btn.getAttribute('data-select-room')));
   });
 
   document.getElementById('detail-fav-btn')?.addEventListener('click', () => {

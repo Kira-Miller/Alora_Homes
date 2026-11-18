@@ -428,3 +428,774 @@ export function getRealtorPortraitSvg(index = 0) {
   `;
 }
 
+/**
+ * Формирует поэтажные архитектурные спецификации комнат для интерактивной SVG-планировки
+ */
+export function getFloorPlanData(property, lang = 'ru') {
+  const s = property.specs || {};
+  const totalArea = Number(s.area) || 120;
+  const rawFloors = Number(s.floors) || 1;
+  const isHouse = property.category === 'houses';
+  const isCommercial = property.category === 'commercial';
+  const numRooms = Number(s.rooms) || 3;
+
+  let levelCount = 1;
+  if (isHouse) {
+    levelCount = Math.max(1, Math.min(3, rawFloors));
+  } else if (isCommercial) {
+    levelCount = rawFloors >= 2 && totalArea >= 180 ? 2 : 1;
+  } else {
+    levelCount = numRooms >= 4 && totalArea >= 135 ? 2 : 1;
+  }
+
+  const buildRooms = (templates, targetArea) => {
+    const rawSum = templates.reduce((acc, item) => acc + item.raw, 0) || 1;
+    const scale = targetArea / rawSum;
+    let accumulated = 0;
+    return templates.map((tpl, idx) => {
+      const area =
+        idx === templates.length - 1
+          ? Math.max(3, Math.round((targetArea - accumulated) * 10) / 10)
+          : Math.round(tpl.raw * scale * 10) / 10;
+      accumulated += area;
+      return {...tpl, area};
+    });
+  };
+
+  if (isHouse) {
+    const f1Ratio = levelCount === 1 ? 1 : levelCount === 2 ? 0.56 : 0.44;
+    const f2Ratio = levelCount === 2 ? 0.44 : 0.34;
+    const f3Ratio = 0.22;
+
+    const floor1Templates = [
+      {
+        id: 'f1-living',
+        nameRu: 'Гостиная со вторым светом',
+        nameEn: 'Double-Height Living Room',
+        raw: 42,
+        x: 34,
+        y: 34,
+        w: 250,
+        h: 215,
+        aspectRu: 'Юго-запад · Панорамное остекление',
+        aspectEn: 'South-West · Panoramic glazing',
+        finishRu: 'Паркет из массива дуба, каминная зона',
+        finishEn: 'Solid oak parquet, fireplace zone',
+        windows: [{x1: 75, y1: 34, x2: 235, y2: 34}, {x1: 34, y1: 75, x2: 34, y2: 190}],
+        door: {x: 284, y: 175, r: 28, dir: 'br'},
+      },
+      {
+        id: 'f1-kitchen',
+        nameRu: 'Кухня-столовая',
+        nameEn: 'Kitchen & Dining',
+        raw: 28,
+        x: 284,
+        y: 34,
+        w: 210,
+        h: 150,
+        aspectRu: 'Юг · Выход на террасу',
+        aspectEn: 'South · Direct terrace access',
+        finishRu: 'Кварцевый остров, встроенная техника',
+        finishEn: 'Quartz island, integrated appliances',
+        windows: [{x1: 325, y1: 34, x2: 455, y2: 34}],
+        door: {x: 284, y: 120, r: 24, dir: 'bl'},
+      },
+      {
+        id: 'f1-terrace',
+        nameRu: 'Крытая терраса',
+        nameEn: 'Covered Terrace',
+        raw: 24,
+        x: 494,
+        y: 34,
+        w: 152,
+        h: 215,
+        aspectRu: 'Восток · Навес и зона отдыха',
+        aspectEn: 'East · Pergola & lounge deck',
+        finishRu: 'Террасная доска ДПК, уличное освещение',
+        finishEn: 'Composite decking, architectural lighting',
+        windows: [],
+        accent: true,
+      },
+      {
+        id: 'f1-hall',
+        nameRu: 'Прихожая и холл',
+        nameEn: 'Entrance Foyer & Hall',
+        raw: 18,
+        x: 284,
+        y: 184,
+        w: 210,
+        h: 112,
+        aspectRu: 'Центр · Гардероб и лестница',
+        aspectEn: 'Center · Coat room & staircase',
+        finishRu: 'Керамогранит с подогревом',
+        finishEn: 'Heated porcelain tile',
+        door: {x: 375, y: 296, r: 26, dir: 'tl'},
+      },
+      {
+        id: 'f1-guest',
+        nameRu: 'Гостевая / Кабинет',
+        nameEn: 'Guest Room / Study',
+        raw: 16,
+        x: 34,
+        y: 249,
+        w: 165,
+        h: 137,
+        aspectRu: 'Северо-запад · Тихая зона',
+        aspectEn: 'North-West · Quiet wing',
+        finishRu: 'Звукоизоляция, встроенный шкаф',
+        finishEn: 'Acoustic insulation, built-in storage',
+        windows: [{x1: 68, y1: 386, x2: 165, y2: 386}],
+      },
+      {
+        id: 'f1-bath',
+        nameRu: 'Санузел и постирочная',
+        nameEn: 'Guest Bath & Utility',
+        raw: 11,
+        x: 199,
+        y: 249,
+        w: 85,
+        h: 137,
+        aspectRu: 'Технический блок',
+        aspectEn: 'Utility core',
+        finishRu: 'Душевая в строительном исполнении',
+        finishEn: 'Walk-in shower, laundry niche',
+      },
+      {
+        id: 'f1-garage',
+        nameRu: 'Котельная / Гараж',
+        nameEn: 'Boiler Room / Garage',
+        raw: 22,
+        x: 284,
+        y: 296,
+        w: 362,
+        h: 90,
+        aspectRu: 'Север · Автоматические ворота',
+        aspectEn: 'North · EV charger & boiler hub',
+        finishRu: 'Наливной полимерный пол',
+        finishEn: 'Epoxy floor, heating manifold',
+      },
+    ];
+
+    const floor2Templates = [
+      {
+        id: 'f2-master',
+        nameRu: 'Мастер-спальня',
+        nameEn: 'Primary Suite',
+        raw: 30,
+        x: 34,
+        y: 34,
+        w: 260,
+        h: 186,
+        aspectRu: 'Юго-запад · Собственный санузел',
+        aspectEn: 'South-West · En-suite & balcony',
+        finishRu: 'Тёплый паркет, скрытая подсветка',
+        finishEn: 'Engineered oak, cove lighting',
+        windows: [{x1: 80, y1: 34, x2: 245, y2: 34}],
+        door: {x: 294, y: 170, r: 26, dir: 'bl'},
+      },
+      {
+        id: 'f2-wardrobe',
+        nameRu: 'Гардеробная',
+        nameEn: 'Walk-In Closet',
+        raw: 12,
+        x: 294,
+        y: 34,
+        w: 136,
+        h: 110,
+        aspectRu: 'Доступ из мастер-спальни',
+        aspectEn: 'Private dressing room',
+        finishRu: 'Модульная система хранения с подсветкой',
+        finishEn: 'Custom illuminated shelving',
+      },
+      {
+        id: 'f2-masterbath',
+        nameRu: 'Ванная комната',
+        nameEn: 'Master Bathroom',
+        raw: 13,
+        x: 430,
+        y: 34,
+        w: 216,
+        h: 110,
+        aspectRu: 'Восток · Окно в сад',
+        aspectEn: 'East · Natural daylight window',
+        finishRu: 'Отдельностоящая ванна, двойная раковина',
+        finishEn: 'Freestanding tub, double vanity',
+        windows: [{x1: 495, y1: 34, x2: 595, y2: 34}],
+      },
+      {
+        id: 'f2-hall',
+        nameRu: 'Холл второго этажа',
+        nameEn: 'Upper Gallery Hall',
+        raw: 16,
+        x: 294,
+        y: 144,
+        w: 185,
+        h: 122,
+        aspectRu: 'Галерея над гостиной',
+        aspectEn: 'Stair landing & gallery',
+        finishRu: 'Стеклянное ограждение, паркет',
+        finishEn: 'Glass balustrade, oak floor',
+      },
+      {
+        id: 'f2-bed2',
+        nameRu: 'Спальня 2',
+        nameEn: 'Bedroom 2',
+        raw: 20,
+        x: 34,
+        y: 220,
+        w: 260,
+        h: 166,
+        aspectRu: 'Запад · Окна на зелёную зону',
+        aspectEn: 'West · Garden view',
+        finishRu: 'Подготовка под детскую или гостевую',
+        finishEn: 'Ready for kids or guest suite',
+        windows: [{x1: 90, y1: 386, x2: 220, y2: 386}],
+      },
+      {
+        id: 'f2-bed3',
+        nameRu: 'Спальня 3 / Детская',
+        nameEn: 'Bedroom 3 / Nursery',
+        raw: 19,
+        x: 479,
+        y: 144,
+        w: 167,
+        h: 242,
+        aspectRu: 'Юго-восток · Выход на лоджию',
+        aspectEn: 'South-East · Loggia access',
+        finishRu: 'Французские окна, место под рабочий стол',
+        finishEn: 'Full-height glazing, study corner',
+        windows: [{x1: 646, y1: 190, x2: 646, y2: 330}],
+      },
+      {
+        id: 'f2-bath2',
+        nameRu: 'Санузел 2-го этажа',
+        nameEn: 'Shared Bathroom',
+        raw: 9,
+        x: 294,
+        y: 266,
+        w: 185,
+        h: 120,
+        aspectRu: 'Север · Вентиляция и тёплый пол',
+        aspectEn: 'North · Heated floor',
+        finishRu: 'Керамогранит под мрамор, инсталляция',
+        finishEn: 'Marble-look porcelain, concealed cistern',
+      },
+    ];
+
+    const floor3Templates = [
+      {
+        id: 'f3-lounge',
+        nameRu: 'Панорамная лаунж-зона / Мансарда',
+        nameEn: 'Panoramic Penthouse Lounge',
+        raw: 34,
+        x: 34,
+        y: 34,
+        w: 360,
+        h: 220,
+        aspectRu: 'Юг · Выход на эксплуатируемую кровлю',
+        aspectEn: 'South · Rooftop terrace access',
+        finishRu: 'Домашний кинотеатр, барная стойка',
+        finishEn: 'Home cinema & wet bar',
+        windows: [{x1: 85, y1: 34, x2: 340, y2: 34}],
+      },
+      {
+        id: 'f3-rooftop',
+        nameRu: 'Эксплуатируемая терраса',
+        nameEn: 'Open Rooftop Terrace',
+        raw: 28,
+        x: 394,
+        y: 34,
+        w: 252,
+        h: 352,
+        aspectRu: 'Восток-Юг · Панорамный вид',
+        aspectEn: 'East-South · Unobstructed vista',
+        finishRu: 'Стеклянные перила, зона барбекю',
+        finishEn: 'Tempered glass railing, outdoor lounge',
+        accent: true,
+      },
+      {
+        id: 'f3-spa',
+        nameRu: 'Фитнес / СПА-комната',
+        nameEn: 'Private Gym / Spa',
+        raw: 20,
+        x: 34,
+        y: 254,
+        w: 235,
+        h: 132,
+        aspectRu: 'Северо-запад · Приточная вентиляция',
+        aspectEn: 'North-West · Fresh-air HVAC',
+        finishRu: 'Амортизирующее покрытие, сауна из кедра',
+        finishEn: 'Athletic flooring, cedar sauna',
+      },
+      {
+        id: 'f3-bath',
+        nameRu: 'Душевая и холл',
+        nameEn: 'Shower & Upper Landing',
+        raw: 10,
+        x: 269,
+        y: 254,
+        w: 125,
+        h: 132,
+        aspectRu: 'Лестничный блок',
+        aspectEn: 'Staircase & shower',
+        finishRu: 'Тропический душ, панорамный зенитный фонарь',
+        finishEn: 'Rain shower, skylight',
+      },
+    ];
+
+    const floors = [
+      {
+        floorNum: 1,
+        labelRu: '1 этаж · Дневная зона',
+        labelEn: 'Floor 1 · Living & Grounds',
+        ceiling: '3.2 м',
+        totalArea: Math.round(totalArea * f1Ratio * 10) / 10,
+        rooms: buildRooms(floor1Templates, totalArea * f1Ratio),
+      },
+    ];
+    if (levelCount >= 2) {
+      floors.push({
+        floorNum: 2,
+        labelRu: '2 этаж · Приватная зона',
+        labelEn: 'Floor 2 · Private Suites',
+        ceiling: '3.0 м',
+        totalArea: Math.round(totalArea * f2Ratio * 10) / 10,
+        rooms: buildRooms(floor2Templates, totalArea * f2Ratio),
+      });
+    }
+    if (levelCount >= 3) {
+      floors.push({
+        floorNum: 3,
+        labelRu: '3 этаж · Лаунж и кровля',
+        labelEn: 'Floor 3 · Rooftop & Spa',
+        ceiling: '3.1 м',
+        totalArea: Math.round(totalArea * f3Ratio * 10) / 10,
+        rooms: buildRooms(floor3Templates, totalArea * f3Ratio),
+      });
+    }
+    return floors;
+  }
+
+  if (isCommercial) {
+    const f1Ratio = levelCount === 2 ? 0.58 : 1;
+    const floor1Templates = [
+      {
+        id: 'c1-open',
+        nameRu: 'Open Space рабочая зона',
+        nameEn: 'Open-Plan Workspace',
+        raw: 56,
+        x: 34,
+        y: 34,
+        w: 368,
+        h: 230,
+        aspectRu: 'Фасад · Панорамное остекление',
+        aspectEn: 'Facade · Floor-to-ceiling glazing',
+        finishRu: 'Фальшпол, шумопоглощающий потолок',
+        finishEn: 'Raised access floor, acoustic ceiling',
+        windows: [{x1: 75, y1: 34, x2: 365, y2: 34}, {x1: 34, y1: 70, x2: 34, y2: 225}],
+      },
+      {
+        id: 'c1-meet',
+        nameRu: 'Переговорная комната',
+        nameEn: 'Executive Boardroom',
+        raw: 24,
+        x: 402,
+        y: 34,
+        w: 244,
+        h: 156,
+        aspectRu: 'Акустическое остекление',
+        aspectEn: 'Acoustic glass partition',
+        finishRu: 'ВКС-подготовка, климат-контроль',
+        finishEn: 'AV-ready, zoned HVAC',
+        windows: [{x1: 450, y1: 34, x2: 610, y2: 34}],
+      },
+      {
+        id: 'c1-exec',
+        nameRu: 'Кабинет руководителя',
+        nameEn: 'Director Office',
+        raw: 22,
+        x: 402,
+        y: 190,
+        w: 244,
+        h: 196,
+        aspectRu: 'Восток · Изолированный блок',
+        aspectEn: 'East · Private suite',
+        finishRu: 'Шпонированные панели, индивидуальный санузел',
+        finishEn: 'Wood wall paneling, private access',
+        windows: [{x1: 646, y1: 230, x2: 646, y2: 345}],
+      },
+      {
+        id: 'c1-reception',
+        nameRu: 'Ресепшен и входная группа',
+        nameEn: 'Reception & Lobby',
+        raw: 18,
+        x: 34,
+        y: 264,
+        w: 205,
+        h: 122,
+        aspectRu: 'Главный вход · СКУД',
+        aspectEn: 'Main entrance · Access control',
+        finishRu: 'Керамогранит крупного формата, стойка',
+        finishEn: 'Large-format stone tile, concierge desk',
+        door: {x: 135, y: 386, r: 28, dir: 'tr'},
+      },
+      {
+        id: 'c1-coffee',
+        nameRu: 'Кофе-пойнт и санузлы',
+        nameEn: 'Coffee Lounge & Restrooms',
+        raw: 16,
+        x: 239,
+        y: 264,
+        w: 163,
+        h: 122,
+        aspectRu: 'Мокрая зона',
+        aspectEn: 'Plumbing & kitchen core',
+        finishRu: 'Водоподготовка, вытяжка',
+        finishEn: 'Plumbing & filtration ready',
+      },
+    ];
+
+    const floors = [
+      {
+        floorNum: s.floor || 1,
+        labelRu:
+          levelCount === 2
+            ? 'Уровень 1 · Клиентская и Open Space'
+            : `${s.floor || 1} этаж · Основной блок`,
+        labelEn:
+          levelCount === 2
+            ? 'Level 1 · Client & Open Space'
+            : `Floor ${s.floor || 1} · Main Suite`,
+        ceiling: '3.4 м',
+        totalArea: Math.round(totalArea * f1Ratio * 10) / 10,
+        rooms: buildRooms(floor1Templates, totalArea * f1Ratio),
+      },
+    ];
+
+    if (levelCount === 2) {
+      const f2Area = Math.round(totalArea * 0.42 * 10) / 10;
+      floors.push({
+        floorNum: (s.floor || 1) + 1,
+        labelRu: 'Уровень 2 · Переговорные и бэк-офис',
+        labelEn: 'Level 2 · Boardrooms & Back Office',
+        ceiling: '3.2 м',
+        totalArea: f2Area,
+        rooms: buildRooms(
+          floor1Templates.map((r) => ({...r, id: r.id.replace('c1-', 'c2-')})),
+          f2Area
+        ),
+      });
+    }
+    return floors;
+  }
+
+  // Квартира / Апартаменты
+  const aptRatio = levelCount === 2 ? 0.62 : 1;
+  const aptFloor1Templates = [
+    {
+      id: 'a1-living',
+      nameRu: numRooms <= 2 ? 'Гостиная-студия' : 'Евро-гостиная',
+      nameEn: numRooms <= 2 ? 'Studio Living Room' : 'Open Living Room',
+      raw: 32,
+      x: 34,
+      y: 34,
+      w: 262,
+      h: 210,
+      aspectRu: 'Юг · Панорамные окна в пол',
+      aspectEn: 'South · Floor-to-ceiling glazing',
+      finishRu: 'Высота потолков 3.0 м, подготовка под трековый свет',
+      finishEn: '3.0 m ceilings, track lighting layout',
+      windows: [{x1: 75, y1: 34, x2: 245, y2: 34}],
+      door: {x: 296, y: 176, r: 24, dir: 'bl'},
+    },
+    {
+      id: 'a1-kitchen',
+      nameRu: 'Кухонная зона',
+      nameEn: 'Kitchen Zone',
+      raw: 16,
+      x: 296,
+      y: 34,
+      w: 196,
+      h: 145,
+      aspectRu: 'Объединена с гостиной',
+      aspectEn: 'Integrated with living area',
+      finishRu: 'Выводы под остров, приточная вентиляция',
+      finishEn: 'Island utility rough-in, fresh-air vent',
+      windows: [{x1: 335, y1: 34, x2: 455, y2: 34}],
+    },
+    {
+      id: 'a1-loggia',
+      nameRu: 'Утеплённая лоджия',
+      nameEn: 'Insulated Loggia',
+      raw: 8,
+      x: 492,
+      y: 34,
+      w: 154,
+      h: 145,
+      aspectRu: 'Панорамный вид на город',
+      aspectEn: 'Panoramic city view',
+      finishRu: 'Тёплое остекление, розетки для лаунж-зоны',
+      finishEn: 'Triple-pane glazing, lounge outlets',
+      accent: true,
+    },
+    {
+      id: 'a1-master',
+      nameRu: numRooms >= 2 ? 'Мастер-спальня' : 'Спальная зона',
+      nameEn: numRooms >= 2 ? 'Primary Bedroom' : 'Sleeping Alcove',
+      raw: 21,
+      x: 34,
+      y: 244,
+      w: 224,
+      h: 142,
+      aspectRu: 'Восток · Тихий двор',
+      aspectEn: 'East · Quiet courtyard',
+      finishRu: 'Ниша под встроенный шкаф, шумоизоляция',
+      finishEn: 'Built-in wardrobe niche, acoustic wall',
+      windows: [{x1: 72, y1: 386, x2: 215, y2: 386}],
+    },
+    ...(numRooms >= 3
+      ? [
+          {
+            id: 'a1-bed2',
+            nameRu: 'Детская / Кабинет',
+            nameEn: 'Second Bedroom / Study',
+            raw: 16,
+            x: 446,
+            y: 179,
+            w: 200,
+            h: 207,
+            aspectRu: 'Юго-восток',
+            aspectEn: 'South-East aspect',
+            finishRu: 'Эргономичная геометрия под 2 окна',
+            finishEn: 'Corner natural light',
+            windows: [{x1: 646, y1: 220, x2: 646, y2: 338}],
+          },
+        ]
+      : [
+          {
+            id: 'a1-wardrobe',
+            nameRu: 'Гардеробная система',
+            nameEn: 'Walk-in Closet',
+            raw: 7,
+            x: 446,
+            y: 179,
+            w: 200,
+            h: 207,
+            aspectRu: 'Удобное хранение',
+            aspectEn: 'Dedicated storage',
+            finishRu: 'Встроенная система с подсветкой',
+            finishEn: 'Custom illuminated storage',
+          },
+        ]),
+    {
+      id: 'a1-hall',
+      nameRu: 'Прихожая',
+      nameEn: 'Entry Hallway',
+      raw: 11,
+      x: 258,
+      y: 244,
+      w: 188,
+      h: 142,
+      aspectRu: 'Входная дверь премиум-класса',
+      aspectEn: 'Acoustic armored entry',
+      finishRu: 'Ниша под шкаф-купе, тёплый пол',
+      finishEn: 'Coat alcove, heated floor',
+      door: {x: 350, y: 386, r: 24, dir: 'tl'},
+    },
+    {
+      id: 'a1-bath',
+      nameRu: 'Ванная комната',
+      nameEn: 'Bathroom',
+      raw: 8,
+      x: 296,
+      y: 179,
+      w: 150,
+      h: 65,
+      aspectRu: 'Мокрая зона',
+      aspectEn: 'Bath & laundry',
+      finishRu: 'Трап в полу, полотенцесушитель',
+      finishEn: 'Flush floor drain, heated rail',
+    },
+  ];
+
+  const floors = [
+    {
+      floorNum: s.floor || 1,
+      labelRu:
+        levelCount === 2
+          ? `${s.floor || 1} уровень · Гостиная и кухня`
+          : `${s.floor || 1} этаж · Основной уровень`,
+      labelEn:
+        levelCount === 2
+          ? `Level 1 (Fl. ${s.floor || 1}) · Living`
+          : `Floor ${s.floor || 1} · Apartment Plan`,
+      ceiling: '3.0 м',
+      totalArea: Math.round(totalArea * aptRatio * 10) / 10,
+      rooms: buildRooms(aptFloor1Templates, totalArea * aptRatio),
+    },
+  ];
+
+  if (levelCount === 2) {
+    const f2Area = Math.round(totalArea * 0.38 * 10) / 10;
+    floors.push({
+      floorNum: (s.floor || 1) + 1,
+      labelRu: `${(s.floor || 1) + 1} уровень · Приватные спальни`,
+      labelEn: `Level 2 (Fl. ${(s.floor || 1) + 1}) · Suites`,
+      ceiling: '3.0 м',
+      totalArea: f2Area,
+      rooms: buildRooms(
+        [
+          {
+            id: 'a2-master',
+            nameRu: 'Мастер-спальня',
+            nameEn: 'Primary Suite',
+            raw: 24,
+            x: 34,
+            y: 34,
+            w: 295,
+            h: 210,
+            aspectRu: 'Юг · Вид на панораму',
+            aspectEn: 'South · City skyline',
+            finishRu: 'Собственная ванная и гардероб',
+            finishEn: 'En-suite bath & closet',
+            windows: [{x1: 80, y1: 34, x2: 270, y2: 34}],
+          },
+          {
+            id: 'a2-terrace',
+            nameRu: 'Верхняя терраса',
+            nameEn: 'Upper Private Terrace',
+            raw: 16,
+            x: 329,
+            y: 34,
+            w: 317,
+            h: 210,
+            aspectRu: 'Открытый воздух',
+            aspectEn: 'Outdoor deck',
+            finishRu: 'Деревянный настил и освещение',
+            finishEn: 'Timber decking & lighting',
+            accent: true,
+          },
+          {
+            id: 'a2-study',
+            nameRu: 'Кабинет / Спальня 4',
+            nameEn: 'Study / Bedroom 4',
+            raw: 16,
+            x: 34,
+            y: 244,
+            w: 320,
+            h: 142,
+            aspectRu: 'Восток',
+            aspectEn: 'East window',
+            finishRu: 'Шумоизоляция, рабочая зона',
+            finishEn: 'Quiet studio layout',
+            windows: [{x1: 95, y1: 386, x2: 245, y2: 386}],
+          },
+          {
+            id: 'a2-bath',
+            nameRu: 'Ванная и лестничный холл',
+            nameEn: 'En-suite Bath & Hall',
+            raw: 12,
+            x: 354,
+            y: 244,
+            w: 292,
+            h: 142,
+            aspectRu: 'Приватный блок',
+            aspectEn: 'Private core',
+            finishRu: 'Дизайнерская сантехника',
+            finishEn: 'Architectural fixtures',
+          },
+        ],
+        f2Area
+      ),
+    });
+  }
+
+  return floors;
+}
+
+/**
+ * Генерирует интерактивный архитектурный SVG-чертёж конкретного этажа
+ */
+export function getFloorPlanSvg(floorData, activeRoomId, lang = 'ru') {
+  if (!floorData) return '';
+
+  const roomShapes = floorData.rooms
+    .map((room) => {
+      const isSelected = String(room.id) === String(activeRoomId);
+      const roomName = lang === 'ru' ? room.nameRu : room.nameEn;
+      const shortName = roomName.length > 21 ? `${roomName.slice(0, 19)}…` : roomName;
+      const areaLabel = `${room.area} ${lang === 'ru' ? 'м²' : 'm²'}`;
+
+      const windowMarkup = (room.windows || [])
+        .map(
+          (w) =>
+            `<line x1="${w.x1}" y1="${w.y1}" x2="${w.x2}" y2="${w.y2}" class="floorplan-window" />`
+        )
+        .join('');
+
+      let doorMarkup = '';
+      if (room.door) {
+        const {x, y, r} = room.door;
+        doorMarkup = `
+          <g class="floorplan-door" pointer-events="none">
+            <path d="M ${x - r} ${y} A ${r} ${r} 0 0 1 ${x} ${y - r}" fill="none" stroke="var(--accent-cyan)" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.7" />
+            <line x1="${x}" y1="${y}" x2="${x}" y2="${y - r}" stroke="var(--accent-cyan)" stroke-width="1.5" opacity="0.85" />
+          </g>
+        `;
+      }
+
+      const cx = room.x + room.w / 2;
+      const cy = room.y + room.h / 2;
+
+      return `
+        <g
+          class="floorplan-room ${isSelected ? 'is-active' : ''} ${room.accent ? 'is-terrace' : ''}"
+          data-room-id="${room.id}"
+          tabindex="0"
+          role="button"
+          aria-pressed="${isSelected ? 'true' : 'false'}"
+          aria-label="${roomName}: ${areaLabel}"
+        >
+          <rect
+            x="${room.x}"
+            y="${room.y}"
+            width="${room.w}"
+            height="${room.h}"
+            class="floorplan-room__rect"
+          />
+          ${windowMarkup}
+          ${doorMarkup}
+          <text x="${cx}" y="${cy - 6}" text-anchor="middle" class="floorplan-room__title">${shortName}</text>
+          <text x="${cx}" y="${cy + 14}" text-anchor="middle" class="floorplan-room__area">${areaLabel}</text>
+        </g>
+      `;
+    })
+    .join('');
+
+  return `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 420" class="floorplan-svg" role="img" aria-label="Architectural floor plan">
+      <defs>
+        <pattern id="fp-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--border-subtle)" stroke-width="0.6" opacity="0.65" />
+        </pattern>
+      </defs>
+      <rect x="0" y="0" width="680" height="420" rx="12" fill="url(#fp-grid)" />
+      <!-- Внешний архитектурный контур стен -->
+      <rect x="34" y="34" width="612" height="352" rx="4" fill="none" stroke="var(--text-muted)" stroke-width="3.2" opacity="0.45" />
+      ${roomShapes}
+      <!-- Масштаб и ориентация сторон света -->
+      <g transform="translate(560, 404)" opacity="0.72" pointer-events="none">
+        <line x1="0" y1="0" x2="72" y2="0" stroke="var(--text-muted)" stroke-width="1.5" />
+        <line x1="0" y1="-4" x2="0" y2="4" stroke="var(--text-muted)" stroke-width="1.5" />
+        <line x1="36" y1="-3" x2="36" y2="3" stroke="var(--text-muted)" stroke-width="1.2" />
+        <line x1="72" y1="-4" x2="72" y2="4" stroke="var(--text-muted)" stroke-width="1.5" />
+        <text x="80" y="3" font-size="10" fill="var(--text-muted)" font-weight="600">0 — 4 ${lang === 'ru' ? 'м' : 'm'}</text>
+      </g>
+      <g transform="translate(34, 404)" opacity="0.75" pointer-events="none">
+        <circle cx="8" cy="-1" r="7" fill="none" stroke="var(--accent-cyan)" stroke-width="1.2" />
+        <path d="M8 -6 L10 0 L8 -1 L6 0 Z" fill="var(--accent-cyan)" />
+        <text x="20" y="3" font-size="10" fill="var(--text-muted)" font-weight="700">${lang === 'ru' ? 'С · N' : 'N'}</text>
+      </g>
+    </svg>
+  `;
+}

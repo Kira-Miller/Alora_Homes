@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Аналитика рынка недвижимости Беларуси — Alora Homes</title>
+    <meta
+      name="description"
+      content="Актуальная аналитика рынка недвижимости Беларуси: средние цены за м² в Минске и областях, графики динамики, советы покупателям и новости рынка."
+    />
+    <meta property="og:title" content="Аналитика рынка Беларуси — Alora Homes" />
+    <meta
+      property="og:description"
+      content="Интерактивные графики цен за м² по Минску и областям Беларуси, советы покупателям и обзоры рынка."
+    />
+    <link rel="icon" type="image/svg+xml" href="./assets/logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Перейти к основному содержанию</a>
+    <header id="site-header" class="site-header">
+      <div class="container site-header__inner">
+        <a href="./index.html" class="site-header__brand" aria-label="Alora Homes">
+          <span>Alora <span class="site-header__brand-accent">Homes</span></span>
+        </a>
+        <nav class="site-header__nav" aria-label="Main navigation">
+          <a href="./catalog.html" class="site-header__link">Каталог</a>
+          <a href="./services.html" class="site-header__link">Услуги</a>
+          <a href="./analytics.html" class="site-header__link is-active">Аналитика</a>
+          <a href="./about.html" class="site-header__link">О компании</a>
+          <a href="./about.html#contacts" class="site-header__link">Контакты</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="section">
+        <div class="container" id="analytics-root"></div>
+      </section>
+    </main>
+
+    <footer id="site-footer"></footer>
+    <script type="module" src="./src/js/page-analytics.js"></script>
+  </body>
+</html>

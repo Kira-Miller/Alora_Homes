@@ -8,7 +8,7 @@
     <category>houses</category>
     <subcategory ru="Загородный дом" en="Country House" />
     <region>minsk-region</region>
-    <city ru="Минская область, пос. Ратомка" en="Minsk Region, Ratomka" />
+    <city ru="Минский р-н, аг. Ратомка, ул. Морская, 14" en="Ratomka, Morskaya St, 14" />
     <title ru="Современная вилла с панорамным видом" en="Modern Villa with Panoramic View" />
     <badge type="urgent" ru="Срочная продажа" en="Urgent Sale" />
     <price byn="1226762" usd="380000" />
@@ -43,7 +43,7 @@
     <category>apartments</category>
     <subcategory ru="Квартира" en="Apartment" />
     <region>minsk</region>
-    <city ru="г. Минск, просп. Независимости" en="Minsk, Independence Ave" />
+    <city ru="г. Минск, просп. Независимости, 95" en="Minsk, Independence Ave, 95" />
     <title ru="Апартаменты премиум-класса в центре" en="Premium Downtown Apartments" />
     <badge type="new" ru="Новинка" en="New Listing" />
     <price byn="487500" usd="151000" />
@@ -78,7 +78,7 @@
     <category>houses</category>
     <subcategory ru="Таунхаус" en="Townhouse" />
     <region>minsk</region>
-    <city ru="г. Минск, Серебрянка" en="Minsk, Serebryanka" />
+    <city ru="г. Минск, ул. Плеханова, 42 (Серебрянка)" en="Minsk, Plekhanova St, 42" />
     <title ru="Элитный таунхаус в закрытом комплексе" en="Luxury Townhouse in Gated Complex" />
     <badge type="top" ru="Топ предложение" en="Top Pick" />
     <price byn="895000" usd="277000" />
@@ -113,7 +113,7 @@
     <category>houses</category>
     <subcategory ru="Коттедж" en="Cottage" />
     <region>minsk-region</region>
-    <city ru="Минская область, Раубичи" en="Minsk Region, Raubichi" />
+    <city ru="Минский р-н, д. Раубичи, ул. Сосновая, 18" en="Raubichi, Sosnovaya St, 18" />
     <title ru="Семейный коттедж среди сосен" en="Family Cottage Among Pines" />
     <badge type="agent" ru="Выбор агента" en="Agent's Choice" />
     <price byn="638000" usd="197500" />
@@ -148,7 +148,7 @@
     <category>commercial</category>
     <subcategory ru="Офис" en="Office Space" />
     <region>minsk</region>
-    <city ru="г. Минск, ул. Кальварийская" en="Minsk, Kalvaryiskaya St" />
+    <city ru="г. Минск, ул. Кальварийская, 21" en="Minsk, Kalvaryiskaya St, 21" />
     <title ru="Светлый офис с видом на проспект" en="Bright Avenue-View Office" />
     <badge type="commercial" ru="Коммерция" en="Commercial" />
     <price byn="512400" usd="158700" />
@@ -183,7 +183,7 @@
     <category>apartments</category>
     <subcategory ru="Лофт" en="Loft Apartment" />
     <region>minsk</region>
-    <city ru="г. Минск, ул. Орловская" en="Minsk, Orlovskaya St" />
+    <city ru="г. Минск, ул. Орловская, 86" en="Minsk, Orlovskaya St, 86" />
     <title ru="Дизайнерский лофт у воды" en="Designer Waterfront Loft" />
     <badge type="exclusive" ru="Эксклюзив" en="Exclusive" />
     <price byn="411900" usd="127500" />
@@ -218,7 +218,7 @@
     <category>apartments</category>
     <subcategory ru="Апартаменты" en="Residence" />
     <region>minsk</region>
-    <city ru="г. Минск, ул. Сторожовская" en="Minsk, Storozhovskaya St" />
+    <city ru="г. Минск, ул. Сторожовская, 6" en="Minsk, Storozhovskaya St, 6" />
     <title ru="Видовая резиденция у Свислочи" en="Riverfront Residence by Svisloch" />
     <badge type="top" ru="Топ предложение" en="Top Pick" />
     <price byn="742900" usd="230000" />
@@ -252,7 +252,7 @@
     <category>houses</category>
     <subcategory ru="Коттедж" en="Cottage" />
     <region>grodno</region>
-    <city ru="г. Гродно, мкр. Зарица" en="Grodno, Zaritsa District" />
+    <city ru="г. Гродно, ул. Зарицкая, 27" en="Grodno, Zaritskaya St, 27" />
     <title ru="Современный коттедж в районе «Зарица»" en="Modern Cottage in Zaritsa" />
     <badge type="new" ru="Новинка" en="New Listing" />
     <price byn="468350" usd="145000" />
@@ -286,7 +286,7 @@
     <category>apartments</category>
     <subcategory ru="Квартира" en="Apartment" />
     <region>brest</region>
-    <city ru="г. Брест, ул. Советская" en="Brest, Sovetskaya St" />
+    <city ru="г. Брест, ул. Советская, 68" en="Brest, Sovetskaya St, 68" />
     <title ru="Просторная квартира в историческом центре" en="Spacious Historic Center Apartment" />
     <badge type="agent" ru="Выбор агента" en="Agent's Choice" />
     <price byn="316540" usd="98000" />
@@ -320,7 +320,7 @@
     <category>commercial</category>
     <subcategory ru="Торговое помещение" en="Retail &amp; Office" />
     <region>vitebsk</region>
-    <city ru="г. Витебск, просп. Фрунзе" en="Vitebsk, Frunze Ave" />
+    <city ru="г. Витебск, просп. Фрунзе, 34" en="Vitebsk, Frunze Ave, 34" />
     <title ru="Торгово-офисное пространство у Двины" en="Retail &amp; Office Hub by Dvina" />
     <badge type="commercial" ru="Коммерция" en="Commercial" />
     <price byn="371450" usd="115000" />
@@ -354,7 +354,7 @@
     <category>apartments</category>
     <subcategory ru="Пентхаус" en="Penthouse" />
     <region>minsk-region</region>
-    <city ru="Минская область, Новая Боровая" en="Minsk Region, Novaya Borovaya" />
+    <city ru="Минский р-н, Новая Боровая, ул. Авиационная, 11" en="Novaya Borovaya, Aviatsionnaya St, 11" />
     <title ru="Пентхаус с террасой в «Новой Боровой»" en="Terrace Penthouse in Novaya Borovaya" />
     <badge type="exclusive" ru="Эксклюзив" en="Exclusive" />
     <price byn="549100" usd="170000" />
@@ -388,7 +388,7 @@
     <category>houses</category>
     <subcategory ru="Усадьба" en="Estate" />
     <region>gomel</region>
-    <city ru="г. Гомель, Чёнковский р-н" en="Gomel, Chyonki District" />
+    <city ru="Гомельский р-н, пос. Чёнки, ул. Речная, 15" en="Chyonki, Rechnaya St, 15" />
     <title ru="Усадьба у соснового озера" en="Pine Lake Residence" />
     <badge type="urgent" ru="Срочная продажа" en="Urgent Sale" />
     <price byn="387600" usd="120000" />
@@ -422,7 +422,7 @@
     <category>apartments</category>
     <subcategory ru="Квартира" en="Apartment" />
     <region>minsk-region</region>
-    <city ru="г. Слуцк, ул. Ленина" en="Slutsk, Lenina St" />
+    <city ru="г. Слуцк, ул. Ленина, 142" en="Slutsk, Lenina St, 142" />
     <title ru="Светлая 3-комнатная квартира в центре Слуцка" en="Bright 3-Room Apartment in Central Slutsk" />
     <badge type="new" ru="Новинка" en="New Listing" />
     <price byn="216410" usd="67000" />
@@ -456,7 +456,7 @@
     <category>houses</category>
     <subcategory ru="Коттедж" en="Cottage" />
     <region>grodno</region>
-    <city ru="г. Волковыск, ул. Школьная" en="Volkovysk, Shkolnaya St" />
+    <city ru="г. Волковыск, ул. Школьная, 19" en="Volkovysk, Shkolnaya St, 19" />
     <title ru="Уютный кирпичный коттедж в Волковыске" en="Cozy Brick Cottage in Volkovysk" />
     <badge type="agent" ru="Выбор агента" en="Agent's Choice" />
     <price byn="352070" usd="109000" />
@@ -490,7 +490,7 @@
     <category>houses</category>
     <subcategory ru="Загородный дом" en="Barnhouse" />
     <region>minsk-region</region>
-    <city ru="гп Смиловичи, Червенский р-н" en="Smilovichi, Minsk Region" />
+    <city ru="гп Смиловичи, ул. Республиканская, 24" en="Smilovichi, Respublikanskaya St, 24" />
     <title ru="Современный барнхаус в Смиловичах у соснового леса" en="Modern Barnhouse in Smilovichi Near Pine Forest" />
     <badge type="top" ru="Топ предложение" en="Top Pick" />
     <price byn="458660" usd="142000" />
@@ -524,7 +524,7 @@
     <category>apartments</category>
     <subcategory ru="Апартаменты" en="Apartment" />
     <region>mogilev</region>
-    <city ru="г. Могилёв, ул. Первомайская" en="Mogilev, Pervomayskaya St" />
+    <city ru="г. Могилёв, ул. Первомайская, 52" en="Mogilev, Pervomayskaya St, 52" />
     <title ru="Панорамная квартира на набережной Днепра" en="Panoramic Dnieper Embankment Apartment" />
     <badge type="exclusive" ru="Эксклюзив" en="Exclusive" />
     <price byn="303620" usd="94000" />
@@ -558,7 +558,7 @@
     <category>commercial</category>
     <subcategory ru="Бизнес-центр" en="Commercial Hub" />
     <region>brest</region>
-    <city ru="г. Пинск, ул. Брестская" en="Pinsk, Brestskaya St" />
+    <city ru="г. Пинск, ул. Брестская, 31" en="Pinsk, Brestskaya St, 31" />
     <title ru="Торгово-сервисное здание в центре Пинска" en="Commercial &amp; Retail Building in Central Pinsk" />
     <badge type="commercial" ru="Коммерция" en="Commercial" />
     <price byn="426360" usd="132000" />
@@ -592,7 +592,7 @@
     <category>houses</category>
     <subcategory ru="Таунхаус" en="Townhouse" />
     <region>vitebsk</region>
-    <city ru="г. Полоцк, просп. Франциска Скорины" en="Polotsk, Francysk Skaryna Ave" />
+    <city ru="г. Полоцк, просп. Франциска Скорины, 16" en="Polotsk, Francysk Skaryna Ave, 16" />
     <title ru="Стильный таунхаус у Западной Двины" en="Stylish Townhouse by Western Dvina" />
     <badge type="urgent" ru="Срочная продажа" en="Urgent Sale" />
     <price byn="374680" usd="116000" />

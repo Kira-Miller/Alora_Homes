@@ -2,7 +2,7 @@
 // Повторно используемые DOM-компоненты: карточки объектов и карта Беларуси
 // ==========================================================================
 
-import {formatPrices, t} from './i18n.js';
+import {formatPrices, pluralFloors, t} from './i18n.js';
 import {openGuestGateModal} from './layout.js';
 import {getState, isGuest, toggleCompare, toggleFavorite} from './state.js';
 import {getBelarusMapSvg, getIconSvg, getPropertySvg} from './svg-art.js';
@@ -36,7 +36,7 @@ export function createPropertyCard(property, options = {}) {
   specItems.push(`${s.area} ${t('areaUnit', lang)}`);
 
   if (property.category === 'houses') {
-    specItems.push(`${s.floors} ${t('floorsLabel', lang)}`);
+    specItems.push(`${s.floors} ${pluralFloors(s.floors, lang)}`);
   } else {
     specItems.push(`${s.floor}/${s.floors} ${t('floorLabel', lang)}`);
   }

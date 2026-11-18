@@ -15,7 +15,9 @@
       <stop offset="100%" stop-color="#67e8f9" />
     </linearGradient>
   </defs>
+  <!-- Глубокий архитектурный щит с неоновой окантовкой -->
   <rect x="3.5" y="3.5" width="41" height="41" rx="13" fill="url(#aloraShieldBg)" stroke="url(#aloraEdgeGrad)" stroke-width="2" />
+  <!-- Монограмма «A» и двускатный силуэт современного дома -->
   <path
     d="M13 33.5 L24 12.5 L35 33.5"
     stroke="url(#aloraRoofGrad)"
@@ -23,6 +25,7 @@
     stroke-linecap="round"
     stroke-linejoin="round"
   />
+  <!-- Арочный световой портал и перекладина литеры A -->
   <path
     d="M17.5 33.5 V26.5 C17.5 22.91 20.41 20 24 20 C27.59 20 30.5 22.91 30.5 26.5 V33.5"
     stroke="#22d3ee"
@@ -30,5 +33,6 @@
     stroke-linecap="round"
   />
   <path d="M16.5 28 H31.5" stroke="url(#aloraRoofGrad)" stroke-width="2" stroke-linecap="round" />
+  <!-- Ромб-ключ на коньке крыши -->
   <polygon points="24,14.5 26.2,17 24,19.5 21.8,17" fill="#22d3ee" />
 </svg>
