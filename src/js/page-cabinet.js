@@ -16,6 +16,7 @@ import {
   toggleCompare,
   toggleFavorite,
 } from './state.js';
+import {getIconSvg} from './svg-art.js';
 import {loadPropertiesFromXml, sortProperties} from './xml-loader.js';
 
 initLayout('cabinet');
@@ -73,13 +74,13 @@ function renderCabinet() {
 
     <div class="cabinet-tabs" role="tablist">
       <button type="button" class="${activeTab === 'saved' ? 'is-active' : ''}" data-cab-tab="saved" role="tab">
-        ♥ ${t('tabSaved', lang)} (${savedProps.length})
+        ${getIconSvg('heart', 16)} <span>${t('tabSaved', lang)} (${savedProps.length})</span>
       </button>
       <button type="button" class="${activeTab === 'compare' ? 'is-active' : ''}" data-cab-tab="compare" role="tab">
-        ⚖ ${t('tabCompare', lang)} (${compareProps.length})
+        ${getIconSvg('scale', 16)} <span>${t('tabCompare', lang)} (${compareProps.length})</span>
       </button>
       <button type="button" class="${activeTab === 'requests' ? 'is-active' : ''}" data-cab-tab="requests" role="tab">
-        📅 ${t('tabRequests', lang)} (${viewingRequests.length})
+        ${getIconSvg('calendar', 16)} <span>${t('tabRequests', lang)} (${viewingRequests.length})</span>
       </button>
     </div>
 
@@ -134,7 +135,7 @@ function renderCabinet() {
           <p>${t('guestGateFavDesc', lang)}</p>
           <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
             <button type="button" class="btn btn--primary js-cab-guest-reg">${t('registerBtn', lang)}</button>
-            <a href="tel:+375297745210" class="btn btn--secondary">📞 +375 (29) 774-52-10</a>
+            <a href="tel:+375297745210" class="btn btn--secondary">${getIconSvg('phone', 16)} <span>+375 (29) 774-52-10</span></a>
           </div>
         </div>
       `;
@@ -186,7 +187,7 @@ function renderCabinet() {
       panel.innerHTML = `
         <div class="empty-state">
           <h3>${lang === 'ru' ? 'Список сравнения пуст' : 'Comparison list is empty'}</h3>
-          <p>${lang === 'ru' ? 'Нажмите кнопку «⚖» на карточках в каталоге, чтобы сравнить характеристики.' : 'Click the compare button on catalog cards to compare specs.'}</p>
+          <p>${lang === 'ru' ? 'Нажмите кнопку сравнения на карточках в каталоге, чтобы сопоставить характеристики.' : 'Click the compare button on catalog cards to compare specs.'}</p>
           <a href="./catalog.html" class="btn btn--primary">${t('navCatalog', lang)}</a>
         </div>
       `;
@@ -263,7 +264,7 @@ function renderCabinet() {
         <p>${t('guestGateBookDesc', lang)}</p>
         <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
           <button type="button" class="btn btn--primary js-cab-req-reg">${t('registerBtn', lang)}</button>
-          <a href="tel:+375297745210" class="btn btn--secondary">📞 +375 (29) 774-52-10</a>
+          <a href="tel:+375297745210" class="btn btn--secondary">${getIconSvg('phone', 16)} <span>+375 (29) 774-52-10</span></a>
         </div>
       </div>
     `;

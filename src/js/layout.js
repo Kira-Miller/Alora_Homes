@@ -15,13 +15,37 @@ import {
   toggleLang,
   toggleTheme,
 } from './state.js';
-import {getBrandLogoSvg, getSocialLinksHtml} from './svg-art.js';
+import {getBrandLogoSvg, getIconSvg, getSocialLinksHtml} from './svg-art.js';
+
+let layoutGlobalListenersBound = false;
 
 export function initLayout(activePage = 'home') {
   renderHeader(activePage);
   renderFooter();
   ensureModals();
   applyStaticTranslations(getState().lang);
+
+  if (!layoutGlobalListenersBound) {
+    layoutGlobalListenersBound = true;
+    document.addEventListener('click', (e) => {
+      const dropdown = document.getElementById('services-dropdown');
+      const trigger = dropdown?.querySelector('.site-header__dropdown-trigger');
+      if (dropdown && !dropdown.contains(e.target)) {
+        dropdown.classList.remove('is-open');
+        trigger?.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const dropdown = document.getElementById('services-dropdown');
+        const trigger = dropdown?.querySelector('.site-header__dropdown-trigger');
+        if (dropdown?.classList.contains('is-open')) {
+          dropdown.classList.remove('is-open');
+          trigger?.setAttribute('aria-expanded', 'false');
+        }
+      }
+    });
+  }
 
   subscribe(() => {
     renderHeader(activePage);
@@ -32,6 +56,7 @@ export function initLayout(activePage = 'home') {
 
 function getServiceLinks(lang) {
   return [
+    {href: './services.html', label: lang === 'ru' ? 'Все услуги и продажа' : 'All Agency Services'},
     {href: './services.html?service=sell-apartment#calculator', label: t('srvSellApt', lang)},
     {href: './services.html?service=sell-house#calculator', label: t('srvSellHouse', lang)},
     {href: './services.html?service=sell-land#calculator', label: t('srvSellLand', lang)},
@@ -65,21 +90,22 @@ function renderHeader(activePage) {
         </a>
 
         <div class="site-header__dropdown" id="services-dropdown">
-          <a
-            href="./services.html"
+          <button
+            type="button"
             class="site-header__dropdown-trigger ${activePage === 'services' ? 'is-active' : ''}"
             aria-haspopup="true"
+            aria-expanded="false"
           >
             <span>${t('navServices', lang)}</span>
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <polyline points="6 9 12 15 18 9"/>
             </svg>
-          </a>
+          </button>
           <div class="site-header__dropdown-menu" role="menu">
             ${serviceLinks
               .map(
-                (srv) =>
-                  `<a href="${srv.href}" class="site-header__dropdown-item" role="menuitem">${srv.label}<span>→</span></a>`
+                (srv, i) =>
+                  `<a href="${srv.href}" class="site-header__dropdown-item" role="menuitem" ${i === 0 ? 'style="border-bottom:1px solid var(--border-subtle);margin-bottom:4px;padding-bottom:10px;color:var(--text-primary);font-weight:600;"' : ''}>${srv.label}<span>→</span></a>`
               )
               .join('')}
           </div>
@@ -100,18 +126,17 @@ function renderHeader(activePage) {
         </div>
 
         <button type="button" class="control-chip js-toggle-theme" aria-label="Toggle theme">
-          <span>${theme === 'dark' ? '🌙' : '☀'}</span>
+          ${getIconSvg(theme === 'dark' ? 'moon' : 'sun', 15)}
           <span class="hide-xs">${theme === 'dark' ? t('themeDark', lang) : t('themeLight', lang)}</span>
         </button>
 
         <a href="./cabinet.html" class="icon-btn" aria-label="${t('navCabinet', lang)}" title="${t('navCabinet', lang)}">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
+          ${getIconSvg('heart', 18)}
           <span class="icon-btn__count">${favorites.length}</span>
         </a>
 
         <button type="button" class="control-chip js-open-auth">
+          ${getIconSvg('user', 15)}
           <span>${userLabel}</span>
         </button>
 
@@ -169,6 +194,33 @@ function renderHeader(activePage) {
   burger?.addEventListener('click', () => {
     const opened = drawer?.classList.toggle('is-open');
     burger.setAttribute('aria-expanded', String(Boolean(opened)));
+  });
+
+  // Надёжная работа выпадающего меню «Услуги» (клик + задержка закрытия при наведении)
+  const dropdown = headerEl.querySelector('#services-dropdown');
+  const dropdownTrigger = dropdown?.querySelector('.site-header__dropdown-trigger');
+  let closeTimer = null;
+
+  const setDropdownOpen = (open) => {
+    if (!dropdown || !dropdownTrigger) return;
+    dropdown.classList.toggle('is-open', open);
+    dropdownTrigger.setAttribute('aria-expanded', String(open));
+  };
+
+  dropdown?.addEventListener('mouseenter', () => {
+    if (closeTimer) clearTimeout(closeTimer);
+    setDropdownOpen(true);
+  });
+
+  dropdown?.addEventListener('mouseleave', () => {
+    closeTimer = setTimeout(() => setDropdownOpen(false), 240);
+  });
+
+  dropdownTrigger?.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const isOpen = dropdown?.classList.contains('is-open');
+    setDropdownOpen(!isOpen);
   });
 }
 

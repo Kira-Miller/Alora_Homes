@@ -7,6 +7,7 @@ import {showToast} from './components.js';
 import {formatPrices, t} from './i18n.js';
 import {initLayout} from './layout.js';
 import {addConsultationRequest, addSellRequest, getState, subscribe} from './state.js';
+import {getIconSvg} from './svg-art.js';
 
 initLayout('services');
 
@@ -78,25 +79,25 @@ function renderWizard() {
     const types = [
       {
         id: 'apartment',
-        icon: '🏢',
+        icon: getIconSvg('building', 20),
         title: lang === 'ru' ? 'Квартира' : 'Apartment',
         sub: lang === 'ru' ? 'Городская недвижимость' : 'Urban residential',
       },
       {
         id: 'house',
-        icon: '🏡',
+        icon: getIconSvg('home', 20),
         title: lang === 'ru' ? 'Загородный дом' : 'Country House',
         sub: lang === 'ru' ? 'Коттеджи, таунхаусы, виллы' : 'Cottages, townhouses, villas',
       },
       {
         id: 'land',
-        icon: '🌿',
+        icon: getIconSvg('trees', 20),
         title: lang === 'ru' ? 'Земельный участок' : 'Land Plot',
         sub: lang === 'ru' ? 'Под строительство ИЖС' : 'Residential development',
       },
       {
         id: 'commercial',
-        icon: '🏛',
+        icon: getIconSvg('briefcase', 20),
         title: lang === 'ru' ? 'Коммерческая' : 'Commercial',
         sub: lang === 'ru' ? 'Офис, ритейл, склад' : 'Office, retail, warehouse',
       },

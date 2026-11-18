@@ -368,7 +368,14 @@
             <div class="consult-box__grid">
               <input id="consult-name" class="field__control" type="text" required data-i18n-placeholder="inputNameShort" placeholder="Имя" />
               <div class="phone-prefix-wrap">
-                <span class="phone-prefix-wrap__flag">🇧🇾 +375</span>
+                <span class="phone-prefix-wrap__flag">
+                  <svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true">
+                    <rect width="20" height="9.5" fill="#d22730" />
+                    <rect y="9.5" width="20" height="4.5" fill="#007a3d" />
+                    <rect width="3.5" height="14" fill="#f8fafc" opacity="0.92" />
+                  </svg>
+                  <span>+375</span>
+                </span>
                 <input id="consult-phone" type="tel" required placeholder="29 491-19-11" />
               </div>
             </div>

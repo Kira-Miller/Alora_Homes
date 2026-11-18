@@ -6,7 +6,7 @@
 import {showToast} from './components.js';
 import {initLayout} from './layout.js';
 import {getState, subscribe} from './state.js';
-import {getRealtorPortraitSvg, getSocialLinksHtml} from './svg-art.js';
+import {getIconSvg, getRealtorPortraitSvg, getSocialLinksHtml} from './svg-art.js';
 
 initLayout('about');
 
@@ -47,7 +47,7 @@ function renderAboutWidgets() {
         <div class="realtor-card__body">
           <h3 class="realtor-card__name">${lang === 'ru' ? r.nameRu : r.nameEn}</h3>
           <p class="realtor-card__role">${lang === 'ru' ? r.roleRu : r.roleEn}</p>
-          <a href="tel:${r.phone.replace(/[^+\d]/g, '')}" class="realtor-card__phone">📞 ${r.phone}</a>
+          <a href="tel:${r.phone.replace(/[^+\d]/g, '')}" class="realtor-card__phone">${getIconSvg('phone', 15)} <span>${r.phone}</span></a>
         </div>
       </article>
     `

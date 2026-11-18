@@ -5,7 +5,7 @@
 import {formatPrices, t} from './i18n.js';
 import {openGuestGateModal} from './layout.js';
 import {getState, isGuest, toggleCompare, toggleFavorite} from './state.js';
-import {getBelarusMapSvg, getPropertySvg} from './svg-art.js';
+import {getBelarusMapSvg, getIconSvg, getPropertySvg} from './svg-art.js';
 import {showToast} from './toast.js';
 
 export {showToast};
@@ -49,10 +49,14 @@ export function createPropertyCard(property, options = {}) {
     specItems.push(`${s.year}`);
   }
 
+  const mediaVisual = property.image
+    ? `<img src="${property.image}" alt="${property.title[lang]}" loading="lazy" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(property.visualTheme, 'exterior', `card-${property.id}`)}</div>`
+    : getPropertySvg(property.visualTheme, 'exterior', `card-${property.id}`);
+
   card.innerHTML = `
     <div class="property-card__media">
       <a href="${detailUrl}" aria-label="${property.title[lang]}">
-        ${getPropertySvg(property.visualTheme, 'exterior', `card-${property.id}`)}
+        ${mediaVisual}
       </a>
       <span class="property-card__badge property-card__badge--${property.badge.type}">
         ${property.badge[lang]}
@@ -63,9 +67,7 @@ export function createPropertyCard(property, options = {}) {
         aria-label="${isSaved ? t('inFav', lang) : t('addToFav', lang)}"
         title="${isSaved ? t('inFav', lang) : t('addToFav', lang)}"
       >
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-        </svg>
+        ${getIconSvg(isSaved ? 'heart-filled' : 'heart', 17)}
       </button>
     </div>
     <div class="property-card__body">
@@ -95,8 +97,8 @@ export function createPropertyCard(property, options = {}) {
         <div class="property-card__actions">
           ${
             options.showCompare !== false
-              ? `<button type="button" class="btn btn--secondary btn--sm js-compare-btn" title="${t('compareBtn', lang)}">${
-                  isCompared ? '✓' : '⚖'
+              ? `<button type="button" class="btn btn--secondary btn--sm js-compare-btn" title="${t('compareBtn', lang)}" aria-label="${t('compareBtn', lang)}">${
+                  isCompared ? getIconSvg('check', 15) : getIconSvg('scale', 15)
                 }</button>`
               : ''
           }

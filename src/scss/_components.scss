@@ -112,9 +112,9 @@
 
     &-menu {
       position: absolute;
-      top: calc(100% + 10px);
+      top: calc(100% + 6px);
       left: 0;
-      min-width: 260px;
+      min-width: 270px;
       padding: 8px;
       border-radius: $radius-md;
       background: var(--bg-surface-elevated);
@@ -124,11 +124,19 @@
       flex-direction: column;
       gap: 2px;
       z-index: $z-dropdown;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: -14px;
+        left: -12px;
+        right: -12px;
+        height: 16px;
+      }
     }
 
     &.is-open &-menu,
-    &:hover &-menu,
-    &:focus-within &-menu {
+    &:hover &-menu {
       display: flex;
     }
 

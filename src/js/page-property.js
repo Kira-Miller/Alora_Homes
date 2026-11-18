@@ -6,7 +6,7 @@ import {showToast} from './components.js';
 import {formatPrices, t} from './i18n.js';
 import {initLayout, openAuthModal, openGuestGateModal} from './layout.js';
 import {addViewingRequest, getState, isGuest, subscribe, toggleFavorite} from './state.js';
-import {getPropertySvg} from './svg-art.js';
+import {getIconSvg, getPropertySvg} from './svg-art.js';
 import {loadPropertiesFromXml} from './xml-loader.js';
 
 initLayout('catalog');
@@ -67,7 +67,11 @@ function renderPropertyPage() {
 
     <section class="gallery-bento" aria-label="Property gallery">
       <div class="gallery-bento__main" id="gallery-main-view">
-        ${getPropertySvg(p.visualTheme, activeView, `detail-main-${p.id}`)}
+        ${
+          activeView === 'exterior' && p.image
+            ? `<img src="${p.image}" alt="${p.title[lang]}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(p.visualTheme, activeView, `detail-main-${p.id}`)}</div>`
+            : getPropertySvg(p.visualTheme, activeView, `detail-main-${p.id}`)
+        }
         <span class="gallery-bento__caption">${views.find((v) => v.id === activeView)?.label}</span>
       </div>
       <div class="gallery-bento__side">
@@ -107,7 +111,7 @@ function renderPropertyPage() {
             ${p.features
               .map(
                 (f) =>
-                  `<span style="padding:6px 12px;border-radius:8px;background:var(--bg-surface);border:1px solid var(--border-subtle);font-size:0.84rem;color:var(--text-secondary);">✓ ${f[lang]}</span>`
+                  `<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;background:var(--bg-surface);border:1px solid var(--border-subtle);font-size:0.84rem;color:var(--text-secondary);"><span style="color:var(--accent-cyan);display:inline-flex;">${getIconSvg('check', 14)}</span> ${f[lang]}</span>`
               )
               .join('')}
           </div>
@@ -143,7 +147,7 @@ function renderPropertyPage() {
         </div>
 
         <button type="button" class="btn btn--secondary btn--full" id="detail-fav-btn">
-          <span>${isSaved ? '♥' : '♡'}</span>
+          ${getIconSvg(isSaved ? 'heart-filled' : 'heart', 17)}
           <span>${isSaved ? t('inFav', lang) : t('addToFav', lang)}</span>
         </button>
 
@@ -161,7 +165,7 @@ function renderPropertyPage() {
             ${t('guestGateBookDesc', lang)}
           </div>
           <button type="button" class="btn btn--primary btn--full js-sidebar-reg">${t('registerBtn', lang)}</button>
-          <a href="tel:+375297745210" class="btn btn--secondary btn--full">📞 +375 (29) 774-52-10</a>
+          <a href="tel:+375297745210" class="btn btn--secondary btn--full">${getIconSvg('phone', 16)} <span>+375 (29) 774-52-10</span></a>
         `
             : `
           <form id="viewing-form" style="display:flex;flex-direction:column;gap:12px;">

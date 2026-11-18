@@ -7,17 +7,67 @@ export function getBrandLogoSvg(size = 34) {
   return `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="${size}" height="${size}" fill="none" aria-hidden="true">
       <defs>
-        <linearGradient id="aloraBrandGradInline" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#8b5cf6" />
-          <stop offset="55%" stop-color="#a855f7" />
+        <linearGradient id="aloraShieldBgInline" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#171230" />
+          <stop offset="100%" stop-color="#0d1829" />
+        </linearGradient>
+        <linearGradient id="aloraEdgeGradInline" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a78bfa" />
+          <stop offset="50%" stop-color="#8b5cf6" />
           <stop offset="100%" stop-color="#22d3ee" />
         </linearGradient>
+        <linearGradient id="aloraRoofGradInline" x1="12" y1="12" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="65%" stop-color="#e0e7ff" />
+          <stop offset="100%" stop-color="#67e8f9" />
+        </linearGradient>
       </defs>
-      <rect x="4" y="4" width="40" height="40" rx="12" fill="url(#aloraBrandGradInline)" />
-      <path d="M24 12L12.5 23.5V35H19V27.5C19 25.567 20.567 24 22.5 24H25.5C27.433 24 29 25.567 29 27.5V35H35.5V23.5L24 12Z" fill="#ffffff" fill-opacity="0.96" />
-      <circle cx="24" cy="19" r="2" fill="#8b5cf6" />
+      <rect x="3.5" y="3.5" width="41" height="41" rx="13" fill="url(#aloraShieldBgInline)" stroke="url(#aloraEdgeGradInline)" stroke-width="2" />
+      <path d="M13 33.5 L24 12.5 L35 33.5" stroke="url(#aloraRoofGradInline)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M17.5 33.5 V26.5 C17.5 22.91 20.41 20 24 20 C27.59 20 30.5 22.91 30.5 26.5 V33.5" stroke="#22d3ee" stroke-width="2.2" stroke-linecap="round" />
+      <path d="M16.5 28 H31.5" stroke="url(#aloraRoofGradInline)" stroke-width="2" stroke-linecap="round" />
+      <polygon points="24,14.5 26.2,17 24,19.5 21.8,17" fill="#22d3ee" />
     </svg>
   `;
+}
+
+/**
+ * Единая коллекция эстетичных минималистичных SVG-иконок (1.75px stroke)
+ */
+export function getIconSvg(name, size = 18) {
+  const s = `width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"`;
+  switch (name) {
+    case 'moon':
+      return `<svg ${s}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+    case 'sun':
+      return `<svg ${s}><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
+    case 'heart':
+      return `<svg ${s}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+    case 'heart-filled':
+      return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+    case 'scale':
+      return `<svg ${s}><path d="M12 3v18M5 7h14M3 14l2-7 2 7a2 2 0 0 1-4 0zM17 14l2-7 2 7a2 2 0 0 1-4 0zM8 21h8"/></svg>`;
+    case 'calendar':
+      return `<svg ${s}><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+    case 'phone':
+      return `<svg ${s}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.58 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`;
+    case 'building':
+      return `<svg ${s}><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h2M14 6h2M8 10h2M14 10h2M8 14h2M14 14h2"/></svg>`;
+    case 'home':
+      return `<svg ${s}><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/><path d="M9 21v-6h6v6"/></svg>`;
+    case 'trees':
+      return `<svg ${s}><path d="M12 3 6 12h4l-3 6h10l-3-6h4L12 3z"/><line x1="12" y1="18" x2="12" y2="22"/></svg>`;
+    case 'briefcase':
+      return `<svg ${s}><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M2 12h20"/></svg>`;
+    case 'check':
+      return `<svg ${s}><polyline points="20 6 9 17 4 12"/></svg>`;
+    case 'star':
+      return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+    case 'user':
+      return `<svg ${s}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+    default:
+      return `<svg ${s}><circle cx="12" cy="12" r="9"/></svg>`;
+  }
 }
 
 const PALETTES = {

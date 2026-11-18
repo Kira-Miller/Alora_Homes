@@ -74,6 +74,7 @@ export async function loadPropertiesFromXml() {
         newbuild: getText('specs > newbuild') === 'true',
       },
       visualTheme: getText('visualTheme') || 'villa-pine',
+      image: getText('image'),
       mapCoords: {
         x: Number(getAttr('mapCoords', 'x')) || 270,
         y: Number(getAttr('mapCoords', 'y')) || 190,

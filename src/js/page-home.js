@@ -6,7 +6,7 @@ import {createPropertyCard, openBelarusMapModal, showToast} from './components.j
 import {pluralObjects, t} from './i18n.js';
 import {initLayout} from './layout.js';
 import {addConsultationRequest, getState, setCurrency, subscribe} from './state.js';
-import {getRealtorPortraitSvg} from './svg-art.js';
+import {getIconSvg, getRealtorPortraitSvg} from './svg-art.js';
 import {filterProperties, loadPropertiesFromXml} from './xml-loader.js';
 
 initLayout('home');
@@ -163,7 +163,7 @@ function renderRealtorsAndReviews() {
         <div class="realtor-card__body">
           <h3 class="realtor-card__name">${lang === 'ru' ? r.nameRu : r.nameEn}</h3>
           <p class="realtor-card__role">${lang === 'ru' ? r.roleRu : r.roleEn}</p>
-          <a href="tel:${r.phone.replace(/[^+\d]/g, '')}" class="realtor-card__phone">📞 ${r.phone}</a>
+          <a href="tel:${r.phone.replace(/[^+\d]/g, '')}" class="realtor-card__phone">${getIconSvg('phone', 15)} <span>${r.phone}</span></a>
         </div>
       </article>
     `
@@ -172,11 +172,12 @@ function renderRealtorsAndReviews() {
 
   const reviewsEl = document.getElementById('home-reviews');
   if (reviewsEl) {
+    const starsHtml = Array.from({length: 5}, () => getIconSvg('star', 15)).join('');
     reviewsEl.innerHTML = REVIEWS.map(
       (rev) => `
       <article class="review-card">
         <strong>${lang === 'ru' ? rev.authorRu : rev.authorEn}</strong>
-        <div class="review-card__stars" aria-label="5 stars">★★★★★</div>
+        <div class="review-card__stars" aria-label="5 stars" style="display:flex;gap:4px;">${starsHtml}</div>
         <p class="review-card__text">${lang === 'ru' ? rev.textRu : rev.textEn}</p>
         <div class="review-card__meta">${lang === 'ru' ? rev.metaRu : rev.metaEn}</div>
       </article>
