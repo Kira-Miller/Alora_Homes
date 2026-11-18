@@ -1,0 +1,43 @@
+// ==========================================================================
+// Миксины SCSS для адаптивности, поверхностей и типографики
+// ==========================================================================
+
+@use 'variables' as *;
+
+@mixin respond-down($bp) {
+  @media (max-width: $bp) {
+    @content;
+  }
+}
+
+@mixin respond-up($bp) {
+  @media (min-width: $bp) {
+    @content;
+  }
+}
+
+@mixin flex-center($gap: 8px) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $gap;
+}
+
+@mixin surface-card($radius: $radius-md) {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: $radius;
+  box-shadow: var(--shadow-card);
+}
+
+@mixin tabular-numbers {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+@mixin focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+}

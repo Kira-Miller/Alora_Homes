@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alora Homes — Недвижимость в Беларуси</title>
+    <meta
+      name="description"
+      content="Агентство недвижимости Alora Homes по всей Беларуси: подбор квартир, загородных домов и коммерческих пространств с юридическим сопровождением."
+    />
+    <meta property="og:title" content="Alora Homes — Недвижимость в Беларуси" />
+    <meta
+      property="og:description"
+      content="Каталог элитной, жилой и коммерческой недвижимости по всей Беларуси в BYN и USD."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="/assets/logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Перейти к основному содержанию</a>
+
+    <!-- Семантическая шапка сайта -->
+    <header id="site-header"></header>
+
+    <main id="main-content">
+      <!-- Первый экран (Hero) и панель фильтрации объектов -->
+      <section class="hero">
+        <div class="container">
+          <span class="hero__kicker" data-i18n="heroKicker">Эстетика пространства · Вся Беларусь</span>
+          <h1 class="hero__title">
+            <span data-i18n="heroTitleBefore">Найдите своё идеальное</span>
+            <span class="highlight-cyan" data-i18n="heroTitleCyan">пространство</span>
+            <span data-i18n="heroTitleBrand">с Alora Homes</span>
+          </h1>
+          <p class="hero__subtitle" data-i18n="heroSubtitle">
+            Тщательно подобранный каталог жилой, коммерческой и загородной недвижимости по всей Беларуси с полным
+            юридическим сопровождением.
+          </p>
+
+          <!-- Форма поиска с живым пересчётом совпадений из XML -->
+          <form class="search-panel" id="home-search-form">
+            <div class="search-panel__top-tabs" role="tablist">
+              <button
+                type="button"
+                class="tab-btn is-active"
+                data-deal-tab="residential"
+                data-i18n="tabResidential"
+              >
+                Квартиры / Комнаты / Дома
+              </button>
+              <button type="button" class="tab-btn" data-deal-tab="commercial" data-i18n="tabCommercial">
+                Коммерческая недвижимость
+              </button>
+            </div>
+
+            <div class="search-panel__grid">
+              <div class="search-panel__box">
+                <label for="search-city" data-i18n="labelCity">Город или область</label>
+                <div class="search-panel__input-row">
+                  <input
+                    id="search-city"
+                    type="text"
+                    data-i18n-placeholder="placeholderCity"
+                    placeholder="Минск, Брест, Гродно, Ратомка..."
+                  />
+                  <button
+                    type="button"
+                    class="search-panel__detect"
+                    id="detect-city-btn"
+                    data-i18n="detectCity"
+                  >
+                    Определить
+                  </button>
+                </div>
+              </div>
+
+              <div class="search-panel__box">
+                <label for="search-category" data-i18n="labelCategory">Категория</label>
+                <div class="search-panel__input-row">
+                  <select id="search-category">
+                    <option value="all" data-i18n="catAll">Все категории</option>
+                    <option value="apartments" data-i18n="catApartments">Квартиры и апартаменты</option>
+                    <option value="houses" data-i18n="catHouses">Загородные дома и таунхаусы</option>
+                    <option value="newbuild" data-i18n="catNewbuild">Новостройки</option>
+                    <option value="commercial" data-i18n="catCommercial">Коммерческая недвижимость</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="search-panel__box">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+                  <label for="search-price-min" data-i18n="labelPrice">Цена</label>
+                  <div class="search-panel__curr-toggle">
+                    <button type="button" class="is-active" data-search-curr="BYN">BYN</button>
+                    <button type="button" data-search-curr="USD">USD</button>
+                  </div>
+                </div>
+                <div class="search-panel__range">
+                  <input id="search-price-min" type="number" min="0" data-i18n-placeholder="labelFrom" placeholder="от" />
+                  <span aria-hidden="true">—</span>
+                  <input id="search-price-max" type="number" min="0" data-i18n-placeholder="labelTo" placeholder="до" />
+                </div>
+              </div>
+
+              <div class="search-panel__box">
+                <label for="search-rooms" data-i18n="labelRooms">Комнаты</label>
+                <div class="search-panel__input-row">
+                  <select id="search-rooms">
+                    <option value="any" data-i18n="roomsAny">Любое количество</option>
+                    <option value="1" data-i18n="rooms1">1 комната</option>
+                    <option value="2" data-i18n="rooms2">2 комнаты</option>
+                    <option value="3" data-i18n="rooms3">3 комнаты</option>
+                    <option value="4" data-i18n="rooms4">4+ комнаты</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="search-panel__box">
+                <label for="search-area-min" data-i18n="labelArea">Площадь (м²)</label>
+                <div class="search-panel__range">
+                  <input id="search-area-min" type="number" min="0" data-i18n-placeholder="labelFrom" placeholder="от" />
+                  <span aria-hidden="true">—</span>
+                  <input id="search-area-max" type="number" min="0" data-i18n-placeholder="labelTo" placeholder="до" />
+                </div>
+              </div>
+            </div>
+
+            <div class="search-panel__subgrid">
+              <div class="search-panel__box">
+                <label for="search-living-min" data-i18n="labelLivingArea">Жилая (м²)</label>
+                <div class="search-panel__range">
+                  <input id="search-living-min" type="number" min="0" data-i18n-placeholder="labelFrom" placeholder="от" />
+                  <span aria-hidden="true">—</span>
+                  <input id="search-living-max" type="number" min="0" data-i18n-placeholder="labelTo" placeholder="до" />
+                </div>
+              </div>
+
+              <div class="search-panel__box">
+                <label for="search-plot-min" data-i18n="labelPlot">Участок (сот.)</label>
+                <div class="search-panel__range">
+                  <input id="search-plot-min" type="number" min="0" data-i18n-placeholder="labelFrom" placeholder="от" />
+                  <span aria-hidden="true">—</span>
+                  <input id="search-plot-max" type="number" min="0" data-i18n-placeholder="labelTo" placeholder="до" />
+                </div>
+              </div>
+
+              <div class="search-panel__box">
+                <label for="search-mkad-max" data-i18n="labelMkad">До МКАД (км)</label>
+                <div class="search-panel__input-row">
+                  <input id="search-mkad-max" type="number" min="0" data-i18n-placeholder="labelTo" placeholder="до" />
+                </div>
+              </div>
+            </div>
+
+            <div class="search-panel__footer">
+              <button type="button" class="btn btn--ghost" id="open-map-btn">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span data-i18n="onMap">На карте Беларуси</span>
+              </button>
+
+              <div class="search-panel__actions">
+                <button type="button" class="btn btn--ghost" id="reset-search-btn" data-i18n="resetFilters">
+                  Сбросить фильтры
+                </button>
+                <button type="submit" class="btn btn--primary" id="home-search-submit">
+                  Найти 12 объектов →
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Актуальные предложения (загружаются из /data/properties.xml) -->
+      <section class="section">
+        <div class="container">
+          <div class="section-header-row">
+            <div>
+              <span class="section-kicker" data-i18n="featuredKicker">Выбор Alora Homes</span>
+              <h2 class="section-title" data-i18n="featuredTitle">Актуальные предложения</h2>
+            </div>
+            <a href="/catalog.html" class="btn btn--ghost">
+              <span data-i18n="viewAllCatalog">Смотреть весь каталог</span> →
+            </a>
+          </div>
+
+          <div class="tabs-row" id="featured-tabs" style="margin-bottom:24px;"></div>
+          <div class="property-grid" id="featured-grid"></div>
+        </div>
+      </section>
+
+      <!-- Преимущества агентства -->
+      <section class="section">
+        <div class="container">
+          <div class="section-header-row">
+            <div>
+              <span class="section-kicker" data-i18n="whyKicker">Работаем с заботой</span>
+              <h2 class="section-title" data-i18n="whyTitle">Почему выбирают Alora Homes</h2>
+            </div>
+            <p class="section-subtitle" style="margin-top:0;" data-i18n="whySubtitle">
+              Мы превращаем сложный путь к недвижимости в понятный, безопасный и приятный опыт по всей Беларуси.
+            </p>
+          </div>
+
+          <div class="benefits-grid">
+            <article class="benefit-card">
+              <div class="benefit-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <h3 class="benefit-card__title" data-i18n="why1Title">Полная юридическая безопасность</h3>
+              <p class="benefit-card__desc" data-i18n="why1Desc">
+                Проверяем историю права собственности и юридическую чистоту каждого объекта перед сделкой.
+              </p>
+            </article>
+
+            <article class="benefit-card">
+              <div class="benefit-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+              </div>
+              <h3 class="benefit-card__title" data-i18n="why2Title">Быстрая оценка за 24 часа</h3>
+              <p class="benefit-card__desc" data-i18n="why2Desc">
+                Анализируем реальные сделки и предоставляем точный отчёт о рыночной стоимости объекта.
+              </p>
+            </article>
+
+            <article class="benefit-card">
+              <div class="benefit-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 6v12M15 9.5a3 3 0 0 0-6 0c0 2 6 2 6 4a3 3 0 0 1-6 0"/>
+                </svg>
+              </div>
+              <h3 class="benefit-card__title" data-i18n="why3Title">Без скрытых комиссий</h3>
+              <p class="benefit-card__desc" data-i18n="why3Desc">
+                Прозрачное ценообразование в BYN и USD, фиксированные условия договора и честный расчёт.
+              </p>
+            </article>
+
+            <article class="benefit-card">
+              <div class="benefit-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </div>
+              <h3 class="benefit-card__title" data-i18n="why4Title">Персональный агент</h3>
+              <p class="benefit-card__desc" data-i18n="why4Desc">
+                Выделенный эксперт ведёт вашу сделку от первого просмотра до торжественной передачи ключей.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Этапы работы агентства -->
+      <section class="section">
+        <div class="container">
+          <span class="section-kicker" data-i18n="processKicker">Прозрачный процесс</span>
+          <h2 class="section-title" data-i18n="processTitle">Как мы работаем</h2>
+
+          <ol class="steps-grid">
+            <li class="step-item">
+              <span class="step-item__num">01</span>
+              <h3 class="step-item__title" data-i18n="step1Title">Знакомство и подбор</h3>
+              <p class="step-item__desc" data-i18n="step1Desc">
+                Изучаем ваши задачи, бюджет и город, подбираем точные совпадения из базы XML.
+              </p>
+            </li>
+            <li class="step-item">
+              <span class="step-item__num">02</span>
+              <h3 class="step-item__title" data-i18n="step2Title">Просмотр объектов</h3>
+              <p class="step-item__desc" data-i18n="step2Desc">
+                Организуем комфортные индивидуальные показы в удобное для вас время.
+              </p>
+            </li>
+            <li class="step-item">
+              <span class="step-item__num">03</span>
+              <h3 class="step-item__title" data-i18n="step3Title">Юридическая проверка</h3>
+              <p class="step-item__desc" data-i18n="step3Desc">
+                Берём на себя подготовку всех договоров, справок БТИ и сопровождение расчётов.
+              </p>
+            </li>
+            <li class="step-item">
+              <span class="step-item__num">04</span>
+              <h3 class="step-item__title" data-i18n="step4Title">Передача ключей</h3>
+              <p class="step-item__desc" data-i18n="step4Desc">
+                Закрываем сделку, контролируем регистрацию права собственности и остаёмся на связи.
+              </p>
+            </li>
+          </ol>
+        </div>
+      </section>
+    </main>
+
+    <!-- Семантический подвал сайта -->
+    <footer id="site-footer"></footer>
+
+    <script type="module" src="/src/js/page-home.js"></script>
+  </body>
+</html>

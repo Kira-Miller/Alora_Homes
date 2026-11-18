@@ -1,0 +1,295 @@
+// ==========================================================================
+// Контроллер страницы продажи недвижимости (sell.html)
+// Включает 3-шаговый калькулятор оценки, пакеты и форму с загрузкой фото
+// ==========================================================================
+
+import '../scss/main.scss';
+import {showToast} from './components.js';
+import {formatPrices, t} from './i18n.js';
+import {initLayout} from './layout.js';
+import {addSellRequest, getState, subscribe} from './state.js';
+
+initLayout('sell');
+
+let calcStep = 1;
+const calcData = {
+  type: 'apartment',
+  region: 'minsk',
+  area: 72,
+  condition: 'modern',
+};
+
+const wizardRoot = document.getElementById('sell-wizard-body');
+const uploadedFiles = [];
+
+function calculateEstimate() {
+  const basePerSqmUsd = {
+    apartment: {minsk: 1650, 'minsk-region': 1150, brest: 1020, grodno: 1040, vitebsk: 890, gomel: 920},
+    house: {minsk: 1450, 'minsk-region': 1250, brest: 950, grodno: 980, vitebsk: 820, gomel: 850},
+    land: {minsk: 620, 'minsk-region': 320, brest: 220, grodno: 240, vitebsk: 180, gomel: 190},
+    commercial: {minsk: 1850, 'minsk-region': 1200, brest: 1080, grodno: 1100, vitebsk: 940, gomel: 960},
+  };
+  const condMult = {shell: 0.82, standard: 1.0, modern: 1.22};
+
+  const rate = basePerSqmUsd[calcData.type]?.[calcData.region] || 1100;
+  const mult = condMult[calcData.condition] || 1.0;
+  const area = Math.max(10, Number(calcData.area) || 60);
+  const midUsd = Math.round(rate * area * mult);
+  const lowUsd = Math.round(midUsd * 0.93);
+  const highUsd = Math.round(midUsd * 1.08);
+  const rateUsdToByn = 3.23;
+
+  return {
+    lowUsd,
+    highUsd,
+    lowByn: Math.round(lowUsd * rateUsdToByn),
+    highByn: Math.round(highUsd * rateUsdToByn),
+  };
+}
+
+function renderWizard() {
+  if (!wizardRoot) return;
+  const {lang, currency} = getState();
+
+  document.querySelectorAll('[data-wizard-step]').forEach((el) => {
+    const step = Number(el.getAttribute('data-wizard-step'));
+    el.classList.toggle('is-active', step === calcStep);
+    el.classList.toggle('is-done', step < calcStep);
+  });
+
+  if (calcStep === 1) {
+    const types = [
+      {
+        id: 'apartment',
+        icon: '🏢',
+        title: lang === 'ru' ? 'Квартира' : 'Apartment',
+        sub: lang === 'ru' ? 'Городская недвижимость' : 'Urban residential',
+      },
+      {
+        id: 'house',
+        icon: '🏡',
+        title: lang === 'ru' ? 'Загородный дом' : 'Country House',
+        sub: lang === 'ru' ? 'Коттеджи, таунхаусы, виллы' : 'Cottages, townhouses, villas',
+      },
+      {
+        id: 'land',
+        icon: '🌿',
+        title: lang === 'ru' ? 'Земельный участок' : 'Land Plot',
+        sub: lang === 'ru' ? 'Под строительство ИЖС' : 'Residential development',
+      },
+      {
+        id: 'commercial',
+        icon: '🏛',
+        title: lang === 'ru' ? 'Коммерческая' : 'Commercial',
+        sub: lang === 'ru' ? 'Офис, ритейл, склад' : 'Office, retail, warehouse',
+      },
+    ];
+
+    wizardRoot.innerHTML = `
+      <h3 style="font-size:1.15rem;margin-bottom:16px;">${t('calcStep1Prompt', lang)}</h3>
+      <div class="type-options-grid">
+        ${types
+          .map(
+            (item) => `
+          <button type="button" class="type-option ${calcData.type === item.id ? 'is-selected' : ''}" data-prop-type="${item.id}">
+            <span class="type-option__icon">${item.icon}</span>
+            <div>
+              <strong>${item.title}</strong>
+              <span>${item.sub}</span>
+            </div>
+          </button>
+        `
+          )
+          .join('')}
+      </div>
+      <button type="button" class="btn btn--primary btn--full" id="wizard-next-1">${t('nextStepBtn', lang)} →</button>
+    `;
+
+    wizardRoot.querySelectorAll('[data-prop-type]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        calcData.type = btn.getAttribute('data-prop-type') || 'apartment';
+        renderWizard();
+      });
+    });
+    document.getElementById('wizard-next-1')?.addEventListener('click', () => {
+      calcStep = 2;
+      renderWizard();
+    });
+    return;
+  }
+
+  if (calcStep === 2) {
+    wizardRoot.innerHTML = `
+      <h3 style="font-size:1.15rem;margin-bottom:16px;">${t('calcStep2Prompt', lang)}</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px;">
+        <div class="field">
+          <label class="field__label" for="calc-region">${t('labelRegion', lang)}</label>
+          <select id="calc-region" class="field__control">
+            <option value="minsk" ${calcData.region === 'minsk' ? 'selected' : ''}>${t('regionMinsk', lang)}</option>
+            <option value="minsk-region" ${calcData.region === 'minsk-region' ? 'selected' : ''}>${t('regionMinskRegion', lang)}</option>
+            <option value="brest" ${calcData.region === 'brest' ? 'selected' : ''}>${t('regionBrest', lang)}</option>
+            <option value="grodno" ${calcData.region === 'grodno' ? 'selected' : ''}>${t('regionGrodno', lang)}</option>
+            <option value="vitebsk" ${calcData.region === 'vitebsk' ? 'selected' : ''}>${t('regionVitebsk', lang)}</option>
+            <option value="gomel" ${calcData.region === 'gomel' ? 'selected' : ''}>${t('regionGomel', lang)}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label" for="calc-area">${t('labelArea', lang)}</label>
+          <input id="calc-area" class="field__control" type="number" min="10" max="2000" value="${calcData.area}" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="calc-cond">${lang === 'ru' ? 'Состояние' : 'Condition'}</label>
+          <select id="calc-cond" class="field__control">
+            <option value="shell" ${calcData.condition === 'shell' ? 'selected' : ''}>${lang === 'ru' ? 'Без отделки' : 'Shell & core'}</option>
+            <option value="standard" ${calcData.condition === 'standard' ? 'selected' : ''}>${lang === 'ru' ? 'Хороший ремонт' : 'Standard finish'}</option>
+            <option value="modern" ${calcData.condition === 'modern' ? 'selected' : ''}>${lang === 'ru' ? 'Дизайнерский ремонт' : 'Designer finish'}</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <button type="button" class="btn btn--secondary" id="wizard-prev-2">← ${t('prevStepBtn', lang)}</button>
+        <button type="button" class="btn btn--primary" style="flex:1;" id="wizard-next-2">${t('nextStepBtn', lang)} →</button>
+      </div>
+    `;
+
+    document.getElementById('wizard-prev-2')?.addEventListener('click', () => {
+      calcStep = 1;
+      renderWizard();
+    });
+    document.getElementById('wizard-next-2')?.addEventListener('click', () => {
+      calcData.region = document.getElementById('calc-region').value;
+      calcData.area = Number(document.getElementById('calc-area').value) || 60;
+      calcData.condition = document.getElementById('calc-cond').value;
+      calcStep = 3;
+      renderWizard();
+    });
+    return;
+  }
+
+  // Шаг 3: Оценка
+  const est = calculateEstimate();
+  const lowFmt = formatPrices(est.lowByn, est.lowUsd, currency);
+  const highFmt = formatPrices(est.highByn, est.highUsd, currency);
+
+  wizardRoot.innerHTML = `
+    <h3 style="font-size:1.15rem;margin-bottom:16px;">${t('calcStep3Prompt', lang)}</h3>
+    <div class="valuation-result">
+      <div style="font-size:0.85rem;color:var(--text-secondary);">
+        ${calcData.area} ${t('areaUnit', lang)} · ${calcData.region.toUpperCase()}
+      </div>
+      <div class="valuation-result__price">${lowFmt.primary} — ${highFmt.primary}</div>
+      <div class="valuation-result__sub">${lowFmt.secondary} — ${highFmt.secondary}</div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;">
+      <button type="button" class="btn btn--secondary" id="wizard-recalc">${t('recalcBtn', lang)}</button>
+      <button type="button" class="btn btn--primary" style="flex:1;" id="wizard-apply">${t('applyWithEstimate', lang)} →</button>
+    </div>
+  `;
+
+  document.getElementById('wizard-recalc')?.addEventListener('click', () => {
+    calcStep = 1;
+    renderWizard();
+  });
+
+  document.getElementById('wizard-apply')?.addEventListener('click', () => {
+    const typeSelect = document.getElementById('sell-type');
+    const commentEl = document.getElementById('sell-comment');
+    if (typeSelect) typeSelect.value = calcData.type;
+    if (commentEl) {
+      commentEl.value =
+        lang === 'ru'
+          ? `Онлайн-оценка: ${calcData.area} м², ориентир ${lowFmt.primary} – ${highFmt.primary}.`
+          : `Online estimate: ${calcData.area} sq.m, range ${lowFmt.primary} – ${highFmt.primary}.`;
+    }
+    document.getElementById('sell-application')?.scrollIntoView({behavior: 'smooth'});
+  });
+}
+
+function bindPackagesAndForm() {
+  document.querySelectorAll('[data-select-package]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const pkg = btn.getAttribute('data-select-package');
+      const pkgSelect = document.getElementById('sell-package');
+      if (pkgSelect && pkg) {
+        pkgSelect.value = pkg;
+      }
+      document.getElementById('sell-application')?.scrollIntoView({behavior: 'smooth'});
+      showToast(
+        getState().lang === 'ru' ? 'Пакет выбран в форме заявки' : 'Package selected in form',
+        'success'
+      );
+    });
+  });
+
+  // Dropzone загрузки фотографий
+  const dropzone = document.getElementById('sell-dropzone');
+  const fileInput = document.getElementById('sell-file-input');
+  const previewBox = document.getElementById('sell-previews');
+
+  const handleFiles = (files) => {
+    Array.from(files).slice(0, 6).forEach((file) => {
+      if (!file.type.startsWith('image/')) return;
+      uploadedFiles.push(file.name);
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const thumb = document.createElement('div');
+        thumb.className = 'dropzone__thumb';
+        thumb.innerHTML = `<img src="${ev.target?.result}" alt="${file.name}" />`;
+        previewBox?.appendChild(thumb);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  dropzone?.addEventListener('click', () => fileInput?.click());
+  fileInput?.addEventListener('change', (e) => {
+    if (e.target.files) handleFiles(e.target.files);
+  });
+
+  dropzone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('is-dragover');
+  });
+  dropzone?.addEventListener('dragleave', () => dropzone.classList.remove('is-dragover'));
+  dropzone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('is-dragover');
+    if (e.dataTransfer?.files) handleFiles(e.dataTransfer.files);
+  });
+
+  // Отправка заявки на продажу
+  const sellForm = document.getElementById('sell-form');
+  sellForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const {lang} = getState();
+    const name = document.getElementById('sell-name').value.trim();
+    const phone = document.getElementById('sell-phone').value.trim();
+    const type = document.getElementById('sell-type').value;
+    const pkg = document.getElementById('sell-package').value;
+    const comment = document.getElementById('sell-comment').value.trim();
+    const agree = document.getElementById('sell-agree').checked;
+
+    if (!agree || name.length < 2 || phone.length < 7) {
+      showToast(
+        lang === 'ru'
+          ? 'Заполните имя, телефон и подтвердите согласие'
+          : 'Please complete name, phone, and privacy agreement'
+      );
+      return;
+    }
+
+    addSellRequest({name, phone, type, pkg, comment, photosCount: uploadedFiles.length});
+    sellForm.reset();
+    if (previewBox) previewBox.innerHTML = '';
+    showToast(
+      lang === 'ru'
+        ? 'Заявка отправлена! Агент Alora Homes свяжется с вами сегодня.'
+        : 'Request submitted! An Alora Homes advisor will reach out today.',
+      'success'
+    );
+  });
+}
+
+renderWizard();
+bindPackagesAndForm();
+subscribe(() => renderWizard());

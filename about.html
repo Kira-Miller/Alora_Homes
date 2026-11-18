@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>О компании и контакты — Alora Homes</title>
+    <meta
+      name="description"
+      content="Информация об агентстве недвижимости Alora Homes, офисы во всех областных центрах Беларуси и форма обратной связи."
+    />
+    <meta property="og:title" content="О компании — Alora Homes" />
+    <meta property="og:description" content="Представительства Alora Homes в Минске, Бресте, Гродно, Витебске и Гомеле." />
+    <link rel="icon" type="image/svg+xml" href="/assets/logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Перейти к основному содержанию</a>
+    <header id="site-header"></header>
+
+    <main id="main-content">
+      <section class="section">
+        <div class="container">
+          <span class="section-kicker" data-i18n="aboutKicker">Агентство недвижимости</span>
+          <h1 class="section-title" data-i18n="aboutTitle">Alora Homes по всей Беларуси</h1>
+          <p class="section-subtitle" data-i18n="aboutSubtitle">
+            Работаем в Минске и всех областных центрах. Объединяем архитектурную экспертизу, точную аналитику и
+            юридическую защиту каждой сделки.
+          </p>
+
+          <div class="kpi-strip" style="margin-top:30px;">
+            <div class="kpi-strip__card">
+              <strong>1 240+</strong>
+              <span>Успешных сделок</span>
+            </div>
+            <div class="kpi-strip__card">
+              <strong>6 регионов</strong>
+              <span>Покрытие по всей Беларуси</span>
+            </div>
+            <div class="kpi-strip__card">
+              <strong>24 часа</strong>
+              <span>Срок экспертной оценки</span>
+            </div>
+            <div class="kpi-strip__card">
+              <strong>100%</strong>
+              <span>Юридическая проверка</span>
+            </div>
+          </div>
+
+          <div style="margin-top:52px;" id="contacts">
+            <h2 class="section-title" data-i18n="officesTitle">Наши представительства в Беларуси</h2>
+            <div class="offices-grid">
+              <article class="office-card">
+                <h3>Минск — Головной офис</h3>
+                <p>пр-т Победителей, 7, БЦ «Royal Plaza»</p>
+                <p class="tabular">+375 (17) 240-18-90</p>
+                <p>Пн–Вс: 09:00 – 21:00</p>
+              </article>
+              <article class="office-card">
+                <h3>Брест</h3>
+                <p>ул. Советская, 73, офис 14</p>
+                <p class="tabular">+375 (29) 774-52-10</p>
+                <p>Пн–Сб: 09:00 – 19:00</p>
+              </article>
+              <article class="office-card">
+                <h3>Гродно</h3>
+                <p>ул. Ожешко, 22, корпус 2</p>
+                <p class="tabular">+375 (29) 618-33-40</p>
+                <p>Пн–Сб: 09:00 – 19:00</p>
+              </article>
+              <article class="office-card">
+                <h3>Витебск</h3>
+                <p>просп. Фрунзе, 19</p>
+                <p class="tabular">+375 (29) 512-49-80</p>
+                <p>Пн–Пт: 09:00 – 19:00</p>
+              </article>
+              <article class="office-card">
+                <h3>Гомель</h3>
+                <p>ул. Советская, 44</p>
+                <p class="tabular">+375 (29) 340-77-15</p>
+                <p>Пн–Пт: 09:00 – 19:00</p>
+              </article>
+              <article class="office-card">
+                <h3>Могилёв</h3>
+                <p>ул. Первомайская, 29</p>
+                <p class="tabular">+375 (29) 822-14-60</p>
+                <p>Пн–Пт: 09:00 – 19:00</p>
+              </article>
+            </div>
+          </div>
+
+          <div style="margin-top:56px;" id="legal">
+            <h2 class="section-title" style="margin-bottom:18px;" data-i18n="contactFormTitle">Связаться с нами</h2>
+            <form
+              id="about-contact-form"
+              class="wizard-card"
+              style="margin:0;max-width:680px;display:flex;flex-direction:column;gap:14px;"
+            >
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;">
+                <div class="field">
+                  <label class="field__label" for="contact-name" data-i18n="inputName">Как к вам обращаться</label>
+                  <input id="contact-name" class="field__control" type="text" required placeholder="Ваше имя" />
+                </div>
+                <div class="field">
+                  <label class="field__label" for="contact-phone" data-i18n="inputPhone">Номер телефона</label>
+                  <input id="contact-phone" class="field__control" type="tel" required placeholder="+375 (29) ___-__-__" />
+                </div>
+              </div>
+              <div class="field">
+                <label class="field__label" for="contact-msg">Сообщение</label>
+                <textarea id="contact-msg" class="field__control" placeholder="Ваш вопрос по покупке, продаже или оценке недвижимости..."></textarea>
+              </div>
+              <button type="submit" class="btn btn--primary" data-i18n="sendMessageBtn">Отправить сообщение</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="site-footer"></footer>
+    <script type="module" src="/src/js/page-about.js"></script>
+  </body>
+</html>

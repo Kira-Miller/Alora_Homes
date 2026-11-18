@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Каталог недвижимости Беларуси — Alora Homes</title>
+    <meta
+      name="description"
+      content="Полный каталог квартир, загородных домов, коттеджей и коммерческих объектов по всей Беларуси."
+    />
+    <meta property="og:title" content="Каталог недвижимости — Alora Homes" />
+    <meta property="og:description" content="Подбор объектов по городам и областям Беларуси в BYN и USD." />
+    <link rel="icon" type="image/svg+xml" href="/assets/logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Перейти к основному содержанию</a>
+    <header id="site-header"></header>
+
+    <main id="main-content">
+      <section class="section">
+        <div class="container">
+          <div class="section-header-row">
+            <div>
+              <span class="section-kicker" data-i18n="catalogKicker">Каталог недвижимости</span>
+              <h1 class="section-title" data-i18n="catalogTitle">Все объекты по Беларуси</h1>
+              <p class="section-subtitle" data-i18n="catalogSubtitle">
+                Актуальная база объектов, загружаемая напрямую из структурированного XML-каталога.
+              </p>
+            </div>
+            <button type="button" class="btn btn--secondary" id="cat-map-btn">
+              <span data-i18n="onMap">На карте Беларуси</span>
+            </button>
+          </div>
+
+          <!-- Панель расширенной фильтрации -->
+          <div class="catalog-toolbar" role="search">
+            <div class="field">
+              <label class="field__label" for="cat-query" data-i18n="labelCity">Город или область</label>
+              <input
+                id="cat-query"
+                class="field__control"
+                type="text"
+                data-i18n-placeholder="placeholderCity"
+                placeholder="Минск, Брест, Гродно..."
+              />
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="cat-region" data-i18n="labelRegion">Регион</label>
+              <select id="cat-region" class="field__control">
+                <option value="all" data-i18n="regionAll">Вся Беларусь</option>
+                <option value="minsk" data-i18n="regionMinsk">г. Минск</option>
+                <option value="minsk-region" data-i18n="regionMinskRegion">Минская область</option>
+                <option value="brest" data-i18n="regionBrest">Брест и область</option>
+                <option value="grodno" data-i18n="regionGrodno">Гродно и область</option>
+                <option value="vitebsk" data-i18n="regionVitebsk">Витебск и область</option>
+                <option value="gomel" data-i18n="regionGomel">Гомель и область</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="cat-category" data-i18n="labelCategory">Категория</label>
+              <select id="cat-category" class="field__control">
+                <option value="all" data-i18n="catAll">Все категории</option>
+                <option value="apartments" data-i18n="catApartments">Квартиры и апартаменты</option>
+                <option value="houses" data-i18n="catHouses">Загородные дома и таунхаусы</option>
+                <option value="newbuild" data-i18n="catNewbuild">Новостройки</option>
+                <option value="commercial" data-i18n="catCommercial">Коммерческая недвижимость</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="cat-rooms" data-i18n="labelRooms">Комнаты</label>
+              <select id="cat-rooms" class="field__control">
+                <option value="any" data-i18n="roomsAny">Любое количество</option>
+                <option value="1" data-i18n="rooms1">1 комната</option>
+                <option value="2" data-i18n="rooms2">2 комнаты</option>
+                <option value="3" data-i18n="rooms3">3 комнаты</option>
+                <option value="4" data-i18n="rooms4">4+ комнаты</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="cat-price-max" data-i18n="labelPrice">Цена (до)</label>
+              <input id="cat-price-max" class="field__control" type="number" min="0" placeholder="Макс." />
+            </div>
+          </div>
+
+          <div class="catalog-meta-bar">
+            <strong id="catalog-count" class="tabular">Найдено объектов: 12</strong>
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+              <select id="cat-sort" class="field__control" style="width:auto;" aria-label="Сортировка">
+                <option value="default" data-i18n="sortDefault">Рекомендуемые</option>
+                <option value="price-asc" data-i18n="sortPriceAsc">Сначала дешевле</option>
+                <option value="price-desc" data-i18n="sortPriceDesc">Сначала дороже</option>
+                <option value="area-desc" data-i18n="sortAreaDesc">По площади (убыв.)</option>
+              </select>
+              <button type="button" class="btn btn--secondary btn--sm" id="cat-reset-btn" data-i18n="resetFilters">
+                Сбросить фильтры
+              </button>
+            </div>
+          </div>
+
+          <div class="property-grid" id="catalog-grid"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="site-footer"></footer>
+    <script type="module" src="/src/js/page-catalog.js"></script>
+  </body>
+</html>

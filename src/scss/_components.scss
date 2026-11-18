@@ -1,0 +1,875 @@
+// ==========================================================================
+// Повторно используемые компоненты интерфейса Alora Homes
+// ==========================================================================
+
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// --------------------------------------------------------------------------
+// Шапка сайта (Header)
+// --------------------------------------------------------------------------
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: $z-header;
+  background: var(--bg-header);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-subtle);
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 70px;
+  }
+
+  &__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.125rem;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    svg {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+    }
+
+    &-accent {
+      color: var(--accent-primary);
+    }
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    @include respond-down($bp-lg) {
+      display: none;
+    }
+  }
+
+  &__link {
+    position: relative;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    padding-block: 6px;
+    transition: color $transition-fast;
+
+    &:hover,
+    &.is-active {
+      color: var(--text-primary);
+    }
+
+    &.is-active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      border-radius: 2px;
+      background: var(--accent-primary);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  &__burger {
+    display: none;
+    width: 42px;
+    height: 42px;
+    border-radius: $radius-xs;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+
+    @include respond-down($bp-lg) {
+      display: inline-flex;
+    }
+  }
+}
+
+.control-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: $radius-xs;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: border-color $transition-fast, background-color $transition-fast;
+
+  &:hover {
+    border-color: var(--border-strong);
+    background: var(--bg-surface-hover);
+  }
+
+  @include respond-down($bp-sm) {
+    padding: 0 9px;
+    font-size: 0.75rem;
+  }
+}
+
+.icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-xs;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  flex-shrink: 0;
+  transition: border-color $transition-fast, background-color $transition-fast, color $transition-fast;
+
+  &:hover {
+    border-color: var(--border-strong);
+    background: var(--bg-surface-hover);
+  }
+
+  &__count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    min-width: 18px;
+    height: 18px;
+    padding-inline: 5px;
+    border-radius: $radius-pill;
+    background: var(--accent-cyan);
+    color: #06141a;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    @include flex-center(0);
+    @include tabular-numbers;
+  }
+}
+
+.lang-currency-group {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  border-radius: $radius-xs;
+  overflow: hidden;
+  min-height: 40px;
+
+  button {
+    height: 38px;
+    padding: 0 10px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    transition: background-color $transition-fast, color $transition-fast;
+
+    &:hover {
+      color: var(--text-primary);
+      background: var(--bg-surface-hover);
+    }
+
+    & + button {
+      border-left: 1px solid var(--border-subtle);
+    }
+  }
+
+  @include respond-down($bp-md) {
+    display: none;
+  }
+}
+
+.mobile-drawer {
+  position: fixed;
+  inset: 70px 0 0 0;
+  z-index: $z-dropdown;
+  background: var(--bg-canvas);
+  padding: 24px 16px;
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+
+  &.is-open {
+    display: flex;
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-radius: $radius-sm;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    font-weight: 600;
+
+    &.is-active {
+      border-color: var(--border-accent);
+      color: var(--accent-primary);
+    }
+  }
+
+  &__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-subtle);
+  }
+}
+
+// --------------------------------------------------------------------------
+// Кнопки (Buttons)
+// --------------------------------------------------------------------------
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 20px;
+  border-radius: $radius-sm;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: transform $transition-fast, background-color $transition-fast, border-color $transition-fast, box-shadow $transition-fast;
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &--primary {
+    background: var(--accent-primary);
+    color: #ffffff;
+    box-shadow: var(--shadow-glow);
+
+    &:hover {
+      background: var(--accent-primary-hover);
+    }
+  }
+
+  &--secondary {
+    background: var(--bg-surface-elevated);
+    color: var(--text-primary);
+    border: 1px solid var(--border-strong);
+
+    &:hover {
+      background: var(--bg-surface-hover);
+      border-color: var(--border-accent);
+    }
+  }
+
+  &--ghost {
+    color: var(--text-secondary);
+    padding-inline: 12px;
+
+    &:hover {
+      color: var(--text-primary);
+      background: var(--bg-surface-hover);
+    }
+  }
+
+  &--success {
+    background: #10b981;
+    color: #03150e;
+
+    &:hover {
+      background: #059669;
+      color: #ffffff;
+    }
+  }
+
+  &--sm {
+    min-height: 38px;
+    padding: 7px 14px;
+    font-size: 0.8125rem;
+    border-radius: $radius-xs;
+  }
+
+  &--full {
+    width: 100%;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Вкладки фильтрации (Tabs / Segmented controls)
+// --------------------------------------------------------------------------
+.tabs-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tab-btn {
+  min-height: 40px;
+  padding: 8px 18px;
+  border-radius: $radius-pill;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color $transition-fast, color $transition-fast, border-color $transition-fast;
+
+  &:hover {
+    color: var(--text-primary);
+    border-color: var(--border-strong);
+  }
+
+  &.is-active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: #ffffff;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Карточка объекта недвижимости (Property Card)
+// --------------------------------------------------------------------------
+.property-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+
+  @include respond-down($bp-lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include respond-down($bp-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.property-card {
+  @include surface-card($radius-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform $transition-base, border-color $transition-base;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-accent);
+  }
+
+  &__media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: var(--bg-surface-elevated);
+    overflow: hidden;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 360ms $ease-out;
+    }
+  }
+
+  &:hover &__media svg {
+    transform: scale(1.03);
+  }
+
+  &__badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    padding: 5px 11px;
+    border-radius: $radius-pill;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    z-index: 2;
+
+    &--urgent { background: var(--status-urgent); color: var(--status-urgent-text); }
+    &--new { background: var(--status-new); color: var(--status-new-text); }
+    &--top { background: var(--status-top); color: var(--status-top-text); }
+    &--agent { background: var(--status-agent); color: var(--status-agent-text); }
+    &--commercial { background: var(--status-commercial); color: var(--status-commercial-text); }
+    &--exclusive { background: var(--status-exclusive); color: var(--status-exclusive-text); }
+  }
+
+  &__fav {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    width: 38px;
+    height: 38px;
+    border-radius: $radius-pill;
+    background: rgba(9, 9, 16, 0.58);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    @include flex-center(0);
+    transition: transform $transition-fast, background-color $transition-fast, color $transition-fast;
+
+    &:hover {
+      transform: scale(1.06);
+      background: rgba(9, 9, 16, 0.85);
+    }
+
+    &.is-saved {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: #ffffff;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    padding: 20px;
+    gap: 12px;
+  }
+
+  &__meta-line {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: 1.1875rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text-primary);
+
+    a:hover {
+      color: var(--accent-primary);
+    }
+  }
+
+  &__location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+
+    svg {
+      width: 15px;
+      height: 15px;
+      color: var(--accent-primary);
+      flex-shrink: 0;
+    }
+  }
+
+  &__specs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-subtle);
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    @include tabular-numbers;
+
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &__footer {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  &__price-main {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    @include tabular-numbers;
+  }
+
+  &__price-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    @include tabular-numbers;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__arrow {
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-xs;
+    background: var(--accent-primary-soft);
+    color: var(--accent-primary);
+    border: 1px solid var(--border-accent);
+    @include flex-center(0);
+    transition: background-color $transition-fast, color $transition-fast;
+
+    &:hover {
+      background: var(--accent-primary);
+      color: #ffffff;
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// Поля ввода (Forms & Inputs)
+// --------------------------------------------------------------------------
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  &__control {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    border-radius: $radius-xs;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+
+    &::placeholder {
+      color: var(--text-muted);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px var(--accent-primary-soft);
+    }
+  }
+
+  textarea.field__control {
+    min-height: 110px;
+    resize: vertical;
+  }
+
+  &__error {
+    font-size: 0.78rem;
+    color: var(--status-danger);
+    min-height: 1em;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Модальные окна (Auth Modal, Belarus Map Modal, Lightbox)
+// --------------------------------------------------------------------------
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: $z-modal;
+  background: rgba(5, 5, 10, 0.76);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  &.is-open {
+    display: flex;
+  }
+}
+
+.modal-dialog {
+  @include surface-card($radius-lg);
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 28px;
+  position: relative;
+
+  &--wide {
+    max-width: 880px;
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  &__close {
+    width: 38px;
+    height: 38px;
+    border-radius: $radius-xs;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    @include flex-center(0);
+
+    &:hover {
+      color: var(--text-primary);
+      background: var(--bg-surface-hover);
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// Уведомления (Toast)
+// --------------------------------------------------------------------------
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: $z-toast;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+
+  @include respond-down($bp-sm) {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: $radius-sm;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-accent);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-card);
+  font-size: 0.875rem;
+  font-weight: 500;
+  animation: toast-in 200ms $ease-out;
+
+  &--success {
+    border-color: rgba(16, 185, 129, 0.5);
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// --------------------------------------------------------------------------
+// Подвал сайта (Footer)
+// --------------------------------------------------------------------------
+.site-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  padding-block: 52px 28px;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+    gap: 36px;
+    padding-bottom: 36px;
+    border-bottom: 1px solid var(--border-subtle);
+
+    @include respond-down($bp-lg) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @include respond-down($bp-sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__tagline {
+    margin-top: 14px;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    max-width: 30ch;
+  }
+
+  &__socials {
+    margin-top: 18px;
+    display: flex;
+    gap: 10px;
+  }
+
+  &__col-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: var(--text-primary);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+
+    a:hover {
+      color: var(--accent-primary);
+    }
+  }
+
+  &__contact-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      color: var(--accent-primary);
+      flex-shrink: 0;
+    }
+  }
+
+  &__bottom {
+    padding-top: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  &__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    a:hover {
+      color: var(--text-primary);
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// Интерактивная SVG-карта Беларуси
+// --------------------------------------------------------------------------
+.belarus-map {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 20px;
+  align-items: start;
+
+  @include respond-down($bp-md) {
+    grid-template-columns: 1fr;
+  }
+
+  &__canvas {
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    border-radius: $radius-md;
+    padding: 16px;
+
+    svg {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  &__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 380px;
+    overflow-y: auto;
+  }
+
+  &__pin {
+    cursor: pointer;
+    transition: transform $transition-fast;
+
+    &:hover circle {
+      fill: var(--accent-cyan);
+    }
+  }
+
+  &__item {
+    padding: 12px 14px;
+    border-radius: $radius-sm;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface-elevated);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+    transition: border-color $transition-fast;
+
+    &:hover,
+    &.is-active {
+      border-color: var(--accent-primary);
+    }
+
+    strong {
+      font-size: 0.88rem;
+    }
+
+    span {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+  }
+}

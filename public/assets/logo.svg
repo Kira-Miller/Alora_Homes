@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" fill="none" role="img" aria-label="Alora Homes Logo">
+  <defs>
+    <linearGradient id="aloraBrandGrad" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#8b5cf6" />
+      <stop offset="55%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#22d3ee" />
+    </linearGradient>
+    <linearGradient id="aloraInnerGrad" x1="12" y1="12" x2="36" y2="38" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.98" />
+      <stop offset="100%" stop-color="#e0e7ff" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+  <!-- Outer architectural shield / rounded diamond -->
+  <rect x="4" y="4" width="40" height="40" rx="12" fill="url(#aloraBrandGrad)" />
+  <!-- Geometric pitched roof & stylized 'A' portal -->
+  <path d="M24 12L12.5 23.5V35H19V27.5C19 25.567 20.567 24 22.5 24H25.5C27.433 24 29 25.567 29 27.5V35H35.5V23.5L24 12Z" fill="url(#aloraInnerGrad)" />
+  <!-- Horizon line & subtle keystone accent -->
+  <circle cx="24" cy="19" r="2" fill="#8b5cf6" />
+</svg>
