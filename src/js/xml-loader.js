@@ -75,6 +75,8 @@ export async function loadPropertiesFromXml() {
       },
       visualTheme: getText('visualTheme') || 'villa-pine',
       image: getText('image'),
+      interiorImage: getText('interiorImage'),
+      terraceImage: getText('terraceImage'),
       mapCoords: {
         x: Number(getAttr('mapCoords', 'x')) || 270,
         y: Number(getAttr('mapCoords', 'y')) || 190,

@@ -42,6 +42,19 @@ function renderPropertyPage() {
       : {val: `${s.year}`, label: t('specYear', lang)},
   ];
 
+  const renderGalleryMedia = (viewId, imgStyle, svgUid) => {
+    const viewSrcMap = {
+      exterior: p.image,
+      interior: p.interiorImage,
+      terrace: p.terraceImage,
+    };
+    const url = viewSrcMap[viewId] || '';
+    if (!url) {
+      return getPropertySvg(p.visualTheme, viewId, svgUid);
+    }
+    return `<img src="${url}" alt="${p.title[lang]}" referrerpolicy="no-referrer" style="${imgStyle}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(p.visualTheme, viewId, svgUid)}</div>`;
+  };
+
   rootEl.innerHTML = `
     <nav class="breadcrumbs" aria-label="Breadcrumb">
       <a href="./index.html">${t('crumbHome', lang)}</a>
@@ -67,11 +80,7 @@ function renderPropertyPage() {
 
     <section class="gallery-bento" aria-label="Property gallery">
       <div class="gallery-bento__main" id="gallery-main-view">
-        ${
-          activeView === 'exterior' && p.image
-            ? `<img src="${p.image}" alt="${p.title[lang]}" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(p.visualTheme, activeView, `detail-main-${p.id}`)}</div>`
-            : getPropertySvg(p.visualTheme, activeView, `detail-main-${p.id}`)
-        }
+        ${renderGalleryMedia(activeView, 'width:100%;height:100%;object-fit:cover;', `detail-main-${p.id}`)}
         <span class="gallery-bento__caption">${views.find((v) => v.id === activeView)?.label}</span>
       </div>
       <div class="gallery-bento__side">
@@ -80,11 +89,7 @@ function renderPropertyPage() {
           .map(
             (v) => `
           <button type="button" class="gallery-bento__thumb" data-switch-view="${v.id}">
-            ${
-              v.id === 'exterior' && p.image
-                ? `<img src="${p.image}" alt="${p.title[lang]}" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(p.visualTheme, v.id, `detail-thumb-${v.id}-${p.id}`)}</div>`
-                : getPropertySvg(p.visualTheme, v.id, `detail-thumb-${v.id}-${p.id}`)
-            }
+            ${renderGalleryMedia(v.id, 'width:100%;height:100%;object-fit:cover;', `detail-thumb-${v.id}-${p.id}`)}
             <span class="gallery-bento__caption">${v.label}</span>
           </button>
         `
