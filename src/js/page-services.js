@@ -8,6 +8,7 @@ import {formatPrices, t} from './i18n.js';
 import {initLayout} from './layout.js';
 import {addConsultationRequest, addSellRequest, getState, subscribe} from './state.js';
 import {getIconSvg} from './svg-art.js';
+import {clearFormErrors, setFieldError, validateBelarusPhone, validateName} from './validation.js';
 
 initLayout('services');
 
@@ -284,26 +285,54 @@ function bindServicesInteractions() {
   });
 
   const sellForm = document.getElementById('sell-form');
+  sellForm?.querySelectorAll('input, textarea').forEach((inp) => {
+    inp.addEventListener('input', () => setFieldError(inp, ''));
+    inp.addEventListener('change', () => setFieldError(inp, ''));
+  });
   sellForm?.addEventListener('submit', (e) => {
     e.preventDefault();
+    clearFormErrors(sellForm);
     const {lang} = getState();
-    const name = document.getElementById('sell-name').value.trim();
-    const phone = document.getElementById('sell-phone').value.trim();
+    const nameEl = document.getElementById('sell-name');
+    const phoneEl = document.getElementById('sell-phone');
+    const agreeEl = document.getElementById('sell-agree');
     const type = document.getElementById('sell-type').value;
     const pkg = document.getElementById('sell-package').value;
     const comment = document.getElementById('sell-comment').value.trim();
-    const agree = document.getElementById('sell-agree').checked;
 
-    if (!agree || name.length < 2 || phone.length < 7) {
-      showToast(
-        lang === 'ru'
-          ? 'Заполните имя, телефон и подтвердите согласие'
-          : 'Please complete name, phone, and privacy agreement'
+    const nameRes = validateName(nameEl?.value, lang);
+    const phoneRes = validateBelarusPhone(phoneEl?.value, lang, true);
+    let firstInvalid = null;
+
+    if (!nameRes.ok) {
+      setFieldError(nameEl, nameRes.error);
+      firstInvalid ||= nameEl;
+    }
+    if (!phoneRes.ok) {
+      setFieldError(phoneEl, phoneRes.error);
+      firstInvalid ||= phoneEl;
+    }
+    if (!agreeEl?.checked) {
+      setFieldError(
+        agreeEl,
+        lang === 'ru' ? 'Подтвердите согласие с Политикой конфиденциальности' : 'Please accept the Privacy Policy'
       );
+      firstInvalid ||= agreeEl;
+    }
+
+    if (firstInvalid) {
+      firstInvalid.focus();
       return;
     }
 
-    addSellRequest({name, phone, type, pkg, comment, photosCount: uploadedFiles.length});
+    addSellRequest({
+      name: nameRes.value,
+      phone: phoneRes.value,
+      type,
+      pkg,
+      comment,
+      photosCount: uploadedFiles.length,
+    });
     sellForm.reset();
     if (previewBox) previewBox.innerHTML = '';
     showToast(
@@ -315,18 +344,37 @@ function bindServicesInteractions() {
   });
 
   const consultForm = document.getElementById('services-consult-form');
+  consultForm?.querySelectorAll('input').forEach((inp) => {
+    inp.addEventListener('input', () => setFieldError(inp, ''));
+  });
   consultForm?.addEventListener('submit', (e) => {
     e.preventDefault();
+    clearFormErrors(consultForm);
     const {lang} = getState();
     const intent = consultForm.querySelector('input[name="srv-intent"]:checked')?.value || 'sell';
-    const name = document.getElementById('srv-consult-name').value.trim();
-    const phone = document.getElementById('srv-consult-phone').value.trim();
+    const nameEl = document.getElementById('srv-consult-name');
+    const phoneEl = document.getElementById('srv-consult-phone');
     const city = document.getElementById('srv-consult-city').value.trim();
-    if (name.length < 2 || phone.length < 7) {
-      showToast(lang === 'ru' ? 'Введите имя и номер телефона' : 'Please enter name and phone');
+
+    const nameRes = validateName(nameEl?.value, lang);
+    const phoneRes = validateBelarusPhone(phoneEl?.value, lang, false);
+    let firstInvalid = null;
+
+    if (!nameRes.ok) {
+      setFieldError(nameEl, nameRes.error);
+      firstInvalid ||= nameEl;
+    }
+    if (!phoneRes.ok) {
+      setFieldError(phoneEl, phoneRes.error);
+      firstInvalid ||= phoneEl;
+    }
+
+    if (firstInvalid) {
+      firstInvalid.focus();
       return;
     }
-    addConsultationRequest({intent, name, phone: `+375 ${phone}`, city});
+
+    addConsultationRequest({intent, name: nameRes.value, phone: phoneRes.value, city});
     consultForm.reset();
     showToast(
       lang === 'ru'

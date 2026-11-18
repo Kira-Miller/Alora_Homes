@@ -14,7 +14,32 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  scroll-padding-top: 84px;
   -webkit-text-size-adjust: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-primary) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(124, 58, 237, 0.52), rgba(6, 182, 212, 0.45));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+
+  &:hover {
+    background: linear-gradient(180deg, var(--accent-primary), var(--accent-cyan));
+    border: 1px solid transparent;
+    background-clip: padding-box;
+  }
 }
 
 body {
@@ -163,7 +188,23 @@ ol {
   }
 }
 
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 520ms $ease-out, transform 520ms $ease-out;
+
+  &.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll {
+    opacity: 1;
+    transform: none;
+  }
+
   *,
   *::before,
   *::after {

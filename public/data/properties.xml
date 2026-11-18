@@ -621,4 +621,209 @@
       <feature ru="Два парковочных места" en="2 Parking spaces" />
     </features>
   </property>
+
+  <property id="19" featured="true" dealGroup="residential">
+    <category>apartments</category>
+    <subcategory ru="3-комнатная квартира" en="3-Room Apartment" />
+    <region>brest</region>
+    <city ru="г. Барановичи, ул. Ленина, 35" en="Baranavichy, Lenina St, 35" />
+    <title ru="Стильная квартира в историческом кирпичном доме" en="Stylish Apartment in Historic Brick Building" />
+    <badge type="top" ru="Топ предложение" en="Top Pick" />
+    <price byn="274295" usd="85000" />
+    <specs>
+      <area>84</area>
+      <livingArea>52</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>3</rooms>
+      <floors>4</floors>
+      <floor>3</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2021</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>waterfront-loft</visualTheme>
+    <image>./assets/images/prop-19.jpg</image>
+    <interiorImage>./assets/images/prop-19-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-19-terrace.jpg</interiorImage>
+    <mapCoords x="178" y="255" />
+    <description
+      ru="Просторная трёхкомнатная квартира с потолками 3,2 метра, дубовым паркетом «ёлочка» и французским балконом в зелёном центре Барановичей."
+      en="Spacious 3-room apartment with 3.2 m ceilings, herringbone oak parquet, and French balcony overlooking a leafy courtyard in central Baranavichy." />
+    <features>
+      <feature ru="Потолки 3.2 м" en="3.2 m Ceilings" />
+      <feature ru="Французский балкон" en="French balcony" />
+      <feature ru="Дубовый паркет" en="Oak parquet" />
+    </features>
+  </property>
+
+  <property id="20" featured="true" dealGroup="residential">
+    <category>houses</category>
+    <subcategory ru="Коттедж" en="Cottage" />
+    <region>minsk-region</region>
+    <city ru="г. Борисов, ул. Гагарина, 88" en="Barysau, Gagarina St, 88" />
+    <title ru="Скандинавский коттедж у соснового леса" en="Nordic Timber Cottage by Pine Forest" />
+    <badge type="new" ru="Новинка" en="New" />
+    <price byn="448553" usd="139000" />
+    <specs>
+      <area>176</area>
+      <livingArea>118</livingArea>
+      <plotArea>12</plotArea>
+      <rooms>4</rooms>
+      <floors>2</floors>
+      <floor>2</floor>
+      <mkadDistance>64</mkadDistance>
+      <year>2025</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>forest-cottage</visualTheme>
+    <image>./assets/images/prop-20.jpg</image>
+    <interiorImage>./assets/images/prop-20-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-20-terrace.jpg</interiorImage>
+    <mapCoords x="326" y="168" />
+    <description
+      ru="Светлый дом со вторым светом, панорамным остеклением, дровяным камином и просторной лесной террасой с костровой зоной в Борисове."
+      en="Double-height Nordic residence with panoramic pine views, minimalist wood fireplace, and spacious timber deck with firepit near Barysau." />
+    <features>
+      <feature ru="Второй свет" en="Double-height living" />
+      <feature ru="Выход в хвойный лес" en="Direct pine forest edge" />
+      <feature ru="Терраса с очагом" en="Firepit timber deck" />
+    </features>
+  </property>
+
+  <property id="21" featured="false" dealGroup="commercial">
+    <category>commercial</category>
+    <subcategory ru="Шоурум и клиника" en="Showroom &amp; Clinic" />
+    <region>mogilev</region>
+    <city ru="г. Бобруйск, ул. Социалистическая, 64" en="Babruysk, Sotsialisticheskaya St, 64" />
+    <title ru="Витринное помещение в центре Бобруйска" en="Street-Level Showcase Space in Babruysk" />
+    <badge type="commercial" ru="Коммерция" en="Commercial" />
+    <price byn="477596" usd="148000" />
+    <specs>
+      <area>152</area>
+      <livingArea>138</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>4</rooms>
+      <floors>1</floors>
+      <floor>1</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2023</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>glass-office</visualTheme>
+    <image>./assets/images/prop-21.jpg</image>
+    <interiorImage>./assets/images/prop-21-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-21-terrace.jpg</interiorImage>
+    <mapCoords x="352" y="255" />
+    <description
+      ru="Готовое коммерческое пространство на пешеходной улице Бобруйска с отдельным входом, кирпичными сводами, дизайнерским ресепшеном и тихим внутренним двориком."
+      en="Turnkey street-level space on central Babruysk avenue featuring historic brick arches, travertine reception, glass meeting room, and landscaped inner courtyard." />
+    <features>
+      <feature ru="Отдельный вход 1 этаж" en="Private 1st-floor entrance" />
+      <feature ru="Высокий трафик" en="High foot traffic" />
+      <feature ru="Внутренний дворик" en="Private courtyard" />
+    </features>
+  </property>
+
+  <property id="22" featured="true" dealGroup="residential">
+    <category>houses</category>
+    <subcategory ru="Таунхаус" en="Townhouse" />
+    <region>grodno</region>
+    <city ru="г. Лида, ул. Замковая, 12" en="Lida, Zamkovaya St, 12" />
+    <title ru="Кирпичный таунхаус у Лидского замка" en="Brick Townhouse Near Lida Castle" />
+    <badge type="agent" ru="Выбор агента" en="Agent Pick" />
+    <price byn="384013" usd="119000" />
+    <specs>
+      <area>138</area>
+      <livingArea>96</livingArea>
+      <plotArea>3.5</plotArea>
+      <rooms>4</rooms>
+      <floors>2</floors>
+      <floor>2</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2024</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>townhouse-dusk</visualTheme>
+    <image>./assets/images/prop-22.jpg</image>
+    <interiorImage>./assets/images/prop-22-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-22-terrace.jpg</interiorImage>
+    <mapCoords x="156" y="196" />
+    <description
+      ru="Двухэтажный кирпичный таунхаус в шаговой доступности от исторического центра Лиды. Светлая кухня-гостиная, дубовая лестница и приватная пергола во дворе."
+      en="Two-story brick townhouse near historic Lida Castle. Open kitchen-living area, oak staircase, and private landscaped backyard with wooden pergola." />
+    <features>
+      <feature ru="Исторический центр" en="Historic district" />
+      <feature ru="Пергола и дворик" en="Backyard pergola" />
+      <feature ru="Газовое отопление" en="Gas heating" />
+    </features>
+  </property>
+
+  <property id="23" featured="false" dealGroup="residential">
+    <category>apartments</category>
+    <subcategory ru="Новостройка" en="New Build" />
+    <region>vitebsk</region>
+    <city ru="г. Новополоцк, ул. Молодёжная, 158" en="Navapolatsk, Molodyozhnaya St, 158" />
+    <title ru="Панорамная новостройка с видовой лоджией" en="Panoramic New Build with Glazed Loggia" />
+    <badge type="new" ru="Новинка" en="New" />
+    <price byn="238798" usd="74000" />
+    <specs>
+      <area>74</area>
+      <livingArea>46</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>2</rooms>
+      <floors>16</floors>
+      <floor>11</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2026</year>
+      <newbuild>true</newbuild>
+    </specs>
+    <visualTheme>minsk-tower</visualTheme>
+    <image>./assets/images/prop-23.jpg</image>
+    <interiorImage>./assets/images/prop-23-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-23-terrace.jpg</interiorImage>
+    <mapCoords x="316" y="84" />
+    <description
+      ru="Современная евро-двухкомнатная квартира в новом жилом комплексе Новополоцка с панорамными окнами в пол, тёплой лоджией и закрытым двором-парком."
+      en="Contemporary open-plan apartment in a brand-new Navapolatsk residence featuring floor-to-ceiling glazing, insulated lounge loggia, and car-free park courtyard." />
+    <features>
+      <feature ru="Дом сдан 2026" en="Completed 2026" />
+      <feature ru="Двор без машин" en="Car-free courtyard" />
+      <feature ru="Панорамная лоджия" en="Panoramic loggia" />
+    </features>
+  </property>
+
+  <property id="24" featured="true" dealGroup="residential">
+    <category>houses</category>
+    <subcategory ru="Загородный дом" en="Riverside House" />
+    <region>gomel</region>
+    <city ru="г. Жлобин, ул. Первомайская, 44" en="Zhlobin, Pervomayskaya St, 44" />
+    <title ru="Семейный дом на берегу реки Днепр" en="Family Residence Overlooking Dnieper River" />
+    <badge type="exclusive" ru="Эксклюзив" en="Exclusive" />
+    <price byn="413056" usd="128000" />
+    <specs>
+      <area>168</area>
+      <livingArea>114</livingArea>
+      <plotArea>14</plotArea>
+      <rooms>4</rooms>
+      <floors>2</floors>
+      <floor>2</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2024</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>villa-pine</visualTheme>
+    <image>./assets/images/prop-24.jpg</image>
+    <interiorImage>./assets/images/prop-24-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-24-terrace.jpg</terraceImage>
+    <mapCoords x="375" y="280" />
+    <description
+      ru="Элегантный двухэтажный дом в Жлобине с собственной террасой, выходящей прямо на живописную пойму Днепра. Просторная гостиная, натуральная отделка и ландшафтный участок."
+      en="Bright two-story home in Zhlobin with an expansive timber terrace overlooking the calm Dnieper river meadow. Glass walls, natural finishes, and landscaped garden." />
+    <features>
+      <feature ru="Вид на реку Днепр" en="Dnieper river view" />
+      <feature ru="Терраса 35 м²" en="35 m² river deck" />
+      <feature ru="Участок 14 соток" en="14-are plot" />
+    </features>
+  </property>
 </catalog>
+

@@ -7,6 +7,7 @@ import {pluralObjects, t} from './i18n.js';
 import {initLayout} from './layout.js';
 import {addConsultationRequest, getState, setCurrency, subscribe} from './state.js';
 import {getIconSvg, getRealtorPortraitSvg} from './svg-art.js';
+import {clearFormErrors, setFieldError, validateBelarusPhone, validateName} from './validation.js';
 import {filterProperties, loadPropertiesFromXml} from './xml-loader.js';
 
 initLayout('home');
@@ -59,8 +60,8 @@ const REVIEWS = [
       'Огромное спасибо команде Alora Homes! Была непростая сделка по продаже квартиры в Минске с последующей покупкой дома в Ратомке. На каждом этапе нам предлагали чёткие и безопасные решения.',
     textEn:
       'Huge thanks to the Alora Homes team! We had a complex sale in Minsk followed by buying a house in Ratomka. Every step was handled transparently and safely.',
-    metaRu: 'Купля-продажа жилья · 17.11.2026',
-    metaEn: 'Residential Sale & Purchase · 17.11.2026',
+    metaRu: 'Купля-продажа жилья · Минск — Ратомка · 17.11.2026',
+    metaEn: 'Residential Sale & Purchase · Minsk — Ratomka · 17.11.2026',
   },
   {
     authorRu: 'Эрнест К.',
@@ -69,8 +70,8 @@ const REVIEWS = [
       'Очень доволен работой с Ксенией и Алисой! Результат превзошёл ожидания: нашли покупателя на коттедж за 3 недели без торга по заниженной цене. Профессиональный подход.',
     textEn:
       'Extremely satisfied with Kseniya and Alisa! They found a buyer for our cottage in just 3 weeks at our target valuation. Truly professional brokerage.',
-    metaRu: 'Загородная недвижимость · 13.11.2026',
-    metaEn: 'Country Property · 13.11.2026',
+    metaRu: 'Загородная недвижимость · Тарасово · 13.11.2026',
+    metaEn: 'Country Property · Tarasovo · 13.11.2026',
   },
   {
     authorRu: 'Лобач Алексей',
@@ -79,8 +80,68 @@ const REVIEWS = [
       'Отличный сервис и понятный личный кабинет! Помогли обменять двухкомнатную квартиру в Гродно на просторную трёшку в новостройке с полным юридическим сопровождением.',
     textEn:
       'Great service and intuitive account tools! Helped us exchange a 2-room apartment in Grodno for a spacious 3-room new build with full legal support.',
-    metaRu: 'Обмен недвижимости · 12.11.2026',
-    metaEn: 'Property Exchange · 12.11.2026',
+    metaRu: 'Обмен недвижимости · Гродно · 12.11.2026',
+    metaEn: 'Property Exchange · Grodno · 12.11.2026',
+  },
+  {
+    authorRu: 'Ирина и Виктор Савицкие',
+    authorEn: 'Irina & Victor Savitsky',
+    textRu:
+      'Искали дом для родителей в Слуцке с готовым участком и баней. Юлия организовала 4 показа за один день и проверила все документы БТИ до задатка.',
+    textEn:
+      'We were looking for a quiet house in Slutsk for our parents. Yulia arranged 4 viewings in one day and audited every land and building record.',
+    metaRu: 'Покупка дома · Слуцк · 09.11.2026',
+    metaEn: 'House Purchase · Slutsk · 09.11.2026',
+  },
+  {
+    authorRu: 'Дмитрий Веремейчик',
+    authorEn: 'Dmitry Veremeichik',
+    textRu:
+      'Приобретали помещение под кофейню в Бресте. Порадовала детальная аналитика по трафику и расчёт окупаемости, а также быстрая регистрация договора.',
+    textEn:
+      'Acquired a retail space for a coffee shop in Brest. Impressed by the foot-traffic analytics, ROI breakdown, and seamless contract registration.',
+    metaRu: 'Коммерческая недвижимость · Брест · 04.11.2026',
+    metaEn: 'Commercial Real Estate · Brest · 04.11.2026',
+  },
+  {
+    authorRu: 'Анна Ковалёва',
+    authorEn: 'Anna Kovaleva',
+    textRu:
+      'Продавали квартиру в Витебске дистанционно. Агентство взяло на себя фотосъёмку, показы и сопровождение сделки — приехали только на подписание у нотариуса.',
+    textEn:
+      'Sold our apartment in Vitebsk remotely. The agency handled staging, photos, and tours — we only flew in for final signing.',
+    metaRu: 'Дистанционная продажа · Витебск · 28.10.2026',
+    metaEn: 'Remote Sale · Vitebsk · 28.10.2026',
+  },
+  {
+    authorRu: 'Максим Русецкий',
+    authorEn: 'Maxim Rusetsky',
+    textRu:
+      'На сайте сразу сравнили четыре новостройки в Минске и Барановичах по планировке этажей и цене за квадрат. Записались на показ в один клик — всё чётко и вовремя.',
+    textEn:
+      'Compared four new builds across Minsk and Baranovichi right on the site using interactive floor plans. Booked a tour in one click.',
+    metaRu: 'Покупка новостройки · Барановичи · 21.10.2026',
+    metaEn: 'New Build Purchase · Baranovichi · 21.10.2026',
+  },
+  {
+    authorRu: 'Светлана Герасимова',
+    authorEn: 'Svetlana Gerasimova',
+    textRu:
+      'Оценка стоимости квартиры в Могилёве заняла меньше суток и совпала с реальной ценой продажи на 98%. Никаких скрытых доплат после закрытия сделки.',
+    textEn:
+      'The valuation for our Mogilev apartment took less than 24 hours and matched our final closing price within 2%. Zero hidden fees.',
+    metaRu: 'Оценка и продажа · Могилёв · 15.10.2026',
+    metaEn: 'Valuation & Sale · Mogilev · 15.10.2026',
+  },
+  {
+    authorRu: 'Олег Статкевич',
+    authorEn: 'Oleg Statkevich',
+    textRu:
+      'Благодарю за помощь с покупкой уютного коттеджа в Волковыске. Редкий случай, когда агентство действительно защищает интересы клиента на каждом шаге.',
+    textEn:
+      'Grateful for help buying a cozy cottage in Volkovysk. A rare agency that truly advocates for the buyer at every step.',
+    metaRu: 'Загородная недвижимость · Волковыск · 08.10.2026',
+    metaEn: 'Country Property · Volkovysk · 08.10.2026',
   },
 ];
 
@@ -243,6 +304,7 @@ function renderRealtorsAndReviews() {
             src="${r.image}"
             alt="${lang === 'ru' ? r.nameRu : r.nameEn}"
             loading="lazy"
+            decoding="async"
             referrerpolicy="no-referrer"
             onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
           />
@@ -271,7 +333,19 @@ function renderRealtorsAndReviews() {
       </article>
     `
     ).join('');
+    syncReviewCarouselButtons();
   }
+}
+
+function syncReviewCarouselButtons() {
+  const reviewsEl = document.getElementById('home-reviews');
+  const prevBtn = document.getElementById('reviews-prev');
+  const nextBtn = document.getElementById('reviews-next');
+  if (!reviewsEl || !prevBtn || !nextBtn) return;
+
+  const maxScroll = Math.max(0, reviewsEl.scrollWidth - reviewsEl.clientWidth - 4);
+  prevBtn.disabled = reviewsEl.scrollLeft <= 4;
+  nextBtn.disabled = reviewsEl.scrollLeft >= maxScroll;
 }
 
 function syncSearchCurrencyButtons() {
@@ -346,22 +420,52 @@ function bindHomeInteractions() {
     openBelarusMapModal(matched.length ? matched : allProperties);
   });
 
-  // Форма консультации «Ответим на ваши вопросы»
+  // Прокрутка отзывов кнопками влево / вправо
+  const reviewsEl = document.getElementById('home-reviews');
+  const scrollReviews = (dir) => {
+    if (!reviewsEl) return;
+    const card = reviewsEl.querySelector('.review-card');
+    const step = card ? card.getBoundingClientRect().width + 20 : 340;
+    reviewsEl.scrollBy({left: dir * step, behavior: 'smooth'});
+  };
+  document.getElementById('reviews-prev')?.addEventListener('click', () => scrollReviews(-1));
+  document.getElementById('reviews-next')?.addEventListener('click', () => scrollReviews(1));
+  reviewsEl?.addEventListener('scroll', syncReviewCarouselButtons, {passive: true});
+  window.addEventListener('resize', syncReviewCarouselButtons, {passive: true});
+
+  // Форма консультации «Ответим на ваши вопросы» с проверкой вводимых данных
   const consultForm = document.getElementById('home-consult-form');
+  consultForm?.querySelectorAll('input').forEach((inp) => {
+    inp.addEventListener('input', () => setFieldError(inp, ''));
+  });
   consultForm?.addEventListener('submit', (e) => {
     e.preventDefault();
+    clearFormErrors(consultForm);
     const {lang} = getState();
     const intent = consultForm.querySelector('input[name="consult-intent"]:checked')?.value || 'buy';
-    const name = document.getElementById('consult-name')?.value.trim() || '';
-    const phone = document.getElementById('consult-phone')?.value.trim() || '';
+    const nameEl = document.getElementById('consult-name');
+    const phoneEl = document.getElementById('consult-phone');
     const city = document.getElementById('consult-city')?.value.trim() || '';
 
-    if (name.length < 2 || phone.length < 7) {
-      showToast(lang === 'ru' ? 'Введите имя и номер телефона' : 'Please enter name and phone number');
+    const nameRes = validateName(nameEl?.value, lang);
+    const phoneRes = validateBelarusPhone(phoneEl?.value, lang, false);
+    let firstInvalid = null;
+
+    if (!nameRes.ok) {
+      setFieldError(nameEl, nameRes.error);
+      firstInvalid ||= nameEl;
+    }
+    if (!phoneRes.ok) {
+      setFieldError(phoneEl, phoneRes.error);
+      firstInvalid ||= phoneEl;
+    }
+
+    if (firstInvalid) {
+      firstInvalid.focus();
       return;
     }
 
-    addConsultationRequest({intent, name, phone: `+375 ${phone}`, city});
+    addConsultationRequest({intent, name: nameRes.value, phone: phoneRes.value, city});
     consultForm.reset();
     showToast(
       lang === 'ru'
@@ -384,7 +488,7 @@ async function initHome() {
     updateLiveCount();
   } catch (err) {
     if (featuredGrid) {
-      featuredGrid.innerHTML = `<div class="empty-state"><p>Не удалось загрузить XML-каталог объектов.</p></div>`;
+      featuredGrid.innerHTML = `<div class="empty-state"><p>Не удалось загрузить каталог объектов.</p></div>`;
     }
     console.error(err);
   }

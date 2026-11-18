@@ -7,6 +7,13 @@ import {formatPrices, t} from './i18n.js';
 import {initLayout, openAuthModal, openGuestGateModal} from './layout.js';
 import {addViewingRequest, getState, isGuest, subscribe, toggleFavorite} from './state.js';
 import {getFloorPlanData, getFloorPlanSvg, getIconSvg, getPropertySvg} from './svg-art.js';
+import {
+  clearFormErrors,
+  setFieldError,
+  validateBelarusPhone,
+  validateFutureDate,
+  validateName,
+} from './validation.js';
 import {loadPropertiesFromXml} from './xml-loader.js';
 
 initLayout('catalog');
@@ -54,7 +61,7 @@ function renderPropertyPage() {
       : {val: `${s.year}`, label: t('specYear', lang)},
   ];
 
-  const renderGalleryMedia = (viewId, imgStyle, svgUid) => {
+  const renderGalleryMedia = (viewId, imgStyle, svgUid, isMain = false) => {
     const viewSrcMap = {
       exterior: p.image,
       interior: p.interiorImage,
@@ -64,7 +71,10 @@ function renderPropertyPage() {
     if (!url) {
       return getPropertySvg(p.visualTheme, viewId, svgUid);
     }
-    return `<img src="${url}" alt="${p.title[lang]}" referrerpolicy="no-referrer" style="${imgStyle}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(p.visualTheme, viewId, svgUid)}</div>`;
+    const perfAttrs = isMain
+      ? 'fetchpriority="high" decoding="async"'
+      : 'loading="lazy" decoding="async"';
+    return `<img src="${url}" alt="${p.title[lang]}" ${perfAttrs} referrerpolicy="no-referrer" style="${imgStyle}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(p.visualTheme, viewId, svgUid)}</div>`;
   };
 
   const currentIdx = allCatalog.findIndex((item) => String(item.id) === String(p.id));
@@ -123,7 +133,7 @@ function renderPropertyPage() {
 
     <section class="gallery-bento" aria-label="Property gallery">
       <div class="gallery-bento__main" id="gallery-main-view">
-        ${renderGalleryMedia(activeView, 'width:100%;height:100%;object-fit:cover;', `detail-main-${p.id}`)}
+        ${renderGalleryMedia(activeView, 'width:100%;height:100%;object-fit:cover;', `detail-main-${p.id}`, true)}
         <button type="button" class="gallery-bento__arrow gallery-bento__arrow--prev" data-gallery-step="-1" aria-label="${t('prevSlide', lang)}">
           ${getIconSvg('chevron-left', 20)}
         </button>
@@ -226,7 +236,7 @@ function renderPropertyPage() {
           <a href="tel:+375297745210" class="btn btn--secondary btn--full">${getIconSvg('phone', 16)} <span>+375 (29) 774-52-10</span></a>
         `
             : `
-          <form id="viewing-form" style="display:flex;flex-direction:column;gap:12px;">
+          <form id="viewing-form" novalidate style="display:flex;flex-direction:column;gap:12px;">
             <div class="field">
               <label class="field__label" for="view-name">${t('inputName', lang)}</label>
               <input
@@ -407,20 +417,50 @@ function renderPropertyPage() {
 
   rootEl.querySelector('.js-sidebar-reg')?.addEventListener('click', () => openAuthModal('register'));
 
-  document.getElementById('viewing-form')?.addEventListener('submit', (e) => {
+  const viewingForm = document.getElementById('viewing-form');
+  viewingForm?.querySelectorAll('input').forEach((inp) => {
+    inp.addEventListener('input', () => setFieldError(inp, ''));
+  });
+  viewingForm?.addEventListener('submit', (e) => {
     e.preventDefault();
     if (isGuest()) {
       openGuestGateModal('booking');
       return;
     }
-    const name = document.getElementById('view-name').value.trim();
-    const phone = document.getElementById('view-phone').value.trim();
-    const date = document.getElementById('view-date').value;
-    if (name.length < 2 || phone.length < 7) {
-      showToast(lang === 'ru' ? 'Проверьте имя и номер телефона' : 'Please check name and phone');
+    clearFormErrors(viewingForm);
+    const nameEl = document.getElementById('view-name');
+    const phoneEl = document.getElementById('view-phone');
+    const dateEl = document.getElementById('view-date');
+
+    const nameRes = validateName(nameEl?.value, lang);
+    const phoneRes = validateBelarusPhone(phoneEl?.value, lang, true);
+    const dateRes = validateFutureDate(dateEl?.value, lang);
+    let firstInvalid = null;
+
+    if (!nameRes.ok) {
+      setFieldError(nameEl, nameRes.error);
+      firstInvalid ||= nameEl;
+    }
+    if (!phoneRes.ok) {
+      setFieldError(phoneEl, phoneRes.error);
+      firstInvalid ||= phoneEl;
+    }
+    if (!dateRes.ok) {
+      setFieldError(dateEl, dateRes.error);
+      firstInvalid ||= dateEl;
+    }
+
+    if (firstInvalid) {
+      firstInvalid.focus();
       return;
     }
-    addViewingRequest({propertyId: p.id, name, phone, date});
+
+    addViewingRequest({
+      propertyId: p.id,
+      name: nameRes.value,
+      phone: phoneRes.value,
+      date: dateRes.value,
+    });
     showToast(
       lang === 'ru'
         ? 'Заявка на показ сохранена в вашем кабинете!'
@@ -439,6 +479,13 @@ async function initPropertyDetail() {
     currentProperty = allCatalog.find((item) => String(item.id) === String(id)) || allCatalog[0];
     document.title = `${currentProperty.title[getState().lang]} — Alora Homes`;
     renderPropertyPage();
+    [currentProperty.interiorImage, currentProperty.terraceImage].forEach((src) => {
+      if (src) {
+        const pre = new Image();
+        pre.decoding = 'async';
+        pre.src = src;
+      }
+    });
   } catch (err) {
     if (rootEl) {
       rootEl.innerHTML = `<div class="empty-state"><h2>Объект не найден</h2><a href="./catalog.html" class="btn btn--primary">Вернуться в каталог</a></div>`;

@@ -666,6 +666,11 @@
       border-color: var(--accent-primary);
       box-shadow: 0 0 0 3px var(--accent-primary-soft);
     }
+
+    &.is-invalid {
+      border-color: var(--status-danger);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.14);
+    }
   }
 
   textarea.field__control {
@@ -677,6 +682,7 @@
     font-size: 0.78rem;
     color: var(--status-danger);
     min-height: 1em;
+    line-height: 1.35;
   }
 }
 
@@ -746,7 +752,7 @@
 // --------------------------------------------------------------------------
 .toast-container {
   position: fixed;
-  bottom: 24px;
+  bottom: 84px;
   right: 24px;
   z-index: $z-toast;
   display: flex;
@@ -757,7 +763,7 @@
   @include respond-down($bp-sm) {
     left: 16px;
     right: 16px;
-    bottom: 16px;
+    bottom: 78px;
   }
 }
 
@@ -1174,6 +1180,59 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Плавающая кнопка возврата наверх с индикатором прогресса скролла
+// --------------------------------------------------------------------------
+.scroll-top-btn {
+  --scroll-pct: 0%;
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: $z-dropdown;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-card);
+  @include flex-center(0);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px) scale(0.92);
+  transition: opacity $transition-base, transform $transition-base, visibility $transition-base, color $transition-fast;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    padding: 2px;
+    background: conic-gradient(var(--accent-cyan) var(--scroll-pct), var(--border-strong) 0);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  &:hover {
+    color: var(--accent-cyan);
+    transform: translateY(-2px) scale(1.04);
+  }
+
+  @include respond-down($bp-sm) {
+    right: 16px;
+    bottom: 16px;
+    width: 42px;
+    height: 42px;
   }
 }
 

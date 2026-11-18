@@ -250,6 +250,11 @@ export function getBelarusMapSvg(
     {name: lang === 'ru' ? 'Смиловичи' : 'Smilovichi', x: 318, y: 200},
     {name: lang === 'ru' ? 'Пинск' : 'Pinsk', x: 205, y: 330},
     {name: lang === 'ru' ? 'Полоцк' : 'Polotsk', x: 332, y: 88},
+    {name: lang === 'ru' ? 'Барановичи' : 'Baranavichy', x: 178, y: 255},
+    {name: lang === 'ru' ? 'Борисов' : 'Barysau', x: 326, y: 168},
+    {name: lang === 'ru' ? 'Бобруйск' : 'Babruysk', x: 352, y: 255},
+    {name: lang === 'ru' ? 'Лида' : 'Lida', x: 156, y: 196},
+    {name: lang === 'ru' ? 'Жлобин' : 'Zhlobin', x: 375, y: 280},
   ];
 
   const minskDistricts = isMinskZoom

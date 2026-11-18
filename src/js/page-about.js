@@ -7,6 +7,7 @@ import {showToast} from './components.js';
 import {initLayout} from './layout.js';
 import {getState, subscribe} from './state.js';
 import {getIconSvg, getRealtorPortraitSvg, getSocialLinksHtml} from './svg-art.js';
+import {clearFormErrors, setFieldError, validateBelarusPhone, validateName} from './validation.js';
 
 initLayout('about');
 
@@ -49,6 +50,7 @@ function renderAboutWidgets() {
             src="${r.image}"
             alt="${lang === 'ru' ? r.nameRu : r.nameEn}"
             loading="lazy"
+            decoding="async"
             referrerpolicy="no-referrer"
             onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
           />
@@ -71,15 +73,43 @@ function renderAboutWidgets() {
 }
 
 const contactForm = document.getElementById('about-contact-form');
+contactForm?.querySelectorAll('input, textarea').forEach((inp) => {
+  inp.addEventListener('input', () => setFieldError(inp, ''));
+});
 contactForm?.addEventListener('submit', (e) => {
   e.preventDefault();
+  clearFormErrors(contactForm);
   const {lang} = getState();
-  const name = document.getElementById('contact-name').value.trim();
-  const phone = document.getElementById('contact-phone').value.trim();
-  if (name.length < 2 || phone.length < 7) {
-    showToast(lang === 'ru' ? 'Укажите имя и телефон' : 'Please enter name and phone');
+  const nameEl = document.getElementById('contact-name');
+  const phoneEl = document.getElementById('contact-phone');
+  const msgEl = document.getElementById('contact-msg');
+
+  const nameRes = validateName(nameEl?.value, lang);
+  const phoneRes = validateBelarusPhone(phoneEl?.value, lang, true);
+  const msgVal = (msgEl?.value || '').trim();
+  let firstInvalid = null;
+
+  if (!nameRes.ok) {
+    setFieldError(nameEl, nameRes.error);
+    firstInvalid ||= nameEl;
+  }
+  if (!phoneRes.ok) {
+    setFieldError(phoneEl, phoneRes.error);
+    firstInvalid ||= phoneEl;
+  }
+  if (msgVal.length < 5) {
+    setFieldError(
+      msgEl,
+      lang === 'ru' ? 'Напишите короткое сообщение (от 5 символов)' : 'Please enter a short message (min 5 chars)'
+    );
+    firstInvalid ||= msgEl;
+  }
+
+  if (firstInvalid) {
+    firstInvalid.focus();
     return;
   }
+
   contactForm.reset();
   showToast(
     lang === 'ru'

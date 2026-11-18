@@ -16,13 +16,24 @@ import {
   toggleTheme,
 } from './state.js';
 import {getBrandLogoSvg, getIconSvg, getSocialLinksHtml} from './svg-art.js';
+import {
+  clearFormErrors,
+  setFieldError,
+  validateBelarusPhone,
+  validateEmail,
+  validateName,
+  validatePassword,
+} from './validation.js';
 
 let layoutGlobalListenersBound = false;
+let currentActivePage = 'home';
 
 export function initLayout(activePage = 'home') {
+  currentActivePage = activePage;
   renderHeader(activePage);
   renderFooter();
   ensureModals();
+  ensureScrollEnhancements();
   applyStaticTranslations(getState().lang);
 
   if (!layoutGlobalListenersBound) {
@@ -45,10 +56,14 @@ export function initLayout(activePage = 'home') {
         }
       }
     });
+    window.addEventListener('hashchange', () => {
+      renderHeader(currentActivePage);
+      applyStaticTranslations(getState().lang);
+    });
   }
 
   subscribe(() => {
-    renderHeader(activePage);
+    renderHeader(currentActivePage);
     renderFooter();
     applyStaticTranslations(getState().lang);
   });
@@ -75,6 +90,7 @@ function renderHeader(activePage) {
   const isRegistered = user.mode === 'registered';
   const userLabel = isRegistered ? user.name.split(' ')[0] : t('guestLabel', lang);
   const serviceLinks = getServiceLinks(lang);
+  const isContactsActive = activePage === 'about' && window.location.hash === '#contacts';
 
   headerEl.className = 'site-header';
   headerEl.innerHTML = `
@@ -90,17 +106,23 @@ function renderHeader(activePage) {
         </a>
 
         <div class="site-header__dropdown" id="services-dropdown">
-          <button
-            type="button"
-            class="site-header__dropdown-trigger ${activePage === 'services' ? 'is-active' : ''}"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <span>${t('navServices', lang)}</span>
-            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </button>
+          <div style="display:flex;align-items:center;gap:2px;">
+            <a href="./services.html" class="site-header__link ${activePage === 'services' ? 'is-active' : ''}" style="padding-right:2px;">
+              ${t('navServices', lang)}
+            </a>
+            <button
+              type="button"
+              class="site-header__dropdown-trigger ${activePage === 'services' ? 'is-active' : ''}"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-label="Toggle services menu"
+              style="padding:6px 6px;background:none;border:none;color:var(--text-secondary);cursor:pointer;display:inline-flex;align-items:center;"
+            >
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="transition:transform $transition-fast;">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+          </div>
           <div class="site-header__dropdown-menu" role="menu">
             ${serviceLinks
               .map(
@@ -114,10 +136,10 @@ function renderHeader(activePage) {
         <a href="./analytics.html" class="site-header__link ${activePage === 'analytics' ? 'is-active' : ''}">
           ${t('navAnalytics', lang)}
         </a>
-        <a href="./about.html" class="site-header__link ${activePage === 'about' ? 'is-active' : ''}">
+        <a href="./about.html" class="site-header__link ${activePage === 'about' && !isContactsActive ? 'is-active' : ''}">
           ${t('navAbout', lang)}
         </a>
-        <a href="./about.html#contacts" class="site-header__link">
+        <a href="./about.html#contacts" class="site-header__link js-nav-contacts ${isContactsActive ? 'is-active' : ''}">
           ${t('navContacts', lang)}
         </a>
       </nav>
@@ -164,10 +186,10 @@ function renderHeader(activePage) {
         <a href="./analytics.html" class="mobile-drawer__link ${activePage === 'analytics' ? 'is-active' : ''}">
           ${t('navAnalytics', lang)}<span>→</span>
         </a>
-        <a href="./about.html" class="mobile-drawer__link ${activePage === 'about' ? 'is-active' : ''}">
+        <a href="./about.html" class="mobile-drawer__link ${activePage === 'about' && !isContactsActive ? 'is-active' : ''}">
           ${t('navAbout', lang)}<span>→</span>
         </a>
-        <a href="./about.html#contacts" class="mobile-drawer__link">
+        <a href="./about.html#contacts" class="mobile-drawer__link js-nav-contacts ${isContactsActive ? 'is-active' : ''}">
           ${t('navContacts', lang)}<span>→</span>
         </a>
         <a href="./cabinet.html" class="mobile-drawer__link ${activePage === 'cabinet' ? 'is-active' : ''}">
@@ -200,6 +222,16 @@ function renderHeader(activePage) {
   burger?.addEventListener('click', () => {
     const opened = drawer?.classList.toggle('is-open');
     burger.setAttribute('aria-expanded', String(Boolean(opened)));
+  });
+
+  headerEl.querySelectorAll('.js-nav-contacts').forEach((link) => {
+    link.addEventListener('click', () => {
+      drawer?.classList.remove('is-open');
+      burger?.setAttribute('aria-expanded', 'false');
+      if (currentActivePage === 'about') {
+        setTimeout(() => renderHeader(currentActivePage), 0);
+      }
+    });
   });
 
   // Надёжная работа выпадающего меню «Услуги» (клик + задержка закрытия при наведении)
@@ -427,7 +459,7 @@ export function openAuthModal(defaultTab = 'register') {
           </button>
         </div>
 
-        <form id="auth-form" style="display:flex;flex-direction:column;gap:14px;">
+        <form id="auth-form" novalidate style="display:flex;flex-direction:column;gap:14px;">
           ${
             activeTab === 'register'
               ? `
@@ -448,7 +480,14 @@ export function openAuthModal(defaultTab = 'register') {
           </div>
           <div class="field">
             <label class="field__label" for="auth-pass">${t('authPassLabel', lang)}</label>
-            <input id="auth-pass" class="field__control" type="password" required minlength="4" placeholder="••••••" />
+            <input id="auth-pass" class="field__control" type="password" required minlength="${activeTab === 'register' ? 6 : 4}" placeholder="••••••" />
+            ${
+              activeTab === 'register'
+                ? `<span style="font-size:0.74rem;color:var(--text-muted);">${
+                    lang === 'ru' ? 'Минимум 6 символов, включая букву и цифру' : 'Min 6 characters, including a letter and a digit'
+                  }</span>`
+                : ''
+            }
           </div>
           <div id="auth-error" class="field__error"></div>
           <button type="submit" class="btn btn--primary btn--full">
@@ -474,24 +513,85 @@ export function openAuthModal(defaultTab = 'register') {
     });
 
     const form = modal.querySelector('#auth-form');
+    form?.querySelectorAll('input').forEach((input) => {
+      input.addEventListener('input', () => {
+        setFieldError(input, '');
+        const formErr = modal.querySelector('#auth-error');
+        if (formErr) formErr.textContent = '';
+      });
+    });
+
     form?.addEventListener('submit', (e) => {
       e.preventDefault();
-      const email = modal.querySelector('#auth-email').value;
-      const password = modal.querySelector('#auth-pass').value;
+      clearFormErrors(form);
+
+      const emailEl = modal.querySelector('#auth-email');
+      const passEl = modal.querySelector('#auth-pass');
       const errEl = modal.querySelector('#auth-error');
+      let firstInvalid = null;
 
       if (activeTab === 'register') {
-        const name = modal.querySelector('#auth-name').value;
-        const phone = modal.querySelector('#auth-phone').value;
-        const res = registerUser({name, email, phone, password});
+        const nameEl = modal.querySelector('#auth-name');
+        const phoneEl = modal.querySelector('#auth-phone');
+        const nameRes = validateName(nameEl?.value, lang);
+        const phoneRes = validateBelarusPhone(phoneEl?.value, lang, true);
+        const emailRes = validateEmail(emailEl?.value, lang);
+        const passRes = validatePassword(passEl?.value, lang, false);
+
+        if (!nameRes.ok) {
+          setFieldError(nameEl, nameRes.error);
+          firstInvalid ||= nameEl;
+        }
+        if (!phoneRes.ok) {
+          setFieldError(phoneEl, phoneRes.error);
+          firstInvalid ||= phoneEl;
+        }
+        if (!emailRes.ok) {
+          setFieldError(emailEl, emailRes.error);
+          firstInvalid ||= emailEl;
+        }
+        if (!passRes.ok) {
+          setFieldError(passEl, passRes.error);
+          firstInvalid ||= passEl;
+        }
+
+        if (firstInvalid) {
+          firstInvalid.focus();
+          return;
+        }
+
+        const res = registerUser({
+          name: nameRes.value,
+          email: emailRes.value,
+          phone: phoneRes.value,
+          password: passRes.value,
+        });
         if (!res.ok) {
-          errEl.textContent = lang === 'ru' ? 'Пользователь с таким email уже зарегистрирован' : 'Email already registered';
+          setFieldError(emailEl, lang === 'ru' ? 'Пользователь с таким email уже зарегистрирован' : 'Email already registered');
+          emailEl?.focus();
           return;
         }
         modal.classList.remove('is-open');
-        showToast(lang === 'ru' ? `Добро пожаловать, ${name}!` : `Welcome, ${name}!`, 'success');
+        showToast(lang === 'ru' ? `Добро пожаловать, ${nameRes.value}!` : `Welcome, ${nameRes.value}!`, 'success');
       } else {
-        const res = loginUser({email, password});
+        const emailRes = validateEmail(emailEl?.value, lang);
+        const passRes = validatePassword(passEl?.value, lang, true);
+
+        if (!emailRes.ok) {
+          setFieldError(emailEl, emailRes.error);
+          firstInvalid ||= emailEl;
+        }
+        if (!passRes.ok) {
+          setFieldError(passEl, passRes.error);
+          firstInvalid ||= passEl;
+        }
+
+        if (firstInvalid) {
+          firstInvalid.focus();
+          return;
+        }
+
+        const res = loginUser({email: emailRes.value, password: passRes.value});
         if (!res.ok) {
           errEl.textContent = lang === 'ru' ? 'Неверный email или пароль' : 'Invalid email or password';
           return;
@@ -504,4 +604,67 @@ export function openAuthModal(defaultTab = 'register') {
 
   renderModal();
   modal.classList.add('is-open');
+}
+
+let scrollEnhancementsBound = false;
+
+function ensureScrollEnhancements() {
+  let scrollBtn = document.getElementById('scroll-top-btn');
+  if (!scrollBtn) {
+    scrollBtn = document.createElement('button');
+    scrollBtn.id = 'scroll-top-btn';
+    scrollBtn.type = 'button';
+    scrollBtn.className = 'scroll-top-btn';
+    scrollBtn.setAttribute('aria-label', 'Наверх');
+    scrollBtn.innerHTML = `
+      <span class="scroll-top-btn__ring" aria-hidden="true"></span>
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="18 15 12 9 6 15"/>
+      </svg>
+    `;
+    scrollBtn.addEventListener('click', () => {
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    });
+    document.body.appendChild(scrollBtn);
+  }
+
+  if (!scrollEnhancementsBound) {
+    scrollEnhancementsBound = true;
+    const syncScrollProgress = () => {
+      const btn = document.getElementById('scroll-top-btn');
+      if (!btn) return;
+      const docHeight = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const ratio = Math.min(1, Math.max(0, window.scrollY / docHeight));
+      btn.style.setProperty('--scroll-pct', `${Math.round(ratio * 100)}%`);
+      btn.classList.toggle('is-visible', window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', syncScrollProgress, {passive: true});
+    window.addEventListener('resize', syncScrollProgress, {passive: true});
+    syncScrollProgress();
+
+    // Плавное появление секций при прокрутке
+    if ('IntersectionObserver' in window) {
+      const sections = Array.from(document.querySelectorAll('main > .section'));
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-revealed');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        {threshold: 0.08, rootMargin: '0px 0px -32px 0px'}
+      );
+
+      sections.forEach((sec) => {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top > window.innerHeight * 0.92) {
+          sec.classList.add('reveal-on-scroll');
+          observer.observe(sec);
+        }
+      });
+    }
+  }
 }
