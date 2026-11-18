@@ -24,6 +24,7 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>villa-pine</visualTheme>
+    <image>./assets/images/prop-1.jpg</image>
     <mapCoords x="244" y="168" />
     <description
       ru="Современная вилла с панорамным остеклением в престижном посёлке Ратомка в 7 км от МКАД. Архитектура сочетает натуральный термобрус, архитектурный бетон и просторные террасы с видом на хвойный массив."
@@ -56,6 +57,7 @@
       <newbuild>true</newbuild>
     </specs>
     <visualTheme>minsk-tower</visualTheme>
+    <image>./assets/images/prop-2.jpg</image>
     <mapCoords x="282" y="186" />
     <description
       ru="Видовые трёхкомнатные апартаменты в новом доме бизнес-класса на проспекте Независимости. Высокие потолки 3,1 м, дизайнерская отделка, консьерж-сервис и подземный паркинг."
@@ -88,6 +90,7 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>townhouse-dusk</visualTheme>
+    <image>./assets/images/prop-3.jpg</image>
     <mapCoords x="292" y="208" />
     <description
       ru="Двухуровневый таунхаус в охраняемом клубном квартале. Собственный благоустроенный участок, зона барбекю, два парковочных места и быстрый выезд к центру города."
@@ -120,6 +123,7 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>forest-cottage</visualTheme>
+    <image>./assets/images/prop-4.jpg</image>
     <mapCoords x="316" y="158" />
     <description
       ru="Просторный семейный коттедж в экологически чистом районе Раубичи. Большая гостиная со вторым светом и камином, банный комплекс и собственный выход к лесному массиву."
@@ -152,6 +156,7 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>glass-office</visualTheme>
+    <image>./assets/images/prop-5.jpg</image>
     <mapCoords x="258" y="192" />
     <description
       ru="Современное офисное пространство формата open-space с переговорными комнатами в бизнес-центре класса А. Высокоскоростной интернет, система приточно-вытяжной вентиляции и шаговая доступность до метро."
@@ -184,6 +189,7 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>waterfront-loft</visualTheme>
+    <image>./assets/images/prop-6.jpg</image>
     <mapCoords x="268" y="172" />
     <description
       ru="Стильный дизайнерский лофт рядом с Комсомольским озером и парком Победы. Панорамные окна, авторская кухня, встроенная техника и продуманные сценарии освещения."
@@ -216,6 +222,7 @@
       <newbuild>true</newbuild>
     </specs>
     <visualTheme>minsk-tower</visualTheme>
+    <image>./assets/images/prop-7.jpg</image>
     <mapCoords x="275" y="184" />
     <description
       ru="Просторная четырёхкомнатная резиденция в историческом центре Минска у набережной реки Свислочь. Две мастер-спальни, панорамная лоджия и клубный уровень приватности."
@@ -247,6 +254,7 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>villa-pine</visualTheme>
+    <image>./assets/images/prop-8.jpg</image>
     <mapCoords x="108" y="212" />
     <description
       ru="Энергоэффективный двухэтажный коттедж в зелёном районе Гродно. Газовое отопление, центральное водоснабжение, просторная крытая терраса и ландшафтный дизайн участка."
@@ -278,6 +286,7 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>waterfront-loft</visualTheme>
+    <image>./assets/images/prop-9.jpg</image>
     <mapCoords x="105" y="325" />
     <description
       ru="Светлая трёхкомнатная квартира на главной пешеходной улице Бреста. Кирпичный дом, потолки 3,2 м, свежий скандинавский ремонт и тихий закрытый двор."
@@ -309,6 +318,7 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>glass-office</visualTheme>
+    <image>./assets/images/prop-10.jpg</image>
     <mapCoords x="392" y="102" />
     <description
       ru="Помещение первого этажа с отдельным входом и витринным остеклением на оживлённой магистрали Витебска. Идеально подходит под клинику, шоурум или представительство компании."
@@ -340,6 +350,7 @@
       <newbuild>true</newbuild>
     </specs>
     <visualTheme>townhouse-dusk</visualTheme>
+    <image>./assets/images/prop-11.jpg</image>
     <mapCoords x="298" y="170" />
     <description
       ru="Двухуровневый пентхаус в современном квартале Новая Боровая с собственной эксплуатируемой террасой 32 м², безбарьерным двором без машин и развитой инфраструктурой."
@@ -371,6 +382,7 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>forest-cottage</visualTheme>
+    <image>./assets/images/prop-12.jpg</image>
     <mapCoords x="405" y="315" />
     <description
       ru="Уютный загородный дом в курортной зоне Чёнки под Гомелем. Благоустроенный участок с фруктовым садом, панорамная веранда и быстрая дорога до центра города."

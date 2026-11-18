@@ -50,7 +50,7 @@ export function createPropertyCard(property, options = {}) {
   }
 
   const mediaVisual = property.image
-    ? `<img src="${property.image}" alt="${property.title[lang]}" loading="lazy" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(property.visualTheme, 'exterior', `card-${property.id}`)}</div>`
+    ? `<img src="${property.image}" alt="${property.title[lang]}" loading="lazy" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(property.visualTheme, 'exterior', `card-${property.id}`)}</div>`
     : getPropertySvg(property.visualTheme, 'exterior', `card-${property.id}`);
 
   card.innerHTML = `
@@ -251,10 +251,14 @@ export function openBelarusMapModal(properties) {
       const detailUrl = `./property.html?id=${encodeURIComponent(selectedProp.id)}`;
       const s = selectedProp.specs;
 
+      const mapMedia = selectedProp.image
+        ? `<img src="${selectedProp.image}" alt="${selectedProp.title[lang]}" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(selectedProp.visualTheme, 'exterior', `map-${selectedProp.id}`)}</div>`
+        : getPropertySvg(selectedProp.visualTheme, 'exterior', `map-${selectedProp.id}`);
+
       selectedWrap.innerHTML = `
         <div class="belarus-map__selected-card">
           <div class="belarus-map__selected-media">
-            ${getPropertySvg(selectedProp.visualTheme, 'exterior', `map-${selectedProp.id}`)}
+            ${mapMedia}
             <span class="property-card__badge property-card__badge--${selectedProp.badge.type}">
               ${selectedProp.badge[lang]}
             </span>

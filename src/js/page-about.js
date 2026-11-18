@@ -12,25 +12,28 @@ initLayout('about');
 
 const REALTORS = [
   {
-    nameRu: 'Соболевский Дмитрий Викторович',
-    nameEn: 'Dmitry Sobolevsky',
+    nameRu: 'Шестак Алиса Дмитриевна',
+    nameEn: 'Alisa Shestak',
     roleRu: 'Ведущий риэлтор · Жилая недвижимость',
     roleEn: 'Lead Realtor · Residential',
     phone: '+375 (29) 774-52-10',
+    image: './assets/images/realtor-shestak.jpg',
   },
   {
-    nameRu: 'Воронова Елена Сергеевна',
-    nameEn: 'Elena Voronova',
+    nameRu: 'Ботвич Ксения Сергеевна',
+    nameEn: 'Kseniya Botvich',
     roleRu: 'Эксперт по загородным домам',
     roleEn: 'Country Estate Specialist',
     phone: '+375 (29) 618-33-40',
+    image: './assets/images/realtor-botvich.jpg',
   },
   {
-    nameRu: 'Красовский Андрей Игоревич',
-    nameEn: 'Andrey Krasovsky',
-    roleRu: 'Риэлтор · Коммерческие объекты',
-    roleEn: 'Commercial Real Estate Advisor',
+    nameRu: 'Свирко Юлия Александровна',
+    nameEn: 'Yulia Svirko',
+    roleRu: 'Риэлтор · Коммерческие и элитные объекты',
+    roleEn: 'Commercial & Luxury Advisor',
     phone: '+375 (44) 551-88-55',
+    image: './assets/images/realtor-svirko.jpg',
   },
 ];
 
@@ -42,7 +45,14 @@ function renderAboutWidgets() {
       (r, idx) => `
       <article class="realtor-card">
         <div class="realtor-card__portrait">
-          ${getRealtorPortraitSvg(idx)}
+          <img
+            src="${r.image}"
+            alt="${lang === 'ru' ? r.nameRu : r.nameEn}"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
+          />
+          <div style="display:none;width:100%;height:100%;">${getRealtorPortraitSvg(idx)}</div>
         </div>
         <div class="realtor-card__body">
           <h3 class="realtor-card__name">${lang === 'ru' ? r.nameRu : r.nameEn}</h3>

@@ -69,7 +69,7 @@ function renderPropertyPage() {
       <div class="gallery-bento__main" id="gallery-main-view">
         ${
           activeView === 'exterior' && p.image
-            ? `<img src="${p.image}" alt="${p.title[lang]}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(p.visualTheme, activeView, `detail-main-${p.id}`)}</div>`
+            ? `<img src="${p.image}" alt="${p.title[lang]}" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(p.visualTheme, activeView, `detail-main-${p.id}`)}</div>`
             : getPropertySvg(p.visualTheme, activeView, `detail-main-${p.id}`)
         }
         <span class="gallery-bento__caption">${views.find((v) => v.id === activeView)?.label}</span>
@@ -80,7 +80,11 @@ function renderPropertyPage() {
           .map(
             (v) => `
           <button type="button" class="gallery-bento__thumb" data-switch-view="${v.id}">
-            ${getPropertySvg(p.visualTheme, v.id, `detail-thumb-${v.id}-${p.id}`)}
+            ${
+              v.id === 'exterior' && p.image
+                ? `<img src="${p.image}" alt="${p.title[lang]}" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(p.visualTheme, v.id, `detail-thumb-${v.id}-${p.id}`)}</div>`
+                : getPropertySvg(p.visualTheme, v.id, `detail-thumb-${v.id}-${p.id}`)
+            }
             <span class="gallery-bento__caption">${v.label}</span>
           </button>
         `

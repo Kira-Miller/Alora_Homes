@@ -449,12 +449,16 @@
     overflow: hidden;
     border: 1px solid var(--border-subtle);
     min-height: 360px;
+    aspect-ratio: 16 / 10;
     background: var(--bg-surface);
     cursor: pointer;
 
+    img,
     svg {
       width: 100%;
       height: 100%;
+      object-fit: cover;
+      display: block;
     }
   }
 
@@ -484,9 +488,12 @@
       border-color: var(--accent-primary);
     }
 
+    img,
     svg {
       width: 100%;
       height: 100%;
+      object-fit: cover;
+      display: block;
     }
   }
 
@@ -1062,10 +1069,24 @@
     border-bottom: 1px solid var(--border-subtle);
     overflow: hidden;
 
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 18%;
+      display: block;
+      transition: transform 360ms $ease-out;
+    }
+
     svg {
       width: 100%;
       height: 100%;
+      display: block;
     }
+  }
+
+  &:hover &__portrait img {
+    transform: scale(1.03);
   }
 
   &__body {
