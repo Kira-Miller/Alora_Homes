@@ -417,4 +417,208 @@
       <feature ru="Плодовый сад" en="Private orchard" />
     </features>
   </property>
+
+  <property id="13" featured="true" dealGroup="residential">
+    <category>apartments</category>
+    <subcategory ru="Квартира" en="Apartment" />
+    <region>minsk-region</region>
+    <city ru="г. Слуцк, ул. Ленина" en="Slutsk, Lenina St" />
+    <title ru="Светлая 3-комнатная квартира в центре Слуцка" en="Bright 3-Room Apartment in Central Slutsk" />
+    <badge type="new" ru="Новинка" en="New Listing" />
+    <price byn="216410" usd="67000" />
+    <specs>
+      <area>78.4</area>
+      <livingArea>51</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>3</rooms>
+      <floors>5</floors>
+      <floor>3</floor>
+      <mkadDistance>98</mkadDistance>
+      <year>2023</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>waterfront-loft</visualTheme>
+    <image>./assets/images/prop-13.jpg</image>
+    <interiorImage>./assets/images/prop-13-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-13-terrace.jpg</terraceImage>
+    <mapCoords x="266" y="246" />
+    <description
+      ru="Просторная трёхкомнатная квартира в благоустроенном малоэтажном квартале в центре Слуцка. Скандинавский ремонт, дубовый паркет, застеклённая тёплая лоджия с видом на зелёный сквер."
+      en="Spacious three-room apartment in a well-kept low-rise quarter in central Slutsk. Scandinavian finish, oak parquet floors, and a glazed loggia overlooking a leafy town park." />
+    <features>
+      <feature ru="Центр города" en="Town center location" />
+      <feature ru="Тёплая лоджия" en="Heated glazed loggia" />
+      <feature ru="Дубовый паркет" en="Natural oak parquet" />
+    </features>
+  </property>
+
+  <property id="14" featured="true" dealGroup="residential">
+    <category>houses</category>
+    <subcategory ru="Коттедж" en="Cottage" />
+    <region>grodno</region>
+    <city ru="г. Волковыск, ул. Школьная" en="Volkovysk, Shkolnaya St" />
+    <title ru="Уютный кирпичный коттедж в Волковыске" en="Cozy Brick Cottage in Volkovysk" />
+    <badge type="agent" ru="Выбор агента" en="Agent's Choice" />
+    <price byn="352070" usd="109000" />
+    <specs>
+      <area>168</area>
+      <livingArea>114</livingArea>
+      <plotArea>12</plotArea>
+      <rooms>4</rooms>
+      <floors>2</floors>
+      <floor>2</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2022</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>villa-pine</visualTheme>
+    <image>./assets/images/prop-14.jpg</image>
+    <interiorImage>./assets/images/prop-14-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-14-terrace.jpg</terraceImage>
+    <mapCoords x="128" y="248" />
+    <description
+      ru="Двухэтажный кирпичный коттедж в тихом жилом секторе Волковыска. Каминная гостиная с деревянными балками, ухоженный участок 12 соток с крытой перголой и садом гортензий."
+      en="Two-story brick family cottage in a peaceful residential quarter of Volkovysk. Exposed-beam fireplace lounge, landscaped 12-are garden with covered wooden pergola." />
+    <features>
+      <feature ru="Кирпичные стены" en="Solid brick facade" />
+      <feature ru="Пергола и сад" en="Covered patio &amp; garden" />
+      <feature ru="Действующий камин" en="Wood-burning fireplace" />
+    </features>
+  </property>
+
+  <property id="15" featured="true" dealGroup="residential">
+    <category>houses</category>
+    <subcategory ru="Загородный дом" en="Barnhouse" />
+    <region>minsk-region</region>
+    <city ru="гп Смиловичи, Червенский р-н" en="Smilovichi, Minsk Region" />
+    <title ru="Современный барнхаус в Смиловичах у соснового леса" en="Modern Barnhouse in Smilovichi Near Pine Forest" />
+    <badge type="top" ru="Топ предложение" en="Top Pick" />
+    <price byn="458660" usd="142000" />
+    <specs>
+      <area>154</area>
+      <livingArea>108</livingArea>
+      <plotArea>15</plotArea>
+      <rooms>4</rooms>
+      <floors>1</floors>
+      <floor>1</floor>
+      <mkadDistance>24</mkadDistance>
+      <year>2025</year>
+      <newbuild>true</newbuild>
+    </specs>
+    <visualTheme>forest-cottage</visualTheme>
+    <image>./assets/images/prop-15.jpg</image>
+    <interiorImage>./assets/images/prop-15-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-15-terrace.jpg</terraceImage>
+    <mapCoords x="306" y="200" />
+    <description
+      ru="Энергоэффективный скандинавский барнхаус 2025 года в 24 км от МКАД в Смиловичах. Второй свет с остеклением до конька, подвесной камин, просторная деревянная терраса с костровой чашей прямо у леса."
+      en="2025 Nordic barnhouse just 24 km from Minsk Ring Road in Smilovichi. Vaulted gable windows, suspended wood stove, and spacious timber firepit deck bordering tall pines." />
+    <features>
+      <feature ru="Остекление до конька" en="Full-gable glazing" />
+      <feature ru="Терраса у сосен" en="Forest-edge timber deck" />
+      <feature ru="Новый дом 2025" en="2025 New build" />
+    </features>
+  </property>
+
+  <property id="16" featured="true" dealGroup="residential">
+    <category>apartments</category>
+    <subcategory ru="Апартаменты" en="Apartment" />
+    <region>mogilev</region>
+    <city ru="г. Могилёв, ул. Первомайская" en="Mogilev, Pervomayskaya St" />
+    <title ru="Панорамная квартира на набережной Днепра" en="Panoramic Dnieper Embankment Apartment" />
+    <badge type="exclusive" ru="Эксклюзив" en="Exclusive" />
+    <price byn="303620" usd="94000" />
+    <specs>
+      <area>92</area>
+      <livingArea>60</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>3</rooms>
+      <floors>14</floors>
+      <floor>10</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2024</year>
+      <newbuild>true</newbuild>
+    </specs>
+    <visualTheme>minsk-tower</visualTheme>
+    <image>./assets/images/prop-16.jpg</image>
+    <interiorImage>./assets/images/prop-16-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-16-terrace.jpg</terraceImage>
+    <mapCoords x="395" y="205" />
+    <description
+      ru="Видовая трёхкомнатная квартира на 10 этаже современного жилого комплекса у набережной Днепра в Могилёве. Панорамные окна в пол и открытая видовая лоджия со стеклянным ограждением."
+      en="High-floor three-room residence on the Dnieper embankment in Mogilev. Floor-to-ceiling river sunset views and an open glass-railed terrace balcony." />
+    <features>
+      <feature ru="Вид на реку Днепр" en="Dnieper river view" />
+      <feature ru="Стеклянный балкон" en="Glass-railed terrace" />
+      <feature ru="Прогулочная набережная" en="Riverfront promenade" />
+    </features>
+  </property>
+
+  <property id="17" featured="false" dealGroup="commercial">
+    <category>commercial</category>
+    <subcategory ru="Бизнес-центр" en="Commercial Hub" />
+    <region>brest</region>
+    <city ru="г. Пинск, ул. Брестская" en="Pinsk, Brestskaya St" />
+    <title ru="Торгово-сервисное здание в центре Пинска" en="Commercial &amp; Retail Building in Central Pinsk" />
+    <badge type="commercial" ru="Коммерция" en="Commercial" />
+    <price byn="426360" usd="132000" />
+    <specs>
+      <area>210</area>
+      <livingArea>210</livingArea>
+      <plotArea>4</plotArea>
+      <rooms>4</rooms>
+      <floors>2</floors>
+      <floor>1</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2021</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>glass-office</visualTheme>
+    <image>./assets/images/prop-17.jpg</image>
+    <interiorImage>./assets/images/prop-17-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-17-terrace.jpg</terraceImage>
+    <mapCoords x="205" y="330" />
+    <description
+      ru="Отдельно стоящее коммерческое здание в историческом центре Пинска с витринными окнами, современным шоурумом и собственным закрытым паркингом во внутреннем дворе."
+      en="Standalone commercial building in central Pinsk featuring showcase street glazing, modern terrazzo reception lobby, and private gated courtyard parking." />
+    <features>
+      <feature ru="Витринный фасад" en="Showcase storefront" />
+      <feature ru="Собственная парковка" en="Private courtyard parking" />
+      <feature ru="Готовый арендный бизнес" en="Ready investment asset" />
+    </features>
+  </property>
+
+  <property id="18" featured="false" dealGroup="residential">
+    <category>houses</category>
+    <subcategory ru="Таунхаус" en="Townhouse" />
+    <region>vitebsk</region>
+    <city ru="г. Полоцк, просп. Франциска Скорины" en="Polotsk, Francysk Skaryna Ave" />
+    <title ru="Стильный таунхаус у Западной Двины" en="Stylish Townhouse by Western Dvina" />
+    <badge type="urgent" ru="Срочная продажа" en="Urgent Sale" />
+    <price byn="374680" usd="116000" />
+    <specs>
+      <area>146</area>
+      <livingArea>102</livingArea>
+      <plotArea>4.5</plotArea>
+      <rooms>4</rooms>
+      <floors>2</floors>
+      <floor>2</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2024</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>townhouse-dusk</visualTheme>
+    <image>./assets/images/prop-18.jpg</image>
+    <interiorImage>./assets/images/prop-18-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-18-terrace.jpg</terraceImage>
+    <mapCoords x="332" y="88" />
+    <description
+      ru="Двухуровневый таунхаус с видом на излучину Западной Двины и историческую панораму Полоцка. Воздушная дубовая лестница, панорамное остекление и приватная деревянная терраса."
+      en="Two-level townhouse overlooking the Western Dvina bend and historic Polotsk skyline. Floating oak staircase, sliding glass walls, and private sunset deck." />
+    <features>
+      <feature ru="Вид на Западную Двину" en="Western Dvina view" />
+      <feature ru="Приватная терраса" en="Private timber deck" />
+      <feature ru="Два парковочных места" en="2 Parking spaces" />
+    </features>
+  </property>
 </catalog>

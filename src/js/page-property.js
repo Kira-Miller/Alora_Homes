@@ -11,6 +11,7 @@ import {loadPropertiesFromXml} from './xml-loader.js';
 
 initLayout('catalog');
 
+let allCatalog = [];
 let currentProperty = null;
 let activeView = 'exterior';
 
@@ -55,16 +56,42 @@ function renderPropertyPage() {
     return `<img src="${url}" alt="${p.title[lang]}" referrerpolicy="no-referrer" style="${imgStyle}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(p.visualTheme, viewId, svgUid)}</div>`;
   };
 
+  const currentIdx = allCatalog.findIndex((item) => String(item.id) === String(p.id));
+  const hasMultipleObjects = allCatalog.length > 1 && currentIdx >= 0;
+  const prevObj = hasMultipleObjects
+    ? allCatalog[(currentIdx - 1 + allCatalog.length) % allCatalog.length]
+    : null;
+  const nextObj = hasMultipleObjects
+    ? allCatalog[(currentIdx + 1) % allCatalog.length]
+    : null;
+
   rootEl.innerHTML = `
-    <nav class="breadcrumbs" aria-label="Breadcrumb">
-      <a href="./index.html">${t('crumbHome', lang)}</a>
-      <span aria-hidden="true">/</span>
-      <a href="./catalog.html">${t('crumbCatalog', lang)}</a>
-      <span aria-hidden="true">/</span>
-      <a href="./catalog.html?category=${encodeURIComponent(p.category)}">${p.subcategory[lang]}</a>
-      <span aria-hidden="true">/</span>
-      <span>${p.title[lang]}</span>
-    </nav>
+    <div class="property-topbar">
+      <nav class="breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:0;">
+        <a href="./index.html">${t('crumbHome', lang)}</a>
+        <span aria-hidden="true">/</span>
+        <a href="./catalog.html">${t('crumbCatalog', lang)}</a>
+        <span aria-hidden="true">/</span>
+        <a href="./catalog.html?category=${encodeURIComponent(p.category)}">${p.subcategory[lang]}</a>
+        <span aria-hidden="true">/</span>
+        <span>${p.title[lang]}</span>
+      </nav>
+      ${
+        hasMultipleObjects
+          ? `
+        <div class="property-nav-arrows" aria-label="Object navigation">
+          <a href="./property.html?id=${encodeURIComponent(prevObj.id)}" class="pager-arrow" title="${t('prevObject', lang)}: ${prevObj.title[lang]}" aria-label="${t('prevObject', lang)}">
+            ${getIconSvg('chevron-left', 18)}
+          </a>
+          <span class="featured-pager__counter">${currentIdx + 1} / ${allCatalog.length}</span>
+          <a href="./property.html?id=${encodeURIComponent(nextObj.id)}" class="pager-arrow" title="${t('nextObject', lang)}: ${nextObj.title[lang]}" aria-label="${t('nextObject', lang)}">
+            ${getIconSvg('chevron-right', 18)}
+          </a>
+        </div>
+      `
+          : ''
+      }
+    </div>
 
     <div class="property-hero">
       <div>
@@ -81,6 +108,12 @@ function renderPropertyPage() {
     <section class="gallery-bento" aria-label="Property gallery">
       <div class="gallery-bento__main" id="gallery-main-view">
         ${renderGalleryMedia(activeView, 'width:100%;height:100%;object-fit:cover;', `detail-main-${p.id}`)}
+        <button type="button" class="gallery-bento__arrow gallery-bento__arrow--prev" data-gallery-step="-1" aria-label="${t('prevSlide', lang)}">
+          ${getIconSvg('chevron-left', 20)}
+        </button>
+        <button type="button" class="gallery-bento__arrow gallery-bento__arrow--next" data-gallery-step="1" aria-label="${t('nextSlide', lang)}">
+          ${getIconSvg('chevron-right', 20)}
+        </button>
         <span class="gallery-bento__caption">${views.find((v) => v.id === activeView)?.label}</span>
       </div>
       <div class="gallery-bento__side">
@@ -222,6 +255,16 @@ function renderPropertyPage() {
     });
   });
 
+  rootEl.querySelectorAll('[data-gallery-step]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const step = Number(btn.getAttribute('data-gallery-step')) || 1;
+      const order = views.map((v) => v.id);
+      const idx = order.indexOf(activeView);
+      activeView = order[(idx + step + order.length) % order.length];
+      renderPropertyPage();
+    });
+  });
+
   document.getElementById('detail-fav-btn')?.addEventListener('click', () => {
     if (isGuest()) {
       openGuestGateModal('favorite');
@@ -270,8 +313,8 @@ async function initPropertyDetail() {
   const id = params.get('id') || '1';
 
   try {
-    const all = await loadPropertiesFromXml();
-    currentProperty = all.find((item) => String(item.id) === String(id)) || all[0];
+    allCatalog = await loadPropertiesFromXml();
+    currentProperty = allCatalog.find((item) => String(item.id) === String(id)) || allCatalog[0];
     document.title = `${currentProperty.title[getState().lang]} — Alora Homes`;
     renderPropertyPage();
   } catch (err) {

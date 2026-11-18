@@ -14,10 +14,14 @@ initLayout('home');
 let allProperties = [];
 let activeDealGroup = 'residential';
 let activeFeaturedTab = 'all';
+let featuredPage = 0;
+const FEATURED_PAGE_SIZE = 6;
 
 const searchForm = document.getElementById('home-search-form');
 const featuredGrid = document.getElementById('featured-grid');
 const featuredTabsEl = document.getElementById('featured-tabs');
+const featuredPagerTopEl = document.getElementById('featured-pager-top');
+const featuredPagerBottomEl = document.getElementById('featured-pager-bottom');
 const countBtn = document.getElementById('home-search-submit');
 
 const REALTORS = [
@@ -138,19 +142,93 @@ function renderFeaturedTabs() {
   featuredTabsEl.querySelectorAll('[data-featured-tab]').forEach((btn) => {
     btn.addEventListener('click', () => {
       activeFeaturedTab = btn.getAttribute('data-featured-tab') || 'all';
+      featuredPage = 0;
       renderFeaturedTabs();
       renderFeaturedGrid();
     });
   });
 }
 
+function renderFeaturedPagerControls(totalPages) {
+  const {lang} = getState();
+  const pagerTargets = [featuredPagerTopEl, featuredPagerBottomEl];
+
+  if (totalPages <= 1) {
+    pagerTargets.forEach((el) => {
+      if (el) el.innerHTML = '';
+    });
+    return;
+  }
+
+  const dotsHtml = Array.from(
+    {length: totalPages},
+    (_, idx) => `
+      <button
+        type="button"
+        class="pager-dot ${idx === featuredPage ? 'is-active' : ''}"
+        data-featured-dot="${idx}"
+        aria-label="${idx + 1} / ${totalPages}"
+      ></button>
+    `
+  ).join('');
+
+  if (featuredPagerTopEl) {
+    featuredPagerTopEl.innerHTML = `
+      <button type="button" class="pager-arrow" data-featured-step="-1" aria-label="${t('prevSlide', lang)}" title="${t('prevSlide', lang)}">
+        ${getIconSvg('chevron-left', 18)}
+      </button>
+      <span class="featured-pager__counter">${featuredPage + 1} / ${totalPages}</span>
+      <button type="button" class="pager-arrow" data-featured-step="1" aria-label="${t('nextSlide', lang)}" title="${t('nextSlide', lang)}">
+        ${getIconSvg('chevron-right', 18)}
+      </button>
+    `;
+  }
+
+  if (featuredPagerBottomEl) {
+    featuredPagerBottomEl.innerHTML = `
+      <button type="button" class="pager-arrow" data-featured-step="-1" aria-label="${t('prevSlide', lang)}">
+        ${getIconSvg('chevron-left', 18)}
+      </button>
+      <div class="pager-dots">${dotsHtml}</div>
+      <button type="button" class="pager-arrow" data-featured-step="1" aria-label="${t('nextSlide', lang)}">
+        ${getIconSvg('chevron-right', 18)}
+      </button>
+    `;
+  }
+
+  pagerTargets.forEach((container) => {
+    if (!container) return;
+    container.querySelectorAll('[data-featured-step]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const step = Number(btn.getAttribute('data-featured-step')) || 1;
+        featuredPage = (featuredPage + step + totalPages) % totalPages;
+        renderFeaturedGrid();
+      });
+    });
+    container.querySelectorAll('[data-featured-dot]').forEach((dot) => {
+      dot.addEventListener('click', () => {
+        featuredPage = Number(dot.getAttribute('data-featured-dot')) || 0;
+        renderFeaturedGrid();
+      });
+    });
+  });
+}
+
 function renderFeaturedGrid() {
   if (!featuredGrid) return;
-  const filtered = filterProperties(allProperties, {category: activeFeaturedTab}).slice(0, 6);
+  const filtered = filterProperties(allProperties, {category: activeFeaturedTab});
+  const totalPages = Math.max(1, Math.ceil(filtered.length / FEATURED_PAGE_SIZE));
+  if (featuredPage >= totalPages) featuredPage = 0;
+
+  const start = featuredPage * FEATURED_PAGE_SIZE;
+  const pageItems = filtered.slice(start, start + FEATURED_PAGE_SIZE);
+
   featuredGrid.innerHTML = '';
-  filtered.forEach((prop) => {
+  pageItems.forEach((prop) => {
     featuredGrid.appendChild(createPropertyCard(prop));
   });
+
+  renderFeaturedPagerControls(totalPages);
 }
 
 function renderRealtorsAndReviews() {

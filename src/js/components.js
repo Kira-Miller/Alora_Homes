@@ -195,6 +195,8 @@ export function openBelarusMapModal(properties) {
       viewBox = clampViewBox({x: 300, y: 35, w: 195, h: (195 * BASE_H) / BASE_W});
     } else if (preset === 'gomel') {
       viewBox = clampViewBox({x: 310, y: 230, w: 195, h: (195 * BASE_H) / BASE_W});
+    } else if (preset === 'mogilev') {
+      viewBox = clampViewBox({x: 315, y: 125, w: 190, h: (190 * BASE_H) / BASE_W});
     } else {
       viewBox = {x: 0, y: 0, w: BASE_W, h: BASE_H};
     }
@@ -376,6 +378,7 @@ export function openBelarusMapModal(properties) {
               <button type="button" class="belarus-map__tool-btn" data-map-preset="grodno">${lang === 'ru' ? 'Гродно' : 'Grodno'}</button>
               <button type="button" class="belarus-map__tool-btn" data-map-preset="vitebsk">${lang === 'ru' ? 'Витебск' : 'Vitebsk'}</button>
               <button type="button" class="belarus-map__tool-btn" data-map-preset="gomel">${lang === 'ru' ? 'Гомель' : 'Gomel'}</button>
+              <button type="button" class="belarus-map__tool-btn" data-map-preset="mogilev">${lang === 'ru' ? 'Могилёв' : 'Mogilev'}</button>
             </div>
             <div class="belarus-map__zoom-controls">
               <button type="button" class="belarus-map__tool-btn belarus-map__tool-btn--icon" id="map-zoom-out" aria-label="Zoom out">−</button>

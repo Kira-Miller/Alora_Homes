@@ -65,6 +65,10 @@ export function getIconSvg(name, size = 18) {
       return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
     case 'user':
       return `<svg ${s}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+    case 'chevron-left':
+      return `<svg ${s}><polyline points="15 18 9 12 15 6"/></svg>`;
+    case 'chevron-right':
+      return `<svg ${s}><polyline points="9 18 15 12 9 6"/></svg>`;
     default:
       return `<svg ${s}><circle cx="12" cy="12" r="9"/></svg>`;
   }
@@ -240,6 +244,14 @@ export function getBelarusMapSvg(
     {name: lang === 'ru' ? 'Могилёв' : 'Mogilev', x: 395, y: 205},
   ];
 
+  const towns = [
+    {name: lang === 'ru' ? 'Слуцк' : 'Slutsk', x: 266, y: 246},
+    {name: lang === 'ru' ? 'Волковыск' : 'Volkovysk', x: 128, y: 248},
+    {name: lang === 'ru' ? 'Смиловичи' : 'Smilovichi', x: 318, y: 200},
+    {name: lang === 'ru' ? 'Пинск' : 'Pinsk', x: 205, y: 330},
+    {name: lang === 'ru' ? 'Полоцк' : 'Polotsk', x: 332, y: 88},
+  ];
+
   const minskDistricts = isMinskZoom
     ? `
       <g class="belarus-map__minsk-layer">
@@ -293,6 +305,14 @@ export function getBelarusMapSvg(
     )
     .join('');
 
+  const townLabels = towns
+    .map(
+      (tItem) => `
+      <text x="${tItem.x}" y="${tItem.y - 11 * zoomScale}" text-anchor="middle" fill="#8b95ab" font-size="${8.5 * zoomScale}" font-weight="500">${tItem.name}</text>
+    `
+    )
+    .join('');
+
   return `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}" role="img" aria-label="Map of Belarus">
       <!-- Стилизованный контур Республики Беларусь -->
@@ -313,6 +333,7 @@ export function getBelarusMapSvg(
       </g>
       ${minskDistricts}
       ${cityLabels}
+      ${townLabels}
       ${pins}
     </svg>
   `;

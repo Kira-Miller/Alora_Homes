@@ -240,6 +240,79 @@
   margin-bottom: 24px;
 }
 
+.featured-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.featured-pager {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+
+  &__counter {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    min-width: 40px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.featured-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.pager-arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color $transition-fast, background-color $transition-fast, color $transition-fast, transform $transition-fast;
+
+  &:hover {
+    border-color: var(--accent-primary);
+    background: var(--accent-primary-soft);
+    color: var(--accent-primary);
+    transform: translateY(-1px);
+  }
+}
+
+.pager-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pager-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--border-strong);
+  transition: width $transition-fast, background-color $transition-fast;
+
+  &.is-active {
+    width: 26px;
+    background: var(--accent-primary);
+  }
+}
+
 .benefits-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -433,6 +506,21 @@
   }
 }
 
+.property-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.property-nav-arrows {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .gallery-bento {
   display: grid;
   grid-template-columns: 1.75fr 1fr;
@@ -459,6 +547,38 @@
       height: 100%;
       object-fit: cover;
       display: block;
+    }
+  }
+
+  &__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    background: rgba(11, 11, 20, 0.65);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color $transition-fast, border-color $transition-fast, transform $transition-fast;
+
+    &:hover {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+    }
+
+    &--prev {
+      left: 14px;
+    }
+
+    &--next {
+      right: 14px;
     }
   }
 
