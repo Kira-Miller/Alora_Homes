@@ -49,19 +49,19 @@
           <div class="kpi-strip" style="margin-top:30px;">
             <div class="kpi-strip__card">
               <strong>1 240+</strong>
-              <span>Успешных сделок</span>
+              <span data-i18n="aboutKpiDeals">Успешных сделок</span>
             </div>
             <div class="kpi-strip__card">
-              <strong>6 регионов</strong>
-              <span>Работаем по всей Беларуси</span>
+              <strong data-i18n="aboutKpiRegionsNum">6 регионов</strong>
+              <span data-i18n="aboutKpiRegionsDesc">Работаем по всей Беларуси</span>
             </div>
             <div class="kpi-strip__card">
-              <strong>24 часа</strong>
-              <span>Срок экспертной оценки</span>
+              <strong data-i18n="aboutKpiEvalNum">24 часа</strong>
+              <span data-i18n="aboutKpiEvalDesc">Срок экспертной оценки</span>
             </div>
             <div class="kpi-strip__card">
               <strong>100%</strong>
-              <span>Юридическая проверка</span>
+              <span data-i18n="aboutKpiLegal">Юридическая проверка</span>
             </div>
           </div>
 
@@ -132,8 +132,8 @@
             <h2 class="section-title" data-i18n="footerContacts">Контакты</h2>
             <div class="contacts-grid">
               <div class="contact-info-card">
-                <h3 style="font-size:1.2rem;">Контакт-центр Alora Homes</h3>
-                <p style="color:var(--text-secondary);">
+                <h3 style="font-size:1.2rem;" data-i18n="contactCenterTitle">Контакт-центр Alora Homes</h3>
+                <p style="color:var(--text-secondary);" data-i18n="contactCenterDesc">
                   Ежедневно с 09:00 до 21:00. Помогаем с подбором, продажей, обменом и юридическим оформлением по всей
                   Беларуси.
                 </p>
@@ -157,7 +157,7 @@
                 </ul>
 
                 <div>
-                  <strong style="display:block;font-size:0.85rem;margin-bottom:10px;color:var(--text-secondary);">
+                  <strong style="display:block;font-size:0.85rem;margin-bottom:10px;color:var(--text-secondary);" data-i18n="contactSocialsLabel">
                     Мы в мессенджерах и соцсетях:
                   </strong>
                   <div id="about-socials"></div>
@@ -173,17 +173,18 @@
                 <h3 style="font-size:1.2rem;" data-i18n="contactFormTitle">Связаться с нами</h3>
                 <div class="field">
                   <label class="field__label" for="contact-name" data-i18n="inputName">Как к вам обращаться</label>
-                  <input id="contact-name" class="field__control" type="text" required placeholder="Ваше имя" />
+                  <input id="contact-name" class="field__control" type="text" required data-i18n-placeholder="inputNameShortPlaceholder" placeholder="Ваше имя" />
                 </div>
                 <div class="field">
                   <label class="field__label" for="contact-phone" data-i18n="inputPhone">Номер телефона</label>
-                  <input id="contact-phone" class="field__control" type="tel" required placeholder="+375 (29) ___-__-__" />
+                  <input id="contact-phone" class="field__control" type="tel" required value="+375 " placeholder="+375 (29) ___-__-__" />
                 </div>
                 <div class="field">
-                  <label class="field__label" for="contact-msg">Сообщение</label>
+                  <label class="field__label" for="contact-msg" data-i18n="contactMsgLabel">Сообщение</label>
                   <textarea
                     id="contact-msg"
                     class="field__control"
+                    data-i18n-placeholder="contactMsgPlaceholder"
                     placeholder="Ваш вопрос по покупке, продаже или оценке недвижимости..."
                   ></textarea>
                 </div>
@@ -193,7 +194,7 @@
           </div>
 
           <div style="margin-top:44px;color:var(--text-muted);font-size:0.85rem;" id="legal">
-            <p>
+            <p data-i18n="aboutLegalText">
               Услуги агентства недвижимости Alora Homes оказываются в соответствии с законодательством Республики
               Беларусь. Все расчёты и договоры проходят обязательную юридическую проверку.
             </p>

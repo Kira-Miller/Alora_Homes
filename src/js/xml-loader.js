@@ -40,19 +40,48 @@ export async function loadPropertiesFromXml() {
       const parseError = xmlDoc.querySelector('parsererror');
 
       if (!parseError) {
-        const propertyNodes = Array.from(xmlDoc.querySelectorAll('catalog > property'));
+        const propertyNodes = Array.from(xmlDoc.getElementsByTagName('property')).filter(
+          (n) => n.parentNode && n.parentNode.tagName === 'catalog'
+        );
+
+        const getChild = (parent, tagName) => {
+          if (!parent) return null;
+          const target = tagName.toLowerCase();
+          return Array.from(parent.children || []).find(
+            (el) => (el.tagName || '').toLowerCase() === target
+          ) || null;
+        };
+
+        const getByPath = (root, path) => {
+          const parts = path.split('>').map((p) => p.trim());
+          let cur = root;
+          for (const part of parts) {
+            cur = getChild(cur, part);
+            if (!cur) return null;
+          }
+          return cur;
+        };
+
         if (propertyNodes.length >= 20) {
           cachedCatalog = propertyNodes.map((node) => {
-            const getText = (selector) => node.querySelector(selector)?.textContent?.trim() || '';
-            const getAttr = (selector, attr) => node.querySelector(selector)?.getAttribute(attr) || '';
+            const propId = node.getAttribute('id') || '';
+            const fallbackProp = PROPERTIES_DATA.find((item) => String(item.id) === String(propId));
+            const getText = (path) => getByPath(node, path)?.textContent?.trim() || '';
+            const getAttr = (path, attr) => getByPath(node, path)?.getAttribute(attr) || '';
 
-            const features = Array.from(node.querySelectorAll('features > feature')).map((f) => ({
+            const featuresParent = getChild(node, 'features');
+            const features = Array.from(featuresParent?.children || []).map((f) => ({
               ru: f.getAttribute('ru') || '',
               en: f.getAttribute('en') || '',
             }));
 
+            const parsedX = Number(getAttr('mapCoords', 'x'));
+            const parsedY = Number(getAttr('mapCoords', 'y'));
+            const mapX = Number.isFinite(parsedX) && parsedX > 0 ? parsedX : fallbackProp?.mapCoords?.x || 258;
+            const mapY = Number.isFinite(parsedY) && parsedY > 0 ? parsedY : fallbackProp?.mapCoords?.y || 184;
+
             return {
-              id: node.getAttribute('id') || '',
+              id: propId,
               featured: node.getAttribute('featured') === 'true',
               dealGroup: node.getAttribute('dealGroup') || 'residential',
               category: getText('category'),
@@ -87,13 +116,13 @@ export async function loadPropertiesFromXml() {
                 year: Number(getText('specs > year')) || 2024,
                 newbuild: getText('specs > newbuild') === 'true',
               },
-              visualTheme: getText('visualTheme') || 'villa-pine',
-              image: getText('image'),
-              interiorImage: getText('interiorImage'),
-              terraceImage: getText('terraceImage'),
+              visualTheme: getText('visualTheme') || fallbackProp?.visualTheme || 'villa-pine',
+              image: getText('image') || fallbackProp?.image || '',
+              interiorImage: getText('interiorImage') || fallbackProp?.interiorImage || '',
+              terraceImage: getText('terraceImage') || fallbackProp?.terraceImage || '',
               mapCoords: {
-                x: Number(getAttr('mapCoords', 'x')) || 270,
-                y: Number(getAttr('mapCoords', 'y')) || 190,
+                x: mapX,
+                y: mapY,
               },
               description: {
                 ru: getAttr('description', 'ru'),

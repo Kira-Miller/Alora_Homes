@@ -5,10 +5,13 @@
 import {showToast} from './components.js';
 import {formatPrices, t} from './i18n.js';
 import {initLayout, openAuthModal, openGuestGateModal} from './layout.js';
+import {getRealtorSelectOptionsHtml} from './realtors-data.js';
 import {addViewingRequest, getState, isGuest, subscribe, toggleFavorite} from './state.js';
 import {getFloorPlanData, getFloorPlanSvg, getIconSvg, getPropertySvg} from './svg-art.js';
 import {
+  attachPhoneMask,
   clearFormErrors,
+  formatBelarusPhoneInput,
   setFieldError,
   validateBelarusPhone,
   validateFutureDate,
@@ -24,6 +27,13 @@ let activeView = 'exterior';
 let activeFloorIdx = 0;
 let activeRoomId = null;
 
+const bookingDraft = {
+  name: null,
+  phone: null,
+  date: '2026-11-24',
+  consultant: 'any',
+};
+
 const rootEl = document.getElementById('property-detail-root');
 
 function renderPropertyPage() {
@@ -34,6 +44,25 @@ function renderPropertyPage() {
   const s = p.specs;
   const prices = formatPrices(p.priceByn, p.priceUsd, currency);
   const isSaved = favorites.includes(String(p.id));
+
+  document.title = `${p.title[lang]} — Alora Homes`;
+
+  const existingName = document.getElementById('view-name')?.value;
+  const existingPhone = document.getElementById('view-phone')?.value;
+  const existingDate = document.getElementById('view-date')?.value;
+  const existingConsultant = document.getElementById('view-consultant')?.value;
+  if (existingName !== undefined) bookingDraft.name = existingName;
+  if (existingPhone !== undefined) bookingDraft.phone = existingPhone;
+  if (existingDate !== undefined) bookingDraft.date = existingDate;
+  if (existingConsultant !== undefined) bookingDraft.consultant = existingConsultant;
+
+  const draftName = bookingDraft.name !== null ? bookingDraft.name : user.name && user.name !== 'Гость' ? user.name : '';
+  const draftPhone =
+    bookingDraft.phone !== null
+      ? formatBelarusPhoneInput(bookingDraft.phone, true, true)
+      : user.phone
+        ? formatBelarusPhoneInput(user.phone, true, true)
+        : '+375 ';
 
   const floorPlans = getFloorPlanData(p, lang);
   if (activeFloorIdx >= floorPlans.length) activeFloorIdx = 0;
@@ -125,6 +154,9 @@ function renderPropertyPage() {
         <a href="#floorplan-section" class="btn btn--secondary btn--sm">
           ${t('viewFloorplan', lang)} ↓
         </a>
+        <a href="#property-booking-section" class="btn btn--primary btn--sm">
+          ${t('bookViewing', lang)} ↓
+        </a>
         <span class="property-card__badge property-card__badge--${p.badge.type}" style="position:static;">
           ${p.badge[lang]}
         </span>
@@ -157,22 +189,41 @@ function renderPropertyPage() {
       </div>
     </section>
 
-    <div class="property-layout">
+    <div class="property-price-strip">
       <div>
-        <div class="kpi-strip">
-          ${kpis
-            .map(
-              (k) => `
-            <div class="kpi-strip__card">
-              <strong>${k.val}</strong>
-              <span>${k.label}</span>
-            </div>
-          `
-            )
-            .join('')}
+        <span class="section-kicker" style="margin-bottom:4px;">${t('objectPriceLabel', lang)}</span>
+        <div class="property-price-strip__values">
+          <div class="property-sidebar__price">${prices.primary}</div>
+          <div class="property-sidebar__subprice">${prices.secondary}</div>
         </div>
+      </div>
+      <div class="property-price-strip__actions">
+        <button type="button" class="btn btn--secondary" id="detail-fav-btn">
+          ${getIconSvg(isSaved ? 'heart-filled' : 'heart', 17)}
+          <span>${isSaved ? t('inFav', lang) : t('addToFav', lang)}</span>
+        </button>
+        <a href="#property-booking-section" class="btn btn--primary">
+          ${t('bookViewing', lang)} ↓
+        </a>
+      </div>
+    </div>
 
-        <section style="margin-bottom:28px;">
+    <div class="property-overview">
+      <div class="kpi-strip">
+        ${kpis
+          .map(
+            (k) => `
+          <div class="kpi-strip__card">
+            <strong>${k.val}</strong>
+            <span>${k.label}</span>
+          </div>
+        `
+          )
+          .join('')}
+      </div>
+
+      <div class="property-info-grid">
+        <section>
           <h2 class="section-title" style="font-size:1.5rem;margin-bottom:12px;">${t('aboutObject', lang)}</h2>
           <p style="color:var(--text-secondary);line-height:1.7;">${p.description[lang]}</p>
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;">
@@ -185,7 +236,7 @@ function renderPropertyPage() {
           </div>
         </section>
 
-        <section style="margin-bottom:28px;">
+        <section>
           <h2 class="section-title" style="font-size:1.5rem;">${t('characteristics', lang)}</h2>
           <table class="specs-table">
             <tbody>
@@ -200,77 +251,7 @@ function renderPropertyPage() {
             </tbody>
           </table>
         </section>
-
-        <section style="padding:22px;border-radius:16px;background:var(--bg-surface);border:1px solid var(--border-subtle);">
-          <h3 style="font-size:1.1rem;margin-bottom:6px;">${t('nextStepTitle', lang)}</h3>
-          <p style="color:var(--text-secondary);font-size:0.9rem;">${t('nextStepDesc', lang)}</p>
-        </section>
       </div>
-
-      <aside class="property-sidebar">
-        <div>
-          <span class="section-kicker" style="margin-bottom:4px;">${t('objectPriceLabel', lang)}</span>
-          <div class="property-sidebar__price">${prices.primary}</div>
-          <div class="property-sidebar__subprice">${prices.secondary}</div>
-        </div>
-
-        <button type="button" class="btn btn--secondary btn--full" id="detail-fav-btn">
-          ${getIconSvg(isSaved ? 'heart-filled' : 'heart', 17)}
-          <span>${isSaved ? t('inFav', lang) : t('addToFav', lang)}</span>
-        </button>
-
-        <hr style="border:none;border-top:1px solid var(--border-subtle);margin:4px 0;" />
-
-        <div>
-          <h2 style="font-size:1.25rem;margin-bottom:4px;">${t('bookingTitle', lang)}</h2>
-          <p style="font-size:0.84rem;color:var(--text-secondary);">${t('bookingSubtitle', lang)}</p>
-        </div>
-
-        ${
-          isGuest()
-            ? `
-          <div class="guest-gate__notice" style="font-size:0.84rem;">
-            ${t('guestGateBookDesc', lang)}
-          </div>
-          <button type="button" class="btn btn--primary btn--full js-sidebar-reg">${t('registerBtn', lang)}</button>
-          <a href="tel:+375297745210" class="btn btn--secondary btn--full">${getIconSvg('phone', 16)} <span>+375 (29) 774-52-10</span></a>
-        `
-            : `
-          <form id="viewing-form" novalidate style="display:flex;flex-direction:column;gap:12px;">
-            <div class="field">
-              <label class="field__label" for="view-name">${t('inputName', lang)}</label>
-              <input
-                id="view-name"
-                class="field__control"
-                type="text"
-                required
-                value="${user.name}"
-                placeholder="${t('inputNamePlaceholder', lang)}"
-              />
-            </div>
-            <div class="field">
-              <label class="field__label" for="view-phone">${t('inputPhone', lang)}</label>
-              <input
-                id="view-phone"
-                class="field__control"
-                type="tel"
-                required
-                value="${user.phone}"
-                placeholder="+375 (29) ___-__-__"
-              />
-            </div>
-            <div class="field">
-              <label class="field__label" for="view-date">${t('inputDate', lang)}</label>
-              <input id="view-date" class="field__control" type="date" required value="2026-11-24" />
-            </div>
-            <button type="submit" class="btn btn--primary btn--full">${t('bookViewing', lang)}</button>
-            <p style="font-size:0.78rem;color:var(--text-muted);text-align:center;">
-              ${t('bookingNote', lang)}
-            </p>
-          </form>
-        `
-        }
-      </aside>
     </div>
 
     <section class="floorplan-section" id="floorplan-section" aria-label="${t('floorplanTitle', lang)}">
@@ -350,6 +331,80 @@ function renderPropertyPage() {
         </div>
       </div>
     </section>
+
+    <section class="property-booking-section" id="property-booking-section" aria-label="${t('bookingTitle', lang)}">
+      <div class="property-booking-grid">
+        <div class="property-next-step">
+          <span class="section-kicker">${t('objectPriceLabel', lang)}</span>
+          <div class="property-sidebar__price">${prices.primary}</div>
+          <div class="property-sidebar__subprice" style="margin-bottom:14px;">${prices.secondary}</div>
+          <h3 style="font-size:1.25rem;margin-bottom:8px;">${t('nextStepTitle', lang)}</h3>
+          <p style="color:var(--text-secondary);font-size:0.94rem;line-height:1.65;margin-bottom:18px;">${t('nextStepDesc', lang)}</p>
+          <button type="button" class="btn btn--secondary" id="detail-fav-btn-bottom">
+            ${getIconSvg(isSaved ? 'heart-filled' : 'heart', 17)}
+            <span>${isSaved ? t('inFav', lang) : t('addToFav', lang)}</span>
+          </button>
+        </div>
+
+        <aside class="property-sidebar property-sidebar--inline">
+          <div>
+            <h2 style="font-size:1.35rem;margin-bottom:4px;">${t('bookingTitle', lang)}</h2>
+            <p style="font-size:0.86rem;color:var(--text-secondary);">${t('bookingSubtitle', lang)}</p>
+          </div>
+
+          ${
+            isGuest()
+              ? `
+            <div class="guest-gate__notice" style="font-size:0.86rem;">
+              ${t('guestGateBookDesc', lang)}
+            </div>
+            <button type="button" class="btn btn--primary btn--full js-sidebar-reg">${t('registerBtn', lang)}</button>
+            <a href="tel:+375297745210" class="btn btn--secondary btn--full">${getIconSvg('phone', 16)} <span>+375 (29) 774-52-10</span></a>
+          `
+              : `
+            <form id="viewing-form" novalidate style="display:flex;flex-direction:column;gap:12px;">
+              <div class="field">
+                <label class="field__label" for="view-name">${t('inputName', lang)}</label>
+                <input
+                  id="view-name"
+                  class="field__control"
+                  type="text"
+                  required
+                  value="${draftName}"
+                  placeholder="${t('inputNamePlaceholder', lang)}"
+                />
+              </div>
+              <div class="field">
+                <label class="field__label" for="view-phone">${t('inputPhone', lang)}</label>
+                <input
+                  id="view-phone"
+                  class="field__control"
+                  type="tel"
+                  required
+                  value="${draftPhone}"
+                  placeholder="+375 (29) 123-45-67"
+                />
+              </div>
+              <div class="field">
+                <label class="field__label" for="view-date">${t('inputDate', lang)}</label>
+                <input id="view-date" class="field__control" type="date" required value="${bookingDraft.date || '2026-11-24'}" />
+              </div>
+              <div class="field">
+                <label class="field__label" for="view-consultant">${t('viewConsultantLabel', lang)}</label>
+                <select id="view-consultant" class="field__control">
+                  ${getRealtorSelectOptionsHtml(bookingDraft.consultant || 'any', lang)}
+                </select>
+              </div>
+              <button type="submit" class="btn btn--primary btn--full">${t('bookViewing', lang)}</button>
+              <p style="font-size:0.78rem;color:var(--text-muted);text-align:center;">
+                ${t('bookingNote', lang)}
+              </p>
+            </form>
+          `
+          }
+        </aside>
+      </div>
+    </section>
   `;
 
   rootEl.querySelectorAll('[data-switch-view]').forEach((btn) => {
@@ -397,7 +452,7 @@ function renderPropertyPage() {
     btn.addEventListener('click', () => selectRoom(btn.getAttribute('data-select-room')));
   });
 
-  document.getElementById('detail-fav-btn')?.addEventListener('click', () => {
+  const handleToggleFav = () => {
     if (isGuest()) {
       openGuestGateModal('favorite');
       return;
@@ -413,13 +468,20 @@ function renderPropertyPage() {
           : 'Removed from favorites',
       added ? 'success' : 'default'
     );
-  });
+  };
+
+  document.getElementById('detail-fav-btn')?.addEventListener('click', handleToggleFav);
+  document.getElementById('detail-fav-btn-bottom')?.addEventListener('click', handleToggleFav);
 
   rootEl.querySelector('.js-sidebar-reg')?.addEventListener('click', () => openAuthModal('register'));
 
   const viewingForm = document.getElementById('viewing-form');
-  viewingForm?.querySelectorAll('input').forEach((inp) => {
+  const phoneInputEl = document.getElementById('view-phone');
+  attachPhoneMask(phoneInputEl, true);
+
+  viewingForm?.querySelectorAll('input, select').forEach((inp) => {
     inp.addEventListener('input', () => setFieldError(inp, ''));
+    inp.addEventListener('change', () => setFieldError(inp, ''));
   });
   viewingForm?.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -431,6 +493,7 @@ function renderPropertyPage() {
     const nameEl = document.getElementById('view-name');
     const phoneEl = document.getElementById('view-phone');
     const dateEl = document.getElementById('view-date');
+    const consultantEl = document.getElementById('view-consultant');
 
     const nameRes = validateName(nameEl?.value, lang);
     const phoneRes = validateBelarusPhone(phoneEl?.value, lang, true);
@@ -460,6 +523,7 @@ function renderPropertyPage() {
       name: nameRes.value,
       phone: phoneRes.value,
       date: dateRes.value,
+      consultant: consultantEl?.value || 'any',
     });
     showToast(
       lang === 'ru'
@@ -473,6 +537,7 @@ function renderPropertyPage() {
 async function initPropertyDetail() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id') || '1';
+  const {lang} = getState();
 
   try {
     allCatalog = await loadPropertiesFromXml();
@@ -488,7 +553,7 @@ async function initPropertyDetail() {
     });
   } catch (err) {
     if (rootEl) {
-      rootEl.innerHTML = `<div class="empty-state"><h2>Объект не найден</h2><a href="./catalog.html" class="btn btn--primary">Вернуться в каталог</a></div>`;
+      rootEl.innerHTML = `<div class="empty-state"><h2>${lang === 'ru' ? 'Объект не найден' : 'Property not found'}</h2><a href="./catalog.html" class="btn btn--primary">${lang === 'ru' ? 'Вернуться в каталог' : 'Back to catalog'}</a></div>`;
     }
     console.error(err);
   }

@@ -5,14 +5,15 @@
 import {createPropertyCard, openBelarusMapModal, showToast} from './components.js';
 import {pluralObjects, t} from './i18n.js';
 import {initLayout} from './layout.js';
+import {REALTORS} from './realtors-data.js';
 import {addConsultationRequest, getState, setCurrency, subscribe} from './state.js';
 import {getIconSvg, getRealtorPortraitSvg} from './svg-art.js';
 import {clearFormErrors, setFieldError, validateBelarusPhone, validateName, attachPhoneMask} from './validation.js';
-import {filterProperties, loadPropertiesFromXml} from './xml-loader.js';
+import {FALLBACK_PROPERTIES, filterProperties, loadPropertiesFromXml} from './xml-loader.js';
 
 initLayout('home');
 
-let allProperties = [];
+let allProperties = FALLBACK_PROPERTIES;
 let activeDealGroup = 'all';
 let activeFeaturedTab = 'all';
 let featuredPage = 0;
@@ -25,32 +26,6 @@ const featuredPagerTopEl = document.getElementById('featured-pager-top');
 const featuredPagerBottomEl = document.getElementById('featured-pager-bottom');
 const countBtn = document.getElementById('home-search-submit');
 
-const REALTORS = [
-  {
-    nameRu: 'Шестак Алиса Дмитриевна',
-    nameEn: 'Alisa Shestak',
-    roleRu: 'Ведущий риэлтор · Жилая недвижимость',
-    roleEn: 'Lead Realtor · Residential',
-    phone: '+375 (29) 774-52-10',
-    image: './assets/images/realtor-shestak.jpg',
-  },
-  {
-    nameRu: 'Ботвич Ксения Сергеевна',
-    nameEn: 'Kseniya Botvich',
-    roleRu: 'Эксперт по загородным домам',
-    roleEn: 'Country Estate Specialist',
-    phone: '+375 (29) 618-33-40',
-    image: './assets/images/realtor-botvich.jpg',
-  },
-  {
-    nameRu: 'Свирко Юлия Александровна',
-    nameEn: 'Yulia Svirko',
-    roleRu: 'Риэлтор · Коммерческие и элитные объекты',
-    roleEn: 'Commercial & Luxury Advisor',
-    phone: '+375 (44) 551-88-55',
-    image: './assets/images/realtor-svirko.jpg',
-  },
-];
 
 const REVIEWS = [
   {
@@ -200,8 +175,12 @@ function getSearchFilters() {
 }
 
 function updateLiveCount() {
-  if (!countBtn || !allProperties.length) return;
   const {lang} = getState();
+  const allTabBtn = document.querySelector('[data-deal-tab="all"]');
+  if (allTabBtn) {
+    allTabBtn.textContent = `${t('tabAllObjectsLabel', lang)} (${allProperties.length})`;
+  }
+  if (!countBtn || !allProperties.length) return;
   const matched = filterProperties(allProperties, getSearchFilters());
   const word = pluralObjects(matched.length, lang);
   countBtn.textContent = `${t('findObjectsPrefix', lang)} ${matched.length} ${word} →`;
@@ -429,7 +408,7 @@ function bindHomeInteractions() {
 
   document.getElementById('reset-search-btn')?.addEventListener('click', () => {
     searchForm?.reset();
-    activeDealGroup = 'residential';
+    activeDealGroup = 'all';
     document.querySelectorAll('[data-deal-tab]').forEach((b, i) =>
       b.classList.toggle('is-active', i === 0)
     );
@@ -454,7 +433,7 @@ function bindHomeInteractions() {
 
   document.getElementById('open-map-btn')?.addEventListener('click', () => {
     const matched = filterProperties(allProperties, getSearchFilters());
-    openBelarusMapModal(matched.length ? matched : allProperties);
+    openBelarusMapModal(matched.length ? matched : allProperties, allProperties);
   });
 
   // Прокрутка отзывов кнопками влево / вправо
@@ -472,7 +451,7 @@ function bindHomeInteractions() {
 
   // Форма консультации «Ответим на ваши вопросы» с проверкой вводимых данных
   const consultForm = document.getElementById('home-consult-form');
-  attachPhoneMask(document.getElementById('consult-phone'));
+  attachPhoneMask(document.getElementById('consult-phone'), false);
   consultForm?.querySelectorAll('input').forEach((inp) => {
     inp.addEventListener('input', () => setFieldError(inp, ''));
   });
@@ -519,14 +498,21 @@ async function initHome() {
   syncSearchCurrencyButtons();
   renderRealtorsAndReviews();
 
+  renderFeaturedTabs();
+  renderFeaturedGrid();
+  updateLiveCount();
+
   try {
     allProperties = await loadPropertiesFromXml();
     renderFeaturedTabs();
     renderFeaturedGrid();
     updateLiveCount();
   } catch (err) {
-    if (featuredGrid) {
-      featuredGrid.innerHTML = `<div class="empty-state"><p>Не удалось загрузить каталог объектов.</p></div>`;
+    const {lang} = getState();
+    if (featuredGrid && !allProperties.length) {
+      featuredGrid.innerHTML = `<div class="empty-state"><p>${
+        lang === 'ru' ? 'Не удалось загрузить каталог объектов.' : 'Failed to load property catalog.'
+      }</p></div>`;
     }
     console.error(err);
   }

@@ -160,7 +160,7 @@ export function createPropertyCard(property, options = {}) {
  * Открывает интерактивную карту Беларуси с масштабированием, панорамированием
  * и карточкой выбранного объекта справа
  */
-export function openBelarusMapModal(properties) {
+export function openBelarusMapModal(properties, allPropertiesList = null) {
   let modal = document.getElementById('belarus-map-modal');
   if (!modal) {
     modal = document.createElement('div');
@@ -169,10 +169,19 @@ export function openBelarusMapModal(properties) {
     document.body.appendChild(modal);
   }
 
+  const filteredProps = Array.isArray(properties) ? properties : [];
+  const fullProps =
+    Array.isArray(allPropertiesList) && allPropertiesList.length >= filteredProps.length
+      ? allPropertiesList
+      : filteredProps;
+  const hasFilterDiff = fullProps.length > filteredProps.length && filteredProps.length > 0;
+  let showAllPins = !hasFilterDiff;
+  const getVisibleProps = () => (showAllPins ? fullProps : filteredProps);
+
   const BASE_W = 520;
   const BASE_H = 400;
   const MIN_W = 40; // Макс. увеличение 13.0× (больше 4.3×)
-  let activeId = properties[0]?.id || null;
+  let activeId = getVisibleProps()[0]?.id || null;
   let activePreset = 'all';
   let viewBox = {x: 0, y: 0, w: BASE_W, h: BASE_H};
 
@@ -219,11 +228,12 @@ export function openBelarusMapModal(properties) {
 
   const renderMapBody = () => {
     const {lang} = getState();
+    const visibleProps = getVisibleProps();
     const canvas = modal.querySelector('#belarus-map-canvas');
     const zoomLabel = modal.querySelector('#belarus-map-zoom');
     if (!canvas) return;
 
-    canvas.innerHTML = getBelarusMapSvg(properties, lang, activeId, viewBox);
+    canvas.innerHTML = getBelarusMapSvg(visibleProps, lang, activeId, viewBox);
     if (zoomLabel) {
       zoomLabel.textContent = `${(BASE_W / viewBox.w).toFixed(1)}×`;
     }
@@ -232,12 +242,27 @@ export function openBelarusMapModal(properties) {
       btn.classList.toggle('is-active', btn.getAttribute('data-map-preset') === activePreset);
     });
 
+    const toggleAllBtn = modal.querySelector('#map-toggle-all');
+    if (toggleAllBtn) {
+      toggleAllBtn.classList.toggle('is-active', showAllPins);
+      toggleAllBtn.textContent = showAllPins
+        ? lang === 'ru'
+          ? `По фильтру (${filteredProps.length})`
+          : `Filtered (${filteredProps.length})`
+        : lang === 'ru'
+          ? `Показать все (${fullProps.length})`
+          : `Show all (${fullProps.length})`;
+    }
+
     canvas.querySelectorAll('[data-map-id]').forEach((pin) => {
       pin.addEventListener('click', (e) => {
         e.stopPropagation();
         const target = e.target.closest('[data-map-id]');
         const nextId = target ? target.getAttribute('data-map-id') : pin.getAttribute('data-map-id');
         if (nextId) {
+          if (!visibleProps.some((p) => String(p.id) === String(nextId))) {
+            showAllPins = true;
+          }
           activeId = nextId;
           renderMapBody();
           renderSidebar();
@@ -248,9 +273,15 @@ export function openBelarusMapModal(properties) {
 
   const renderSidebar = () => {
     const {lang, currency, favorites} = getState();
+    const visibleProps = getVisibleProps();
     const selectedWrap = modal.querySelector('#belarus-map-selected');
     const listWrap = modal.querySelector('#belarus-map-list');
-    const selectedProp = properties.find((p) => String(p.id) === String(activeId)) || properties[0];
+    const listLabel = modal.querySelector('#belarus-map-list-label');
+    const selectedProp = visibleProps.find((p) => String(p.id) === String(activeId)) || visibleProps[0];
+
+    if (listLabel) {
+      listLabel.textContent = `${t('mapObjectsList', lang)} (${visibleProps.length})`;
+    }
 
     if (selectedWrap && selectedProp) {
       const pr = formatPrices(selectedProp.priceByn, selectedProp.priceUsd, currency);
@@ -335,7 +366,7 @@ export function openBelarusMapModal(properties) {
     }
 
     if (listWrap) {
-      listWrap.innerHTML = properties
+      listWrap.innerHTML = visibleProps
         .map((p) => {
           const pr = formatPrices(p.priceByn, p.priceUsd, currency);
           return `
@@ -384,6 +415,11 @@ export function openBelarusMapModal(properties) {
               <button type="button" class="belarus-map__tool-btn" data-map-preset="vitebsk">${lang === 'ru' ? 'Витебск' : 'Vitebsk'}</button>
               <button type="button" class="belarus-map__tool-btn" data-map-preset="gomel">${lang === 'ru' ? 'Гомель' : 'Gomel'}</button>
               <button type="button" class="belarus-map__tool-btn" data-map-preset="mogilev">${lang === 'ru' ? 'Могилёв' : 'Mogilev'}</button>
+              ${
+                hasFilterDiff
+                  ? `<button type="button" class="belarus-map__tool-btn" id="map-toggle-all"></button>`
+                  : ''
+              }
             </div>
             <div class="belarus-map__zoom-controls">
               <button type="button" class="belarus-map__tool-btn belarus-map__tool-btn--icon" id="map-zoom-out" aria-label="Zoom out">−</button>
@@ -398,7 +434,7 @@ export function openBelarusMapModal(properties) {
 
         <div class="belarus-map__sidebar">
           <div id="belarus-map-selected"></div>
-          <div class="belarus-map__list-label">${t('mapObjectsList', lang)} (${properties.length})</div>
+          <div class="belarus-map__list-label" id="belarus-map-list-label">${t('mapObjectsList', lang)} (${getVisibleProps().length})</div>
           <div class="belarus-map__list" id="belarus-map-list"></div>
         </div>
       </div>
@@ -407,6 +443,17 @@ export function openBelarusMapModal(properties) {
 
   modal.querySelector('.js-close-map')?.addEventListener('click', () => {
     modal.classList.remove('is-open');
+  });
+
+  modal.querySelector('#map-toggle-all')?.addEventListener('click', () => {
+    showAllPins = !showAllPins;
+    const vis = getVisibleProps();
+    if (!vis.some((p) => String(p.id) === String(activeId))) {
+      activeId = vis[0]?.id || null;
+    }
+    if (showAllPins) applyPreset('all');
+    renderMapBody();
+    renderSidebar();
   });
 
   modal.querySelectorAll('[data-map-preset]').forEach((btn) => {

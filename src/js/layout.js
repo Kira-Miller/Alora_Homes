@@ -29,13 +29,32 @@ import {
 let layoutGlobalListenersBound = false;
 let currentActivePage = 'home';
 
+const PAGE_TITLE_KEYS = {
+  home: 'pageTitleHome',
+  catalog: 'pageTitleCatalog',
+  services: 'pageTitleServices',
+  analytics: 'pageTitleAnalytics',
+  about: 'pageTitleAbout',
+  cabinet: 'pageTitleCabinet',
+};
+
+function syncDocumentTitle(activePage, lang) {
+  if (window.location.pathname.includes('property.html')) return;
+  const titleKey = PAGE_TITLE_KEYS[activePage];
+  if (titleKey) {
+    document.title = t(titleKey, lang);
+  }
+}
+
 export function initLayout(activePage = 'home') {
   currentActivePage = activePage;
+  const initialLang = getState().lang;
   renderHeader(activePage);
   renderFooter();
   ensureModals();
   ensureScrollEnhancements();
-  applyStaticTranslations(getState().lang);
+  applyStaticTranslations(initialLang);
+  syncDocumentTitle(activePage, initialLang);
 
   if (!layoutGlobalListenersBound) {
     layoutGlobalListenersBound = true;
@@ -78,9 +97,12 @@ export function initLayout(activePage = 'home') {
   }
 
   subscribe(() => {
+    const nextLang = getState().lang;
     renderHeader(currentActivePage);
     renderFooter();
-    applyStaticTranslations(getState().lang);
+    ensureScrollEnhancements();
+    applyStaticTranslations(nextLang);
+    syncDocumentTitle(currentActivePage, nextLang);
   });
 }
 
@@ -180,20 +202,20 @@ function renderHeader(activePage) {
           <span>${userLabel}</span>
         </button>
 
-        <button type="button" class="site-header__burger js-toggle-drawer" aria-label="Menu" aria-expanded="false">
+        <button type="button" class="site-header__burger js-toggle-drawer" aria-label="${t('menuBtn', lang)}" aria-expanded="false">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <line x1="3" y1="6" x2="21" y2="6"/>
             <line x1="3" y1="12" x2="21" y2="12"/>
             <line x1="3" y1="18" x2="21" y2="18"/>
           </svg>
-          <span>Меню</span>
+          <span>${t('menuBtn', lang)}</span>
         </button>
       </div>
     </div>
 
     <div class="mobile-drawer" id="mobile-drawer">
       <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--border-subtle);">
-        <span style="font-weight:700;font-size:1.05rem;color:var(--text-primary);">Навигация Alora Homes</span>
+        <span style="font-weight:700;font-size:1.05rem;color:var(--text-primary);">${t('mobileNavTitle', lang)}</span>
         <button type="button" class="modal-dialog__close js-close-drawer" aria-label="Close" style="background:none;border:none;color:var(--text-primary);font-size:1.25rem;cursor:pointer;">✕</button>
       </div>
       <nav class="mobile-drawer__nav" aria-label="Mobile navigation" style="margin-top:12px;">
@@ -224,7 +246,7 @@ function renderHeader(activePage) {
         </button>
         <button type="button" class="control-chip js-open-auth" style="width:100%;justify-content:center;margin-top:4px;">
           ${getIconSvg('user', 15)}
-          <span>${isRegistered ? user.name : t('authSignIn', lang) || 'Войти в кабинет'}</span>
+          <span>${isRegistered ? user.name : t('authSignIn', lang)}</span>
         </button>
       </div>
     </div>
@@ -505,7 +527,7 @@ export function openAuthModal(defaultTab = 'register') {
             </div>
             <div class="field">
               <label class="field__label" for="auth-phone">${t('inputPhone', lang)}</label>
-              <input id="auth-phone" class="field__control" type="tel" required placeholder="+375 (29) 123-45-67" />
+              <input id="auth-phone" class="field__control" type="tel" required value="+375 " placeholder="+375 (29) 123-45-67" />
             </div>
           `
               : ''
@@ -549,7 +571,7 @@ export function openAuthModal(defaultTab = 'register') {
     });
 
     const form = modal.querySelector('#auth-form');
-    attachPhoneMask(modal.querySelector('#auth-phone'));
+    attachPhoneMask(modal.querySelector('#auth-phone'), true);
     form?.querySelectorAll('input').forEach((input) => {
       input.addEventListener('input', () => {
         setFieldError(input, '');
@@ -646,13 +668,13 @@ export function openAuthModal(defaultTab = 'register') {
 let scrollEnhancementsBound = false;
 
 function ensureScrollEnhancements() {
+  const {lang} = getState();
   let scrollBtn = document.getElementById('scroll-top-btn');
   if (!scrollBtn) {
     scrollBtn = document.createElement('button');
     scrollBtn.id = 'scroll-top-btn';
     scrollBtn.type = 'button';
     scrollBtn.className = 'scroll-top-btn';
-    scrollBtn.setAttribute('aria-label', 'Наверх');
     scrollBtn.innerHTML = `
       <span class="scroll-top-btn__ring" aria-hidden="true"></span>
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -664,6 +686,7 @@ function ensureScrollEnhancements() {
     });
     document.body.appendChild(scrollBtn);
   }
+  scrollBtn.setAttribute('aria-label', t('scrollTopLabel', lang));
 
   if (!scrollEnhancementsBound) {
     scrollEnhancementsBound = true;

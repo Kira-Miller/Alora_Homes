@@ -6,6 +6,7 @@
 import {createPropertyCard, showToast} from './components.js';
 import {formatPrices, t} from './i18n.js';
 import {initLayout, openAuthModal} from './layout.js';
+import {getRealtorLabel, getRealtorSelectOptionsHtml} from './realtors-data.js';
 import {
   addViewingRequest,
   cancelViewingRequest,
@@ -17,6 +18,15 @@ import {
   toggleFavorite,
 } from './state.js';
 import {getIconSvg} from './svg-art.js';
+import {
+  attachPhoneMask,
+  clearFormErrors,
+  formatBelarusPhoneInput,
+  setFieldError,
+  validateBelarusPhone,
+  validateFutureDate,
+  validateName,
+} from './validation.js';
 import {loadPropertiesFromXml, sortProperties} from './xml-loader.js';
 
 initLayout('cabinet');
@@ -27,18 +37,169 @@ let savedSort = 'default';
 
 const rootEl = document.getElementById('cabinet-root');
 
-function getInitials(name) {
-  return name
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase() || '')
-    .join('') || 'Г';
+function getInitials(name, lang = 'ru') {
+  return (
+    name
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((p) => p[0]?.toUpperCase() || '')
+      .join('') || (lang === 'ru' ? 'Г' : 'G')
+  );
+}
+
+function openCabinetBookingModal(property) {
+  let modal = document.getElementById('cabinet-booking-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'cabinet-booking-modal';
+    modal.className = 'modal-backdrop';
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('is-open');
+    });
+    document.body.appendChild(modal);
+  }
+
+  const {lang, user} = getState();
+  const today = new Date();
+  const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(
+    today.getDate()
+  ).padStart(2, '0')}`;
+  const initialName = user.mode === 'registered' && user.name ? user.name : '';
+  const initialPhone = user.phone ? formatBelarusPhoneInput(user.phone, true, true) : '+375 ';
+
+  modal.innerHTML = `
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-label="${t('bookingTitle', lang)}">
+      <div class="modal-dialog__header">
+        <div>
+          <h2 class="modal-dialog__title">${t('bookingTitle', lang)}</h2>
+          <p style="color:var(--text-secondary);font-size:0.86rem;margin-top:4px;">
+            ${property.title[lang]} · ${property.city[lang]}
+          </p>
+        </div>
+        <button type="button" class="modal-dialog__close js-close-cab-book" aria-label="Close">✕</button>
+      </div>
+
+      <form id="cabinet-booking-form" novalidate style="display:flex;flex-direction:column;gap:14px;">
+        <div class="field">
+          <label class="field__label" for="cab-book-name">${t('inputName', lang)}</label>
+          <input
+            id="cab-book-name"
+            class="field__control"
+            type="text"
+            required
+            value="${initialName}"
+            placeholder="${t('inputNamePlaceholder', lang)}"
+          />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="cab-book-phone">${t('inputPhone', lang)}</label>
+          <input
+            id="cab-book-phone"
+            class="field__control"
+            type="tel"
+            required
+            value="${initialPhone}"
+            placeholder="+375 (29) 123-45-67"
+          />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="cab-book-date">${t('inputDate', lang)}</label>
+          <input
+            id="cab-book-date"
+            class="field__control"
+            type="date"
+            required
+            min="${todayIso}"
+            value=""
+          />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="cab-book-consultant">${t('viewConsultantLabel', lang)}</label>
+          <select id="cab-book-consultant" class="field__control">
+            ${getRealtorSelectOptionsHtml('any', lang)}
+          </select>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
+          <button type="button" class="btn btn--secondary js-close-cab-book" style="flex:1;">
+            ${t('prevStepBtn', lang)}
+          </button>
+          <button type="submit" class="btn btn--primary" style="flex:1.6;">
+            ${t('bookViewing', lang)}
+          </button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  modal.querySelectorAll('.js-close-cab-book').forEach((btn) => {
+    btn.addEventListener('click', () => modal.classList.remove('is-open'));
+  });
+
+  const form = modal.querySelector('#cabinet-booking-form');
+  const phoneEl = modal.querySelector('#cab-book-phone');
+  attachPhoneMask(phoneEl, true);
+
+  form?.querySelectorAll('input, select').forEach((inp) => {
+    inp.addEventListener('input', () => setFieldError(inp, ''));
+    inp.addEventListener('change', () => setFieldError(inp, ''));
+  });
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    clearFormErrors(form);
+
+    const nameEl = modal.querySelector('#cab-book-name');
+    const dateEl = modal.querySelector('#cab-book-date');
+    const consultantEl = modal.querySelector('#cab-book-consultant');
+
+    const nameRes = validateName(nameEl?.value, lang);
+    const phoneRes = validateBelarusPhone(phoneEl?.value, lang, true);
+    const dateRes = validateFutureDate(dateEl?.value, lang);
+    let firstInvalid = null;
+
+    if (!nameRes.ok) {
+      setFieldError(nameEl, nameRes.error);
+      firstInvalid ||= nameEl;
+    }
+    if (!phoneRes.ok) {
+      setFieldError(phoneEl, phoneRes.error);
+      firstInvalid ||= phoneEl;
+    }
+    if (!dateRes.ok) {
+      setFieldError(dateEl, dateRes.error);
+      firstInvalid ||= dateEl;
+    }
+
+    if (firstInvalid) {
+      firstInvalid.focus();
+      return;
+    }
+
+    addViewingRequest({
+      propertyId: property.id,
+      name: nameRes.value,
+      phone: phoneRes.value,
+      date: dateRes.value,
+      consultant: consultantEl?.value || 'any',
+    });
+
+    modal.classList.remove('is-open');
+    showToast(lang === 'ru' ? 'Заявка на показ создана!' : 'Viewing request created!', 'success');
+  });
+
+  modal.classList.add('is-open');
+  modal.querySelector('#cab-book-date')?.focus();
 }
 
 function renderCabinet() {
   if (!rootEl) return;
   const {lang, currency, user, favorites, compareList, viewingRequests} = getState();
   const isReg = user.mode === 'registered';
+  const guestInitial = lang === 'ru' ? 'Г' : 'G';
 
   const savedProps = sortProperties(
     allProperties.filter((p) => favorites.includes(String(p.id))),
@@ -49,7 +210,7 @@ function renderCabinet() {
   rootEl.innerHTML = `
     <div class="cabinet-banner">
       <div class="cabinet-banner__user">
-        <div class="cabinet-banner__avatar">${isReg ? getInitials(user.name) : 'Г'}</div>
+        <div class="cabinet-banner__avatar">${isReg ? getInitials(user.name, lang) : guestInitial}</div>
         <div>
           <strong style="font-size:1.1rem;display:block;">
             ${isReg ? user.name : t('guestBannerTitle', lang)}
@@ -165,13 +326,7 @@ function renderCabinet() {
         <button type="button" class="btn btn--secondary btn--sm js-remove-fav">${t('removeSaved', lang)}</button>
       `;
       btnBar.querySelector('.js-quick-book')?.addEventListener('click', () => {
-        addViewingRequest({
-          propertyId: p.id,
-          name: isReg ? user.name : t('guestLabel', lang),
-          phone: user.phone || '+375 (29) 000-00-00',
-          date: '2026-11-25',
-        });
-        showToast(lang === 'ru' ? 'Заявка на показ создана!' : 'Viewing request created!', 'success');
+        openCabinetBookingModal(p);
       });
       btnBar.querySelector('.js-remove-fav')?.addEventListener('click', () => {
         toggleFavorite(p.id);
@@ -288,18 +443,29 @@ function renderCabinet() {
       ${viewingRequests
         .map((req) => {
           const prop = allProperties.find((p) => String(p.id) === String(req.propertyId));
-          const title = prop ? prop.title[lang] : `Объект #${req.propertyId}`;
+          const title = prop
+            ? prop.title[lang]
+            : lang === 'ru'
+              ? `Объект #${req.propertyId}`
+              : `Property #${req.propertyId}`;
+          const consultantText = getRealtorLabel(req.consultant, lang);
           return `
             <div class="request-row">
-              <div>
-                <strong style="font-size:1.05rem;">
+              <div class="request-row__info">
+                <strong class="request-row__title">
                   <a href="./property.html?id=${encodeURIComponent(req.propertyId)}">${title}</a>
                 </strong>
-                <p style="color:var(--text-secondary);font-size:0.875rem;margin-top:4px;">
-                  ${req.name} · ${req.phone} · ${t('inputDate', lang)}: <strong class="tabular">${req.date}</strong>
-                </p>
+                <div class="request-row__meta">
+                  ${req.name} · ${req.phone}
+                </div>
+                <div class="request-row__date">
+                  ${t('inputDate', lang)}: <strong class="tabular">${req.date}</strong>
+                </div>
+                <div class="request-row__consultant">
+                  ${t('viewConsultantLabel', lang)}: <strong>${consultantText}</strong>
+                </div>
               </div>
-              <div style="display:flex;align-items:center;gap:10px;">
+              <div class="request-row__actions">
                 <span style="padding:6px 12px;border-radius:999px;font-size:0.78rem;font-weight:700;background:var(--accent-cyan-soft);color:var(--accent-cyan);">
                   ${req.status === 'confirmed' ? t('statusConfirmed', lang) : t('statusPending', lang)}
                 </span>

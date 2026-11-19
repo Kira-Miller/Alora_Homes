@@ -277,7 +277,7 @@ export function getBelarusMapSvg(
           stroke-width="${1.8 * zoomScale}"
           stroke-linecap="round"
         />
-        <text x="258" y="180" text-anchor="middle" fill="#cbd5e1" font-size="${7.2 * zoomScale}" font-weight="700">МКАД / Центр</text>
+        <text x="258" y="180" text-anchor="middle" fill="#cbd5e1" font-size="${7.2 * zoomScale}" font-weight="700">${lang === 'ru' ? 'МКАД / Центр' : 'Ring Rd / Center'}</text>
         <text x="238" y="174" text-anchor="middle" fill="#94a3b8" font-size="${6.2 * zoomScale}">${lang === 'ru' ? 'Ратомка' : 'Ratomka'}</text>
         <text x="272" y="162" text-anchor="middle" fill="#94a3b8" font-size="${6.2 * zoomScale}">${lang === 'ru' ? 'Раубичи' : 'Raubichi'}</text>
         <text x="278" y="176" text-anchor="middle" fill="#94a3b8" font-size="${6.2 * zoomScale}">${lang === 'ru' ? 'Новая Боровая' : 'Novaya Borovaya'}</text>

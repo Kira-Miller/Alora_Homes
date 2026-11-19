@@ -8,7 +8,7 @@ import {formatPrices, t} from './i18n.js';
 import {initLayout} from './layout.js';
 import {addConsultationRequest, addSellRequest, getState, subscribe} from './state.js';
 import {getIconSvg} from './svg-art.js';
-import {clearFormErrors, setFieldError, validateBelarusPhone, validateName} from './validation.js';
+import {attachPhoneMask, clearFormErrors, setFieldError, validateBelarusPhone, validateName} from './validation.js';
 
 initLayout('services');
 
@@ -285,6 +285,8 @@ function bindServicesInteractions() {
   });
 
   const sellForm = document.getElementById('sell-form');
+  const sellPhoneEl = document.getElementById('sell-phone');
+  attachPhoneMask(sellPhoneEl, true);
   sellForm?.querySelectorAll('input, textarea').forEach((inp) => {
     inp.addEventListener('input', () => setFieldError(inp, ''));
     inp.addEventListener('change', () => setFieldError(inp, ''));
@@ -334,6 +336,7 @@ function bindServicesInteractions() {
       photosCount: uploadedFiles.length,
     });
     sellForm.reset();
+    if (sellPhoneEl) sellPhoneEl.value = '+375 ';
     if (previewBox) previewBox.innerHTML = '';
     showToast(
       lang === 'ru'
@@ -344,6 +347,7 @@ function bindServicesInteractions() {
   });
 
   const consultForm = document.getElementById('services-consult-form');
+  attachPhoneMask(document.getElementById('srv-consult-phone'), false);
   consultForm?.querySelectorAll('input').forEach((inp) => {
     inp.addEventListener('input', () => setFieldError(inp, ''));
   });

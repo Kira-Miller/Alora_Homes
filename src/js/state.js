@@ -123,7 +123,7 @@ export function toggleCompare(propertyId) {
   return {added: true, limitReached: false};
 }
 
-export function addViewingRequest({propertyId, name, phone, date}) {
+export function addViewingRequest({propertyId, name, phone, date, consultant = 'any'}) {
   if (isGuest()) return null;
   const newReq = {
     id: `req-${Date.now()}`,
@@ -131,6 +131,7 @@ export function addViewingRequest({propertyId, name, phone, date}) {
     name,
     phone,
     date,
+    consultant: consultant || 'any',
     status: 'pending',
     createdAt: new Date().toISOString().slice(0, 10),
   };

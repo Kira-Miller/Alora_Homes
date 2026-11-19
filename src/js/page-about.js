@@ -5,38 +5,12 @@
 
 import {showToast} from './components.js';
 import {initLayout} from './layout.js';
+import {REALTORS} from './realtors-data.js';
 import {getState, subscribe} from './state.js';
 import {getIconSvg, getRealtorPortraitSvg, getSocialLinksHtml} from './svg-art.js';
-import {clearFormErrors, setFieldError, validateBelarusPhone, validateName} from './validation.js';
+import {attachPhoneMask, clearFormErrors, setFieldError, validateBelarusPhone, validateName} from './validation.js';
 
 initLayout('about');
-
-const REALTORS = [
-  {
-    nameRu: 'Шестак Алиса Дмитриевна',
-    nameEn: 'Alisa Shestak',
-    roleRu: 'Ведущий риэлтор · Жилая недвижимость',
-    roleEn: 'Lead Realtor · Residential',
-    phone: '+375 (29) 774-52-10',
-    image: './assets/images/realtor-shestak.jpg',
-  },
-  {
-    nameRu: 'Ботвич Ксения Сергеевна',
-    nameEn: 'Kseniya Botvich',
-    roleRu: 'Эксперт по загородным домам',
-    roleEn: 'Country Estate Specialist',
-    phone: '+375 (29) 618-33-40',
-    image: './assets/images/realtor-botvich.jpg',
-  },
-  {
-    nameRu: 'Свирко Юлия Александровна',
-    nameEn: 'Yulia Svirko',
-    roleRu: 'Риэлтор · Коммерческие и элитные объекты',
-    roleEn: 'Commercial & Luxury Advisor',
-    phone: '+375 (44) 551-88-55',
-    image: './assets/images/realtor-svirko.jpg',
-  },
-];
 
 function renderAboutWidgets() {
   const {lang} = getState();
@@ -73,6 +47,8 @@ function renderAboutWidgets() {
 }
 
 const contactForm = document.getElementById('about-contact-form');
+const contactPhoneEl = document.getElementById('contact-phone');
+attachPhoneMask(contactPhoneEl, true);
 contactForm?.querySelectorAll('input, textarea').forEach((inp) => {
   inp.addEventListener('input', () => setFieldError(inp, ''));
 });
@@ -111,6 +87,7 @@ contactForm?.addEventListener('submit', (e) => {
   }
 
   contactForm.reset();
+  if (contactPhoneEl) contactPhoneEl.value = '+375 ';
   showToast(
     lang === 'ru'
       ? 'Сообщение отправлено. Специалист Alora Homes свяжется с вами!'

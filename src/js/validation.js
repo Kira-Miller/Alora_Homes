@@ -60,31 +60,86 @@ export function validateBelarusPhone(raw, lang = 'ru', prefixIncluded = true) {
   return {ok: true, value: formatted};
 }
 
-export function attachPhoneMask(inputEl) {
-  if (!inputEl) return;
-  inputEl.addEventListener('input', () => {
-    let digits = inputEl.value.replace(/\D/g, '');
-    if (digits.startsWith('375')) {
-      digits = digits.slice(3);
-    } else if (digits.startsWith('80')) {
-      digits = digits.slice(2);
-    }
-    digits = digits.slice(0, 9);
+function extractBelarusLocalDigits(raw) {
+  let digits = String(raw || '').replace(/\D/g, '');
+  if (digits.startsWith('375')) {
+    digits = digits.slice(3);
+  } else if (digits.startsWith('80')) {
+    digits = digits.slice(2);
+  }
+  return digits.slice(0, 9);
+}
 
-    let formatted = '';
-    if (digits.length > 0) {
-      formatted += '(' + digits.slice(0, 2);
+export function formatBelarusPhoneInput(raw, withCountryCode = true, keepEmptyPrefix = false) {
+  const digits = extractBelarusLocalDigits(raw);
+  const prefix = withCountryCode ? '+375 ' : '';
+
+  if (digits.length === 0) {
+    return withCountryCode && keepEmptyPrefix ? '+375 ' : '';
+  }
+
+  let formatted = prefix + '(' + digits.slice(0, 2);
+  if (digits.length >= 2) {
+    formatted += ')';
+  }
+  if (digits.length > 2) {
+    formatted += ' ' + digits.slice(2, 5);
+  }
+  if (digits.length > 5) {
+    formatted += '-' + digits.slice(5, 7);
+  }
+  if (digits.length > 7) {
+    formatted += '-' + digits.slice(7, 9);
+  }
+  return formatted;
+}
+
+export function attachPhoneMask(inputEl, withCountryCode = true) {
+  if (!inputEl) return;
+
+  if (withCountryCode) {
+    if (!inputEl.value.trim()) {
+      inputEl.value = '+375 ';
+    } else {
+      inputEl.value = formatBelarusPhoneInput(inputEl.value, true, true);
     }
-    if (digits.length >= 2) {
-      formatted += ') ' + digits.slice(2, 5);
+  } else if (inputEl.value.trim()) {
+    inputEl.value = formatBelarusPhoneInput(inputEl.value, false, false);
+  }
+
+  if (inputEl.dataset.phoneMaskBound === '1') return;
+  inputEl.dataset.phoneMaskBound = '1';
+
+  inputEl.addEventListener('focus', () => {
+    if (withCountryCode && !inputEl.value.trim()) {
+      inputEl.value = '+375 ';
     }
-    if (digits.length >= 5) {
-      formatted += '-' + digits.slice(5, 7);
+  });
+
+  inputEl.addEventListener('keydown', (e) => {
+    if (e.key !== 'Backspace') return;
+    const val = inputEl.value;
+    const atEnd = inputEl.selectionStart === val.length && inputEl.selectionEnd === val.length;
+    if (!atEnd) return;
+
+    if (withCountryCode && val === '+375 ') {
+      e.preventDefault();
+      return;
     }
-    if (digits.length >= 7) {
-      formatted += '-' + digits.slice(7, 9);
+
+    if (val.endsWith(')') || val.endsWith('-') || val.endsWith(' ')) {
+      const digits = extractBelarusLocalDigits(val);
+      if (digits.length > 0) {
+        e.preventDefault();
+        const nextDigits = digits.slice(0, -1);
+        inputEl.value = formatBelarusPhoneInput(nextDigits, withCountryCode, withCountryCode);
+        inputEl.dispatchEvent(new Event('input', {bubbles: true}));
+      }
     }
-    inputEl.value = formatted;
+  });
+
+  inputEl.addEventListener('input', () => {
+    inputEl.value = formatBelarusPhoneInput(inputEl.value, withCountryCode, withCountryCode);
   });
 }
 

@@ -6,11 +6,11 @@ import {createPropertyCard, openBelarusMapModal} from './components.js';
 import {pluralObjects, t} from './i18n.js';
 import {initLayout} from './layout.js';
 import {getState, subscribe} from './state.js';
-import {filterProperties, loadPropertiesFromXml, sortProperties} from './xml-loader.js';
+import {FALLBACK_PROPERTIES, filterProperties, loadPropertiesFromXml, sortProperties} from './xml-loader.js';
 
 initLayout('catalog');
 
-let allProperties = [];
+let allProperties = FALLBACK_PROPERTIES;
 
 const gridEl = document.getElementById('catalog-grid');
 const countEl = document.getElementById('catalog-count');
@@ -95,8 +95,10 @@ async function initCatalog() {
   document.getElementById('cat-reset-btn')?.addEventListener('click', resetAllFilters);
   document.getElementById('cat-map-btn')?.addEventListener('click', () => {
     const filtered = filterProperties(allProperties, getCurrentFilters());
-    openBelarusMapModal(filtered.length ? filtered : allProperties);
+    openBelarusMapModal(filtered.length ? filtered : allProperties, allProperties);
   });
+
+  renderCatalog();
 
   try {
     allProperties = await loadPropertiesFromXml();
