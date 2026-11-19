@@ -4,9 +4,9 @@
 
 import {createPropertyCard, openBelarusMapModal, showToast} from './components.js';
 import {pluralObjects, t} from './i18n.js';
-import {initLayout} from './layout.js';
+import {initLayout, openGuestGateModal} from './layout.js';
 import {REALTORS} from './realtors-data.js';
-import {addConsultationRequest, getState, setCurrency, subscribe} from './state.js';
+import {addConsultationRequest, addUserReview, getState, isGuest, setCurrency, subscribe} from './state.js';
 import {getIconSvg, getRealtorPortraitSvg} from './svg-art.js';
 import {clearFormErrors, setFieldError, validateBelarusPhone, validateName, attachPhoneMask} from './validation.js';
 import {FALLBACK_PROPERTIES, filterProperties, loadPropertiesFromXml} from './xml-loader.js';
@@ -16,8 +16,42 @@ initLayout('home');
 let allProperties = FALLBACK_PROPERTIES;
 let activeDealGroup = 'all';
 let activeFeaturedTab = 'all';
+let activeReviewCategory = 'all';
 let featuredPage = 0;
 const FEATURED_PAGE_SIZE = 6;
+
+const BELARUS_CITIES = [
+  {ru: 'Минск', en: 'Minsk', lat: 53.9006, lon: 27.559},
+  {ru: 'Брест', en: 'Brest', lat: 52.0976, lon: 23.7341},
+  {ru: 'Гродно', en: 'Grodno', lat: 53.6694, lon: 23.8131},
+  {ru: 'Витебск', en: 'Vitebsk', lat: 55.1848, lon: 30.2016},
+  {ru: 'Гомель', en: 'Gomel', lat: 52.4345, lon: 30.9754},
+  {ru: 'Могилёв', en: 'Mogilev', lat: 53.9007, lon: 30.3314},
+  {ru: 'Слуцк', en: 'Slutsk', lat: 53.0273, lon: 27.5499},
+  {ru: 'Волковыск', en: 'Volkovysk', lat: 53.1561, lon: 24.4514},
+  {ru: 'Смиловичи', en: 'Smilovichi', lat: 53.7511, lon: 28.0067},
+  {ru: 'Барановичи', en: 'Baranovichi', lat: 53.1327, lon: 26.0139},
+  {ru: 'Пинск', en: 'Pinsk', lat: 52.1114, lon: 26.1025},
+  {ru: 'Полоцк', en: 'Polotsk', lat: 55.4879, lon: 28.7856},
+  {ru: 'Новополоцк', en: 'Novopolotsk', lat: 55.5318, lon: 28.5987},
+  {ru: 'Борисов', en: 'Borisov', lat: 54.2279, lon: 28.505},
+  {ru: 'Бобруйск', en: 'Bobruisk', lat: 53.1384, lon: 29.2214},
+  {ru: 'Лида', en: 'Lida', lat: 53.8879, lon: 25.2997},
+  {ru: 'Жлобин', en: 'Zhlobin', lat: 52.8926, lon: 30.024},
+  {ru: 'Ратомка', en: 'Ratomka', lat: 53.9372, lon: 27.3358},
+  {ru: 'Раубичи', en: 'Raubichi', lat: 54.0581, lon: 27.7375},
+];
+
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const R = 6371;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
 
 const searchForm = document.getElementById('home-search-form');
 const featuredGrid = document.getElementById('featured-grid');
@@ -29,6 +63,7 @@ const countBtn = document.getElementById('home-search-submit');
 
 const REVIEWS = [
   {
+    category: 'houses',
     authorRu: 'Татьяна М.',
     authorEn: 'Tatiana M.',
     textRu:
@@ -39,6 +74,7 @@ const REVIEWS = [
     metaEn: 'Residential Sale & Purchase · Minsk — Ratomka · 17.11.2026',
   },
   {
+    category: 'houses',
     authorRu: 'Эрнест К.',
     authorEn: 'Ernest K.',
     textRu:
@@ -49,6 +85,7 @@ const REVIEWS = [
     metaEn: 'Country Property · Tarasovo · 13.11.2026',
   },
   {
+    category: 'exchange',
     authorRu: 'Лобач Алексей',
     authorEn: 'Alexey Lobach',
     textRu:
@@ -59,6 +96,7 @@ const REVIEWS = [
     metaEn: 'Property Exchange · Grodno · 12.11.2026',
   },
   {
+    category: 'houses',
     authorRu: 'Ирина и Виктор Савицкие',
     authorEn: 'Irina & Victor Savitsky',
     textRu:
@@ -69,6 +107,7 @@ const REVIEWS = [
     metaEn: 'House Purchase · Slutsk · 09.11.2026',
   },
   {
+    category: 'commercial',
     authorRu: 'Дмитрий Веремейчик',
     authorEn: 'Dmitry Veremeichik',
     textRu:
@@ -79,6 +118,7 @@ const REVIEWS = [
     metaEn: 'Commercial Real Estate · Brest · 04.11.2026',
   },
   {
+    category: 'apartments',
     authorRu: 'Анна Ковалёва',
     authorEn: 'Anna Kovaleva',
     textRu:
@@ -89,6 +129,7 @@ const REVIEWS = [
     metaEn: 'Remote Sale · Vitebsk · 28.10.2026',
   },
   {
+    category: 'apartments',
     authorRu: 'Максим Русецкий',
     authorEn: 'Maxim Rusetsky',
     textRu:
@@ -99,6 +140,7 @@ const REVIEWS = [
     metaEn: 'New Build Purchase · Baranovichi · 21.10.2026',
   },
   {
+    category: 'apartments',
     authorRu: 'Светлана Герасимова',
     authorEn: 'Svetlana Gerasimova',
     textRu:
@@ -109,6 +151,7 @@ const REVIEWS = [
     metaEn: 'Valuation & Sale · Mogilev · 15.10.2026',
   },
   {
+    category: 'houses',
     authorRu: 'Олег Статкевич',
     authorEn: 'Oleg Statkevich',
     textRu:
@@ -120,6 +163,31 @@ const REVIEWS = [
     rating: 5,
   },
   {
+    category: 'commercial',
+    authorRu: 'Павел Демидович',
+    authorEn: 'Pavel Demidovich',
+    textRu:
+      'Арендовали с последующим выкупом офис для IT-команды на Кальварийской. Юлия Свирко за два дня согласовала каникулы на ремонт и проверила все мощности БЦ.',
+    textEn:
+      'Leased-to-own an IT office on Kalvariyskaya St. Yulia Svirko negotiated a rent-free fit-out period and verified all building specs in two days.',
+    metaRu: 'Коммерческий офис · Минск · 05.11.2026',
+    metaEn: 'Commercial Office · Minsk · 05.11.2026',
+    rating: 5,
+  },
+  {
+    category: 'exchange',
+    authorRu: 'Марина Хомич',
+    authorEn: 'Marina Khomich',
+    textRu:
+      'Провели встречный обмен дома в Смиловичах и квартиры в Минске за 19 дней без задержек по расчётам. Всегда были на связи и заранее предупреждали о каждом документе.',
+    textEn:
+      'Completed a synchronized exchange of a house in Smilovichi and an apartment in Minsk in 19 days with zero settlement delays.',
+    metaRu: 'Обмен недвижимости · Смиловичи — Минск · 02.11.2026',
+    metaEn: 'Property Exchange · Smilovichi — Minsk · 02.11.2026',
+    rating: 5,
+  },
+  {
+    category: 'apartments',
     authorRu: 'Евгений Макаров',
     authorEn: 'Evgeny Makarov',
     textRu:
@@ -131,6 +199,7 @@ const REVIEWS = [
     rating: 4,
   },
   {
+    category: 'houses',
     authorRu: 'Наталья Воронова',
     authorEn: 'Natalia Voronova',
     textRu:
@@ -142,6 +211,7 @@ const REVIEWS = [
     rating: 4,
   },
   {
+    category: 'apartments',
     authorRu: 'Артур Семёнов',
     authorEn: 'Arthur Semyonov',
     textRu:
@@ -305,6 +375,53 @@ function renderFeaturedGrid() {
   renderFeaturedPagerControls(totalPages);
 }
 
+function getAllCombinedReviews() {
+  const userRevs = getState().userReviews || [];
+  return [...userRevs, ...REVIEWS];
+}
+
+function renderReviewsTabs() {
+  const tabsEl = document.getElementById('reviews-filter-tabs');
+  if (!tabsEl) return;
+  const {lang} = getState();
+  const allReviews = getAllCombinedReviews();
+
+  const counts = {
+    all: allReviews.length,
+    apartments: allReviews.filter((r) => r.category === 'apartments').length,
+    houses: allReviews.filter((r) => r.category === 'houses').length,
+    commercial: allReviews.filter((r) => r.category === 'commercial').length,
+    exchange: allReviews.filter((r) => r.category === 'exchange').length,
+  };
+
+  const tabs = [
+    {id: 'all', label: `${t('tabAll', lang)} (${counts.all})`},
+    {id: 'apartments', label: `${t('tabApt', lang)} (${counts.apartments})`},
+    {id: 'houses', label: `${t('tabHouses', lang)} (${counts.houses})`},
+    {id: 'commercial', label: `${t('tabCommercialShort', lang)} (${counts.commercial})`},
+    {id: 'exchange', label: `${t('intentExchange', lang)} (${counts.exchange})`},
+  ];
+
+  tabsEl.innerHTML = tabs
+    .map(
+      (tab) =>
+        `<button type="button" class="tab-btn ${activeReviewCategory === tab.id ? 'is-active' : ''}" data-review-cat="${tab.id}">${tab.label}</button>`
+    )
+    .join('');
+
+  tabsEl.querySelectorAll('[data-review-cat]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeReviewCategory = btn.getAttribute('data-review-cat') || 'all';
+      renderRealtorsAndReviews();
+      const reviewsEl = document.getElementById('home-reviews');
+      if (reviewsEl) {
+        reviewsEl.scrollLeft = 0;
+        syncReviewCarouselButtons();
+      }
+    });
+  });
+}
+
 function renderRealtorsAndReviews() {
   const {lang} = getState();
   const realtorsEl = document.getElementById('home-realtors');
@@ -333,14 +450,25 @@ function renderRealtorsAndReviews() {
     ).join('');
   }
 
+  renderReviewsTabs();
+
   const reviewsEl = document.getElementById('home-reviews');
   if (reviewsEl) {
-    reviewsEl.innerHTML = REVIEWS.map((rev) => {
-      const rating = rev.rating || 5;
-      const starsHtml = Array.from({length: 5}, (_, idx) =>
-        `<span style="color:${idx < rating ? '#f59e0b' : 'var(--border-subtle)'};display:inline-flex;">${getIconSvg('star', 15)}</span>`
-      ).join('');
-      return `
+    const allReviews = getAllCombinedReviews();
+    const visibleReviews =
+      activeReviewCategory === 'all'
+        ? allReviews
+        : allReviews.filter((r) => r.category === activeReviewCategory);
+
+    reviewsEl.innerHTML = visibleReviews
+      .map((rev) => {
+        const rating = rev.rating || 5;
+        const starsHtml = Array.from(
+          {length: 5},
+          (_, idx) =>
+            `<span style="color:${idx < rating ? '#f59e0b' : 'var(--border-subtle)'};display:inline-flex;">${getIconSvg('star', 15)}</span>`
+        ).join('');
+        return `
       <article class="review-card">
         <strong>${lang === 'ru' ? rev.authorRu : rev.authorEn}</strong>
         <div class="review-card__stars" aria-label="${rating} stars" style="display:flex;gap:4px;">${starsHtml}</div>
@@ -348,9 +476,185 @@ function renderRealtorsAndReviews() {
         <div class="review-card__meta">${lang === 'ru' ? rev.metaRu : rev.metaEn}</div>
       </article>
     `;
-    }).join('');
+      })
+      .join('');
     syncReviewCarouselButtons();
   }
+}
+
+function openReviewModal() {
+  if (isGuest()) {
+    openGuestGateModal('review');
+    return;
+  }
+
+  let modal = document.getElementById('review-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'review-modal';
+    modal.className = 'modal-backdrop';
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('is-open');
+    });
+    document.body.appendChild(modal);
+  }
+
+  const {lang} = getState();
+  let selectedRating = 5;
+
+  modal.innerHTML = `
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-label="${t('reviewModalTitle', lang)}">
+      <div class="modal-dialog__header">
+        <h2 class="modal-dialog__title">${t('reviewModalTitle', lang)}</h2>
+        <button type="button" class="modal-dialog__close js-close-rev" aria-label="Close">✕</button>
+      </div>
+
+      <form id="new-review-form" novalidate style="display:flex;flex-direction:column;gap:14px;">
+        <div class="field">
+          <label class="field__label" for="rev-category">${t('reviewCategoryLabel', lang)}</label>
+          <select id="rev-category" class="field__control">
+            <option value="apartments">${t('tabApt', lang)}</option>
+            <option value="houses">${t('tabHouses', lang)}</option>
+            <option value="commercial">${t('tabCommercialShort', lang)}</option>
+            <option value="exchange">${t('intentExchange', lang)}</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="rev-city">${t('reviewCityLabel', lang)}</label>
+          <input
+            id="rev-city"
+            class="field__control"
+            type="text"
+            list="belarus-cities-list"
+            placeholder="${t('reviewCityPlaceholder', lang)}"
+          />
+        </div>
+
+        <div class="field">
+          <span class="field__label">${t('reviewRatingLabel', lang)}</span>
+          <div class="review-stars-picker" id="rev-stars-picker" role="radiogroup" aria-label="${t('reviewRatingLabel', lang)}">
+            ${[1, 2, 3, 4, 5]
+              .map(
+                (val) => `
+              <button type="button" class="review-star-btn is-filled" data-rate="${val}" aria-label="${val} / 5">
+                ${getIconSvg('star', 22)}
+              </button>
+            `
+              )
+              .join('')}
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="rev-text">${t('reviewTextLabel', lang)}</label>
+          <textarea
+            id="rev-text"
+            class="field__control"
+            rows="4"
+            required
+            placeholder="${t('reviewTextPlaceholder', lang)}"
+            style="resize:vertical;min-height:96px;"
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--full">
+          ${t('submitReviewBtn', lang)}
+        </button>
+      </form>
+    </div>
+  `;
+
+  const syncStars = () => {
+    modal.querySelectorAll('.review-star-btn').forEach((btn) => {
+      const val = Number(btn.getAttribute('data-rate')) || 5;
+      btn.classList.toggle('is-filled', val <= selectedRating);
+    });
+  };
+
+  modal.querySelectorAll('.review-star-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      selectedRating = Number(btn.getAttribute('data-rate')) || 5;
+      syncStars();
+    });
+  });
+
+  modal.querySelector('.js-close-rev')?.addEventListener('click', () => {
+    modal.classList.remove('is-open');
+  });
+
+  const revForm = modal.querySelector('#new-review-form');
+  const revTextEl = modal.querySelector('#rev-text');
+  revTextEl?.addEventListener('input', () => setFieldError(revTextEl, ''));
+
+  revForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    clearFormErrors(revForm);
+    const textVal = revTextEl?.value.trim() || '';
+    if (textVal.length < 10) {
+      setFieldError(
+        revTextEl,
+        lang === 'ru' ? 'Напишите отзыв (минимум 10 символов)' : 'Please write at least 10 characters'
+      );
+      revTextEl?.focus();
+      return;
+    }
+
+    const catVal = modal.querySelector('#rev-category')?.value || 'apartments';
+    const cityVal = modal.querySelector('#rev-city')?.value || '';
+    activeReviewCategory = 'all';
+    addUserReview({
+      category: catVal,
+      city: cityVal,
+      rating: selectedRating,
+      text: textVal,
+    });
+
+    modal.classList.remove('is-open');
+    const reviewsEl = document.getElementById('home-reviews');
+    if (reviewsEl) reviewsEl.scrollLeft = 0;
+    showToast(
+      lang === 'ru' ? 'Спасибо! Ваш отзыв опубликован.' : 'Thank you! Your review has been published.',
+      'success'
+    );
+  });
+
+  modal.classList.add('is-open');
+  revTextEl?.focus();
+}
+
+function populateCityDatalist() {
+  const listEl = document.getElementById('belarus-cities-list');
+  if (!listEl) return;
+  const {lang} = getState();
+  listEl.innerHTML = BELARUS_CITIES.map((c) => `<option value="${lang === 'ru' ? c.ru : c.en}"></option>`).join('');
+}
+
+function syncCityUi() {
+  const {lang} = getState();
+  const cityInput = document.getElementById('search-city');
+  const clearBtn = document.getElementById('clear-city-btn');
+  const currentVal = (cityInput?.value || '').trim();
+  const currentLower = currentVal.toLowerCase();
+
+  if (clearBtn) {
+    clearBtn.hidden = currentVal.length === 0;
+    clearBtn.setAttribute('aria-label', t('clearCityLabel', lang));
+    clearBtn.setAttribute('title', t('clearCityLabel', lang));
+  }
+
+  document.querySelectorAll('[data-quick-city]').forEach((btn) => {
+    const ru = btn.getAttribute('data-city-ru');
+    const en = btn.getAttribute('data-city-en');
+    if (ru && en) {
+      btn.textContent = lang === 'ru' ? ru : en;
+    }
+    const isAllBtn = !ru && !en;
+    const isActive = isAllBtn
+      ? currentVal === ''
+      : currentLower === (ru || '').toLowerCase() || currentLower === (en || '').toLowerCase();
+    btn.classList.toggle('is-active', isActive);
+  });
 }
 
 function syncReviewCarouselButtons() {
@@ -386,14 +690,82 @@ function bindHomeInteractions() {
     });
   });
 
-  document.getElementById('detect-city-btn')?.addEventListener('click', () => {
-    const {lang} = getState();
-    const cityInput = document.getElementById('search-city');
+  const cityInput = document.getElementById('search-city');
+  const clearBtn = document.getElementById('clear-city-btn');
+  const detectBtn = document.getElementById('detect-city-btn');
+
+  cityInput?.addEventListener('input', () => syncCityUi());
+
+  clearBtn?.addEventListener('click', () => {
     if (cityInput) {
-      cityInput.value = lang === 'ru' ? 'Минск' : 'Minsk';
+      cityInput.value = '';
+      cityInput.focus();
+      syncCityUi();
       updateLiveCount();
-      showToast(lang === 'ru' ? 'Определён регион: Минск' : 'Detected region: Minsk');
     }
+  });
+
+  document.querySelectorAll('[data-quick-city]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (!cityInput) return;
+      const {lang} = getState();
+      const ru = btn.getAttribute('data-city-ru');
+      const en = btn.getAttribute('data-city-en');
+      cityInput.value = ru && en ? (lang === 'ru' ? ru : en) : '';
+      syncCityUi();
+      updateLiveCount();
+    });
+  });
+
+  detectBtn?.addEventListener('click', () => {
+    const {lang} = getState();
+    if (!navigator.geolocation) {
+      showToast(t('geoDetectDenied', lang));
+      return;
+    }
+
+    detectBtn.disabled = true;
+    detectBtn.textContent = t('geoDetecting', lang);
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        detectBtn.disabled = false;
+        detectBtn.textContent = t('detectCity', lang);
+
+        const {latitude, longitude} = pos.coords;
+        let nearest = BELARUS_CITIES[0];
+        let minDist = Infinity;
+        for (const c of BELARUS_CITIES) {
+          const d = haversineKm(latitude, longitude, c.lat, c.lon);
+          if (d < minDist) {
+            minDist = d;
+            nearest = c;
+          }
+        }
+
+        if (minDist > 120) {
+          showToast(t('geoDetectOutside', lang));
+          return;
+        }
+
+        if (cityInput) {
+          const cityName = lang === 'ru' ? nearest.ru : nearest.en;
+          cityInput.value = cityName;
+          syncCityUi();
+          updateLiveCount();
+          showToast(
+            lang === 'ru' ? `Определён ближайший город: ${cityName}` : `Nearest city: ${cityName}`,
+            'success'
+          );
+        }
+      },
+      () => {
+        detectBtn.disabled = false;
+        detectBtn.textContent = t('detectCity', lang);
+        showToast(t('geoDetectDenied', lang));
+      },
+      {enableHighAccuracy: false, timeout: 6000, maximumAge: 300000}
+    );
   });
 
   document.querySelectorAll('[data-search-curr]').forEach((btn) => {
@@ -412,6 +784,7 @@ function bindHomeInteractions() {
     document.querySelectorAll('[data-deal-tab]').forEach((b, i) =>
       b.classList.toggle('is-active', i === 0)
     );
+    syncCityUi();
     updateLiveCount();
   });
 
@@ -435,6 +808,8 @@ function bindHomeInteractions() {
     const matched = filterProperties(allProperties, getSearchFilters());
     openBelarusMapModal(matched.length ? matched : allProperties, allProperties);
   });
+
+  document.getElementById('open-review-modal-btn')?.addEventListener('click', openReviewModal);
 
   // Прокрутка отзывов кнопками влево / вправо
   const reviewsEl = document.getElementById('home-reviews');
@@ -495,6 +870,8 @@ function bindHomeInteractions() {
 
 async function initHome() {
   bindHomeInteractions();
+  populateCityDatalist();
+  syncCityUi();
   syncSearchCurrencyButtons();
   renderRealtorsAndReviews();
 
@@ -518,6 +895,8 @@ async function initHome() {
   }
 
   subscribe(() => {
+    populateCityDatalist();
+    syncCityUi();
     syncSearchCurrencyButtons();
     renderFeaturedTabs();
     renderFeaturedGrid();

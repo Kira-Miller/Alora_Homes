@@ -21,6 +21,7 @@ const DEFAULT_STATE = {
   viewingRequests: [],
   sellRequests: [],
   consultationRequests: [],
+  userReviews: [],
 };
 
 let state = loadState();
@@ -165,6 +166,40 @@ export function addConsultationRequest(payload) {
   state.consultationRequests = [newReq, ...state.consultationRequests];
   notify();
   return newReq;
+}
+
+export function addUserReview({category = 'apartments', city = '', rating = 5, text = ''}) {
+  if (isGuest()) return null;
+  const now = new Date();
+  const dateStr = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+  const cleanCity = String(city || '').trim() || (state.lang === 'ru' ? 'Беларусь' : 'Belarus');
+  const author = state.user.name || (state.lang === 'ru' ? 'Клиент Alora Homes' : 'Alora Homes Client');
+  const catNamesRu = {
+    apartments: 'Квартира',
+    houses: 'Загородный дом',
+    commercial: 'Коммерческая недвижимость',
+    exchange: 'Обмен недвижимости',
+  };
+  const catNamesEn = {
+    apartments: 'Apartment',
+    houses: 'Country House',
+    commercial: 'Commercial Real Estate',
+    exchange: 'Property Exchange',
+  };
+  const newRev = {
+    id: `rev-${Date.now()}`,
+    category,
+    authorRu: author,
+    authorEn: author,
+    rating: Math.max(1, Math.min(5, Number(rating) || 5)),
+    textRu: String(text || '').trim(),
+    textEn: String(text || '').trim(),
+    metaRu: `${catNamesRu[category] || catNamesRu.apartments} · ${cleanCity} · ${dateStr}`,
+    metaEn: `${catNamesEn[category] || catNamesEn.apartments} · ${cleanCity} · ${dateStr}`,
+  };
+  state.userReviews = [newRev, ...(state.userReviews || [])];
+  notify();
+  return newRev;
 }
 
 export function registerUser({name, email, phone, password}) {

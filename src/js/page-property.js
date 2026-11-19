@@ -5,7 +5,7 @@
 import {showToast} from './components.js';
 import {formatPrices, t} from './i18n.js';
 import {initLayout, openAuthModal, openGuestGateModal} from './layout.js';
-import {getRealtorSelectOptionsHtml} from './realtors-data.js';
+import {getRealtorSelectOptionsHtml, renderRealtorMiniCardHtml} from './realtors-data.js';
 import {addViewingRequest, getState, isGuest, subscribe, toggleFavorite} from './state.js';
 import {getFloorPlanData, getFloorPlanSvg, getIconSvg, getPropertySvg} from './svg-art.js';
 import {
@@ -198,6 +198,14 @@ function renderPropertyPage() {
         </div>
       </div>
       <div class="property-price-strip__actions">
+        <button type="button" class="btn btn--secondary btn--sm" id="share-property-btn">
+          ${getIconSvg('share', 16)}
+          <span>${t('shareBtn', lang)}</span>
+        </button>
+        <button type="button" class="btn btn--secondary btn--sm" id="print-property-btn">
+          ${getIconSvg('printer', 16)}
+          <span>${t('printBtn', lang)}</span>
+        </button>
         <button type="button" class="btn btn--secondary" id="detail-fav-btn">
           ${getIconSvg(isSaved ? 'heart-filled' : 'heart', 17)}
           <span>${isSaved ? t('inFav', lang) : t('addToFav', lang)}</span>
@@ -395,6 +403,9 @@ function renderPropertyPage() {
                   ${getRealtorSelectOptionsHtml(bookingDraft.consultant || 'any', lang)}
                 </select>
               </div>
+              <div id="view-consultant-preview" class="consultant-mini-card">
+                ${renderRealtorMiniCardHtml(bookingDraft.consultant || 'any', lang)}
+              </div>
               <button type="submit" class="btn btn--primary btn--full">${t('bookViewing', lang)}</button>
               <p style="font-size:0.78rem;color:var(--text-muted);text-align:center;">
                 ${t('bookingNote', lang)}
@@ -405,6 +416,8 @@ function renderPropertyPage() {
         </aside>
       </div>
     </section>
+
+    <div class="print-only-footer">${t('printCardNote', lang)} · ${window.location.href}</div>
   `;
 
   rootEl.querySelectorAll('[data-switch-view]').forEach((btn) => {
@@ -473,11 +486,51 @@ function renderPropertyPage() {
   document.getElementById('detail-fav-btn')?.addEventListener('click', handleToggleFav);
   document.getElementById('detail-fav-btn-bottom')?.addEventListener('click', handleToggleFav);
 
+  document.getElementById('share-property-btn')?.addEventListener('click', async () => {
+    const shareUrl = window.location.href;
+    let copied = false;
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+        copied = true;
+      }
+    } catch {
+      copied = false;
+    }
+    if (!copied) {
+      const ta = document.createElement('textarea');
+      ta.value = shareUrl;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;left:-9999px;';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+      } catch {
+        // Ignore fallback copy errors
+      }
+      ta.remove();
+    }
+    showToast(t('shareCopied', lang), 'success');
+  });
+
+  document.getElementById('print-property-btn')?.addEventListener('click', () => {
+    window.print();
+  });
+
   rootEl.querySelector('.js-sidebar-reg')?.addEventListener('click', () => openAuthModal('register'));
 
   const viewingForm = document.getElementById('viewing-form');
   const phoneInputEl = document.getElementById('view-phone');
   attachPhoneMask(phoneInputEl, true);
+
+  document.getElementById('view-consultant')?.addEventListener('change', (e) => {
+    bookingDraft.consultant = e.target.value || 'any';
+    const previewEl = document.getElementById('view-consultant-preview');
+    if (previewEl) {
+      previewEl.innerHTML = renderRealtorMiniCardHtml(bookingDraft.consultant, getState().lang);
+    }
+  });
 
   viewingForm?.querySelectorAll('input, select').forEach((inp) => {
     inp.addEventListener('input', () => setFieldError(inp, ''));

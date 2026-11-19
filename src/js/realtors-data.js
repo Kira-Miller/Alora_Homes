@@ -2,6 +2,8 @@
 // Общий справочник специалистов агентства Alora Homes
 // ==========================================================================
 
+import {getIconSvg, getRealtorPortraitSvg} from './svg-art.js';
+
 export const REALTORS = [
   {
     id: 'shestak',
@@ -58,4 +60,62 @@ export function getRealtorSelectOptionsHtml(selectedId = 'any', lang = 'ru') {
     }),
   ];
   return options.join('');
+}
+
+export function renderRealtorMiniCardHtml(selectedId = 'any', lang = 'ru') {
+  const realtor = getRealtorById(selectedId);
+  if (!realtor) {
+    return `
+      <div class="consultant-mini-card__avatar-stack" aria-hidden="true">
+        ${REALTORS.map(
+          (r, idx) => `
+          <img
+            src="${r.image}"
+            alt=""
+            class="consultant-mini-card__stack-img"
+            onerror="this.style.display='none';"
+            data-idx="${idx}"
+          />
+        `
+        ).join('')}
+      </div>
+      <div class="consultant-mini-card__body">
+        <div class="consultant-mini-card__name">
+          ${lang === 'ru' ? 'Дежурный эксперт Alora Homes' : 'On-Duty Alora Homes Advisor'}
+        </div>
+        <div class="consultant-mini-card__role">
+          ${lang === 'ru' ? 'Назначим свободного специалиста в течение 15 минут' : 'Fastest available specialist assigned within 15 min'}
+        </div>
+        <a href="tel:+375297745210" class="consultant-mini-card__phone">
+          ${getIconSvg('phone', 13)}
+          <span>+375 (29) 774-52-10</span>
+        </a>
+      </div>
+    `;
+  }
+
+  const idx = REALTORS.findIndex((r) => r.id === realtor.id);
+  const name = lang === 'ru' ? realtor.nameRu : realtor.nameEn;
+  const role = lang === 'ru' ? realtor.roleRu : realtor.roleEn;
+
+  return `
+    <div class="consultant-mini-card__avatar">
+      <img
+        src="${realtor.image}"
+        alt="${name}"
+        loading="lazy"
+        decoding="async"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
+      />
+      <div style="display:none;width:100%;height:100%;">${getRealtorPortraitSvg(Math.max(0, idx))}</div>
+    </div>
+    <div class="consultant-mini-card__body">
+      <div class="consultant-mini-card__name">${name}</div>
+      <div class="consultant-mini-card__role">${role}</div>
+      <a href="tel:${realtor.phone.replace(/[^+\d]/g, '')}" class="consultant-mini-card__phone">
+        ${getIconSvg('phone', 13)}
+        <span>${realtor.phone}</span>
+      </a>
+    </div>
+  `;
 }

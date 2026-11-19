@@ -425,7 +425,12 @@ export function openGuestGateModal(actionType = 'favorite') {
   const modal = document.getElementById('guest-gate-modal');
   if (!modal) return;
   const {lang} = getState();
-  const desc = actionType === 'booking' ? t('guestGateBookDesc', lang) : t('guestGateFavDesc', lang);
+  const desc =
+    actionType === 'booking'
+      ? t('guestGateBookDesc', lang)
+      : actionType === 'review'
+        ? t('guestGateReviewDesc', lang)
+        : t('guestGateFavDesc', lang);
 
   modal.innerHTML = `
     <div class="modal-dialog" role="dialog" aria-modal="true">

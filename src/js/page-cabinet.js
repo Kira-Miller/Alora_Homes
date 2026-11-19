@@ -6,7 +6,7 @@
 import {createPropertyCard, showToast} from './components.js';
 import {formatPrices, t} from './i18n.js';
 import {initLayout, openAuthModal} from './layout.js';
-import {getRealtorLabel, getRealtorSelectOptionsHtml} from './realtors-data.js';
+import {getRealtorLabel, getRealtorSelectOptionsHtml, renderRealtorMiniCardHtml} from './realtors-data.js';
 import {
   addViewingRequest,
   cancelViewingRequest,
@@ -123,6 +123,10 @@ function openCabinetBookingModal(property) {
           </select>
         </div>
 
+        <div id="cab-consultant-preview" class="consultant-mini-card">
+          ${renderRealtorMiniCardHtml('any', lang)}
+        </div>
+
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
           <button type="button" class="btn btn--secondary js-close-cab-book" style="flex:1;">
             ${t('prevStepBtn', lang)}
@@ -142,6 +146,13 @@ function openCabinetBookingModal(property) {
   const form = modal.querySelector('#cabinet-booking-form');
   const phoneEl = modal.querySelector('#cab-book-phone');
   attachPhoneMask(phoneEl, true);
+
+  modal.querySelector('#cab-book-consultant')?.addEventListener('change', (e) => {
+    const previewEl = modal.querySelector('#cab-consultant-preview');
+    if (previewEl) {
+      previewEl.innerHTML = renderRealtorMiniCardHtml(e.target.value || 'any', getState().lang);
+    }
+  });
 
   form?.querySelectorAll('input, select').forEach((inp) => {
     inp.addEventListener('input', () => setFieldError(inp, ''));
