@@ -140,7 +140,7 @@ function renderWizard() {
   if (calcStep === 2) {
     wizardRoot.innerHTML = `
       <h3 style="font-size:1.15rem;margin-bottom:16px;">${t('calcStep2Prompt', lang)}</h3>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:14px;margin-bottom:20px;">
         <div class="field">
           <label class="field__label" for="calc-region">${t('labelRegion', lang)}</label>
           <select id="calc-region" class="field__control">

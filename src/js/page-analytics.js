@@ -495,6 +495,9 @@ function renderAnalyticsPage() {
   const root = document.getElementById('analytics-root');
   if (!root) return;
 
+  const prevBarScrollLeft = document.getElementById('bar-chart-wrap')?.scrollLeft || 0;
+  const prevTrendScrollLeft = document.getElementById('trend-chart-wrap')?.scrollLeft || 0;
+
   const {lang, currency} = getState();
   const segmentLabels = {
     apt: lang === 'ru' ? 'Квартиры (за м²)' : 'Apartments (per m²)',
@@ -592,6 +595,9 @@ function renderAnalyticsPage() {
           </div>
           <span class="analytics-unit-note">${segmentLabels[activeSegment]}</span>
         </div>
+        <div class="chart-scroll-hint" aria-hidden="true">
+          ${lang === 'ru' ? '↔ Листайте график влево и вправо' : '↔ Swipe chart horizontally'}
+        </div>
         <div class="chart-svg-wrap" id="bar-chart-wrap">
           ${renderBarChartSvg(MARKET_REGIONS, activeSegment, selectedRegion.id, currency, lang)}
         </div>
@@ -647,6 +653,9 @@ function renderAnalyticsPage() {
             )
             .join('')}
         </div>
+      </div>
+      <div class="chart-scroll-hint" aria-hidden="true">
+        ${lang === 'ru' ? '↔ Листайте график влево и вправо' : '↔ Swipe chart horizontally'}
       </div>
       <div class="chart-svg-wrap" id="trend-chart-wrap">
         ${renderTrendChartSvg(activeTrendSeries, activeMonthIdx, currency, lang)}
@@ -786,6 +795,11 @@ function renderAnalyticsPage() {
       renderAnalyticsPage();
     });
   });
+
+  const barWrap = document.getElementById('bar-chart-wrap');
+  const trendWrap = document.getElementById('trend-chart-wrap');
+  if (barWrap && prevBarScrollLeft > 0) barWrap.scrollLeft = prevBarScrollLeft;
+  if (trendWrap && prevTrendScrollLeft > 0) trendWrap.scrollLeft = prevTrendScrollLeft;
 }
 
 renderAnalyticsPage();

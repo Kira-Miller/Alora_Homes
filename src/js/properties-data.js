@@ -1196,7 +1196,7 @@ export const PROPERTIES_DATA = [
     "visualTheme": "waterfront-loft",
     "image": "./assets/images/prop-19.jpg",
     "interiorImage": "./assets/images/prop-19-interior.jpg",
-    "terraceImage": "",
+    "terraceImage": "./assets/images/prop-19-terrace.jpg",
     "mapCoords": {
       "x": 188,
       "y": 238
@@ -1259,7 +1259,7 @@ export const PROPERTIES_DATA = [
     "visualTheme": "forest-cottage",
     "image": "./assets/images/prop-20.jpg",
     "interiorImage": "./assets/images/prop-20-interior.jpg",
-    "terraceImage": "",
+    "terraceImage": "./assets/images/prop-20-terrace.jpg",
     "mapCoords": {
       "x": 293,
       "y": 166
@@ -1322,7 +1322,7 @@ export const PROPERTIES_DATA = [
     "visualTheme": "glass-office",
     "image": "./assets/images/prop-21.jpg",
     "interiorImage": "./assets/images/prop-21-interior.jpg",
-    "terraceImage": "",
+    "terraceImage": "./assets/images/prop-21-terrace.jpg",
     "mapCoords": {
       "x": 324,
       "y": 237
@@ -1385,7 +1385,7 @@ export const PROPERTIES_DATA = [
     "visualTheme": "townhouse-dusk",
     "image": "./assets/images/prop-22.jpg",
     "interiorImage": "./assets/images/prop-22-interior.jpg",
-    "terraceImage": "",
+    "terraceImage": "./assets/images/prop-22-terrace.jpg",
     "mapCoords": {
       "x": 158,
       "y": 188
@@ -1448,7 +1448,7 @@ export const PROPERTIES_DATA = [
     "visualTheme": "minsk-tower",
     "image": "./assets/images/prop-23.jpg",
     "interiorImage": "./assets/images/prop-23-interior.jpg",
-    "terraceImage": "",
+    "terraceImage": "./assets/images/prop-23-terrace.jpg",
     "mapCoords": {
       "x": 300,
       "y": 80

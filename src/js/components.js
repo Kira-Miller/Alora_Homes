@@ -50,7 +50,7 @@ export function createPropertyCard(property, options = {}) {
   }
 
   const mediaVisual = property.image
-    ? `<img src="${property.image}" alt="${property.title[lang]}" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(property.visualTheme, 'exterior', `card-${property.id}`)}</div>`
+    ? `<img src="${property.image}" alt="${property.title[lang]}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;position:absolute;inset:0;width:100%;height:100%;">${getPropertySvg(property.visualTheme, 'exterior', `card-${property.id}`)}</div>`
     : getPropertySvg(property.visualTheme, 'exterior', `card-${property.id}`);
 
   card.innerHTML = `
@@ -171,12 +171,13 @@ export function openBelarusMapModal(properties) {
 
   const BASE_W = 520;
   const BASE_H = 400;
+  const MIN_W = 40; // Макс. увеличение 13.0× (больше 4.3×)
   let activeId = properties[0]?.id || null;
   let activePreset = 'all';
   let viewBox = {x: 0, y: 0, w: BASE_W, h: BASE_H};
 
   const clampViewBox = (vb) => {
-    const w = Math.max(120, Math.min(BASE_W, vb.w));
+    const w = Math.max(MIN_W, Math.min(BASE_W, vb.w));
     const h = (w * BASE_H) / BASE_W;
     const x = Math.max(-20, Math.min(BASE_W - w + 20, vb.x));
     const y = Math.max(-20, Math.min(BASE_H - h + 20, vb.y));
@@ -204,7 +205,7 @@ export function openBelarusMapModal(properties) {
 
   const zoomAt = (factor, cx = viewBox.x + viewBox.w / 2, cy = viewBox.y + viewBox.h / 2) => {
     activePreset = 'custom';
-    const nextW = Math.max(120, Math.min(BASE_W, viewBox.w / factor));
+    const nextW = Math.max(MIN_W, Math.min(BASE_W, viewBox.w / factor));
     const nextH = (nextW * BASE_H) / BASE_W;
     const ratioX = (cx - viewBox.x) / viewBox.w;
     const ratioY = (cy - viewBox.y) / viewBox.h;
@@ -258,7 +259,7 @@ export function openBelarusMapModal(properties) {
       const s = selectedProp.specs;
 
       const mapMedia = selectedProp.image
-        ? `<img src="${selectedProp.image}" alt="${selectedProp.title[lang]}" decoding="async" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(selectedProp.visualTheme, 'exterior', `map-${selectedProp.id}`)}</div>`
+        ? `<img src="${selectedProp.image}" alt="${selectedProp.title[lang]}" decoding="async" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;position:absolute;inset:0;width:100%;height:100%;">${getPropertySvg(selectedProp.visualTheme, 'exterior', `map-${selectedProp.id}`)}</div>`
         : getPropertySvg(selectedProp.visualTheme, 'exterior', `map-${selectedProp.id}`);
 
       selectedWrap.innerHTML = `
@@ -426,7 +427,31 @@ export function openBelarusMapModal(properties) {
   });
 
   const canvasEl = modal.querySelector('#belarus-map-canvas');
+  const activePointers = new Map();
   let dragState = null;
+  let pinchState = null;
+  let didPinchGesture = false;
+
+  const syncLiveSvgAndBadge = () => {
+    const svg = canvasEl?.querySelector('svg');
+    if (svg) {
+      svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+    }
+    const zoomLabel = modal.querySelector('#belarus-map-zoom');
+    if (zoomLabel) {
+      zoomLabel.textContent = `${(BASE_W / viewBox.w).toFixed(1)}×`;
+    }
+  };
+
+  const getPinchMetrics = () => {
+    const pts = Array.from(activePointers.values());
+    if (pts.length < 2) return null;
+    const [a, b] = pts;
+    const dist = Math.hypot(b.x - a.x, b.y - a.y);
+    const midX = (a.x + b.x) / 2;
+    const midY = (a.y + b.y) / 2;
+    return {dist, midX, midY};
+  };
 
   canvasEl?.addEventListener(
     'wheel',
@@ -435,49 +460,139 @@ export function openBelarusMapModal(properties) {
       const rect = canvasEl.getBoundingClientRect();
       const fx = viewBox.x + ((e.clientX - rect.left) / rect.width) * viewBox.w;
       const fy = viewBox.y + ((e.clientY - rect.top) / rect.height) * viewBox.h;
-      zoomAt(e.deltaY < 0 ? 1.22 : 1 / 1.22, fx, fy);
+      zoomAt(e.deltaY < 0 ? 1.24 : 1 / 1.24, fx, fy);
       renderMapBody();
     },
     {passive: false}
   );
 
   canvasEl?.addEventListener('pointerdown', (e) => {
-    if (e.target.closest('[data-map-id]')) return;
-    dragState = {
-      clientX: e.clientX,
-      clientY: e.clientY,
-      startX: viewBox.x,
-      startY: viewBox.y,
-    };
-    canvasEl.classList.add('is-panning');
-    canvasEl.setPointerCapture?.(e.pointerId);
-  });
-
-  canvasEl?.addEventListener('pointermove', (e) => {
-    if (!dragState) return;
-    const rect = canvasEl.getBoundingClientRect();
-    const dx = ((e.clientX - dragState.clientX) / rect.width) * viewBox.w;
-    const dy = ((e.clientY - dragState.clientY) / rect.height) * viewBox.h;
-    activePreset = 'custom';
-    viewBox = clampViewBox({
-      x: dragState.startX - dx,
-      y: dragState.startY - dy,
-      w: viewBox.w,
-      h: viewBox.h,
+    const startedOnPin = Boolean(e.target.closest('[data-map-id]'));
+    activePointers.set(e.pointerId, {
+      x: e.clientX,
+      y: e.clientY,
+      startedOnPin,
     });
-    const svg = canvasEl.querySelector('svg');
-    if (svg) {
-      svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+
+    if (activePointers.size === 1) {
+      if (startedOnPin) {
+        dragState = null;
+        return;
+      }
+      dragState = {
+        clientX: e.clientX,
+        clientY: e.clientY,
+        startX: viewBox.x,
+        startY: viewBox.y,
+      };
+      pinchState = null;
+      canvasEl.classList.add('is-panning');
+      canvasEl.setPointerCapture?.(e.pointerId);
+    } else if (activePointers.size >= 2) {
+      dragState = null;
+      const metrics = getPinchMetrics();
+      if (metrics) {
+        pinchState = {
+          prevDist: Math.max(8, metrics.dist),
+          prevMidX: metrics.midX,
+          prevMidY: metrics.midY,
+        };
+        didPinchGesture = true;
+        canvasEl.classList.add('is-panning');
+      }
     }
   });
 
-  const stopPan = () => {
-    if (!dragState) return;
-    dragState = null;
-    canvasEl?.classList.remove('is-panning');
+  canvasEl?.addEventListener('pointermove', (e) => {
+    if (!activePointers.has(e.pointerId)) return;
+    activePointers.set(e.pointerId, {
+      ...activePointers.get(e.pointerId),
+      x: e.clientX,
+      y: e.clientY,
+    });
+
+    const rect = canvasEl.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+
+    if (activePointers.size >= 2 && pinchState) {
+      const metrics = getPinchMetrics();
+      if (!metrics) return;
+      const nextDist = Math.max(8, metrics.dist);
+      const factor = nextDist / pinchState.prevDist;
+
+      // Сдвиг карты вслед за серединой жеста двумя пальцами
+      const panDx = ((metrics.midX - pinchState.prevMidX) / rect.width) * viewBox.w;
+      const panDy = ((metrics.midY - pinchState.prevMidY) / rect.height) * viewBox.h;
+      viewBox = clampViewBox({
+        x: viewBox.x - panDx,
+        y: viewBox.y - panDy,
+        w: viewBox.w,
+        h: viewBox.h,
+      });
+
+      const fx = viewBox.x + ((metrics.midX - rect.left) / rect.width) * viewBox.w;
+      const fy = viewBox.y + ((metrics.midY - rect.top) / rect.height) * viewBox.h;
+      zoomAt(factor, fx, fy);
+      syncLiveSvgAndBadge();
+
+      pinchState = {
+        prevDist: nextDist,
+        prevMidX: metrics.midX,
+        prevMidY: metrics.midY,
+      };
+      return;
+    }
+
+    if (activePointers.size === 1 && dragState) {
+      const dx = ((e.clientX - dragState.clientX) / rect.width) * viewBox.w;
+      const dy = ((e.clientY - dragState.clientY) / rect.height) * viewBox.h;
+      activePreset = 'custom';
+      viewBox = clampViewBox({
+        x: dragState.startX - dx,
+        y: dragState.startY - dy,
+        w: viewBox.w,
+        h: viewBox.h,
+      });
+      syncLiveSvgAndBadge();
+    }
+  });
+
+  const handlePointerEnd = (e) => {
+    activePointers.delete(e.pointerId);
+
+    if (activePointers.size === 1) {
+      // Если один палец остался после щипка — плавно переключаемся в панорамирование
+      const [remId, remPt] = Array.from(activePointers.entries())[0];
+      pinchState = null;
+      dragState = remPt.startedOnPin
+        ? null
+        : {
+            clientX: remPt.x,
+            clientY: remPt.y,
+            startX: viewBox.x,
+            startY: viewBox.y,
+          };
+      if (dragState) {
+        canvasEl?.setPointerCapture?.(remId);
+      }
+      return;
+    }
+
+    if (activePointers.size === 0) {
+      dragState = null;
+      pinchState = null;
+      canvasEl?.classList.remove('is-panning');
+      if (didPinchGesture) {
+        didPinchGesture = false;
+        renderMapBody();
+      }
+    }
   };
-  canvasEl?.addEventListener('pointerup', stopPan);
-  canvasEl?.addEventListener('pointercancel', stopPan);
+
+  canvasEl?.addEventListener('pointerup', handlePointerEnd);
+  canvasEl?.addEventListener('pointercancel', handlePointerEnd);
+  canvasEl?.addEventListener('gesturestart', (e) => e.preventDefault());
+  canvasEl?.addEventListener('gesturechange', (e) => e.preventDefault());
 
   modal.onclick = (e) => {
     if (e.target === modal) modal.classList.remove('is-open');

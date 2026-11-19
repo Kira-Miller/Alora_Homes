@@ -74,7 +74,7 @@ function renderPropertyPage() {
     const perfAttrs = isMain
       ? 'fetchpriority="high" decoding="async"'
       : 'loading="lazy" decoding="async"';
-    return `<img src="${url}" alt="${p.title[lang]}" ${perfAttrs} referrerpolicy="no-referrer" style="${imgStyle}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;width:100%;height:100%;">${getPropertySvg(p.visualTheme, viewId, svgUid)}</div>`;
+    return `<img src="${url}" alt="${p.title[lang]}" ${perfAttrs} referrerpolicy="no-referrer" style="${imgStyle}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;position:absolute;inset:0;width:100%;height:100%;">${getPropertySvg(p.visualTheme, viewId, svgUid)}</div>`;
   };
 
   const currentIdx = allCatalog.findIndex((item) => String(item.id) === String(p.id));

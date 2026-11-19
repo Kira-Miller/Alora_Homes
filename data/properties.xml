@@ -644,7 +644,7 @@
     <visualTheme>waterfront-loft</visualTheme>
     <image>./assets/images/prop-19.jpg</image>
     <interiorImage>./assets/images/prop-19-interior.jpg</interiorImage>
-    <terraceImage>./assets/images/prop-19-terrace.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-19-terrace.jpg</terraceImage>
     <mapCoords x="188" y="238" />
     <description
       ru="Просторная трёхкомнатная квартира с потолками 3,2 метра, дубовым паркетом «ёлочка» и французским балконом в зелёном центре Барановичей."
@@ -678,7 +678,7 @@
     <visualTheme>forest-cottage</visualTheme>
     <image>./assets/images/prop-20.jpg</image>
     <interiorImage>./assets/images/prop-20-interior.jpg</interiorImage>
-    <terraceImage>./assets/images/prop-20-terrace.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-20-terrace.jpg</terraceImage>
     <mapCoords x="293" y="166" />
     <description
       ru="Светлый дом со вторым светом, панорамным остеклением, дровяным камином и просторной лесной террасой с костровой зоной в Борисове."
@@ -712,7 +712,7 @@
     <visualTheme>glass-office</visualTheme>
     <image>./assets/images/prop-21.jpg</image>
     <interiorImage>./assets/images/prop-21-interior.jpg</interiorImage>
-    <terraceImage>./assets/images/prop-21-terrace.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-21-terrace.jpg</terraceImage>
     <mapCoords x="324" y="237" />
     <description
       ru="Готовое коммерческое пространство на пешеходной улице Бобруйска с отдельным входом, кирпичными сводами, дизайнерским ресепшеном и тихим внутренним двориком."
@@ -746,7 +746,7 @@
     <visualTheme>townhouse-dusk</visualTheme>
     <image>./assets/images/prop-22.jpg</image>
     <interiorImage>./assets/images/prop-22-interior.jpg</interiorImage>
-    <terraceImage>./assets/images/prop-22-terrace.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-22-terrace.jpg</terraceImage>
     <mapCoords x="158" y="188" />
     <description
       ru="Двухэтажный кирпичный таунхаус в шаговой доступности от исторического центра Лиды. Светлая кухня-гостиная, дубовая лестница и приватная пергола во дворе."
@@ -780,7 +780,7 @@
     <visualTheme>minsk-tower</visualTheme>
     <image>./assets/images/prop-23.jpg</image>
     <interiorImage>./assets/images/prop-23-interior.jpg</interiorImage>
-    <terraceImage>./assets/images/prop-23-terrace.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-23-terrace.jpg</terraceImage>
     <mapCoords x="300" y="80" />
     <description
       ru="Современная евро-двухкомнатная квартира в новом жилом комплексе Новополоцка с панорамными окнами в пол, тёплой лоджией и закрытым двором-парком."

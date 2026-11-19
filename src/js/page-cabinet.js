@@ -110,7 +110,7 @@ function renderCabinet() {
           <span class="section-kicker">${t('cabinetKicker', lang)}</span>
           <h2 class="section-title">${t('tabSaved', lang)}</h2>
         </div>
-        <div class="field" style="min-width:210px;">
+        <div class="field" style="min-width:0;width:100%;max-width:260px;">
           <select id="cab-sort" class="field__control" aria-label="${t('labelSort', lang)}">
             <option value="default" ${savedSort === 'default' ? 'selected' : ''}>${t('sortDefault', lang)}</option>
             <option value="price-asc" ${savedSort === 'price-asc' ? 'selected' : ''}>${t('sortPriceAsc', lang)}</option>
@@ -159,7 +159,7 @@ function renderCabinet() {
       const card = createPropertyCard(p);
       const body = card.querySelector('.property-card__body');
       const btnBar = document.createElement('div');
-      btnBar.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;';
+      btnBar.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:8px;margin-top:8px;';
       btnBar.innerHTML = `
         <button type="button" class="btn btn--primary btn--sm js-quick-book">${t('bookViewing', lang)}</button>
         <button type="button" class="btn btn--secondary btn--sm js-remove-fav">${t('removeSaved', lang)}</button>
