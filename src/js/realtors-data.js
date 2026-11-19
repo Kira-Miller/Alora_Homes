@@ -30,7 +30,7 @@ export const REALTORS = [
     roleRu: 'Риэлтор · Коммерческие и элитные объекты',
     roleEn: 'Commercial & Luxury Advisor',
     phone: '+375 (44) 551-88-55',
-    image: './assets/images/realtor-svirko.jpg',
+    image: './assets/images/realtor-svirko.jpg?v=2',
   },
 ];
 

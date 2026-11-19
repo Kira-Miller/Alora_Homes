@@ -21,25 +21,25 @@ let featuredPage = 0;
 const FEATURED_PAGE_SIZE = 6;
 
 const BELARUS_CITIES = [
-  {ru: 'Минск', en: 'Minsk', lat: 53.9006, lon: 27.559},
-  {ru: 'Брест', en: 'Brest', lat: 52.0976, lon: 23.7341},
-  {ru: 'Гродно', en: 'Grodno', lat: 53.6694, lon: 23.8131},
-  {ru: 'Витебск', en: 'Vitebsk', lat: 55.1848, lon: 30.2016},
-  {ru: 'Гомель', en: 'Gomel', lat: 52.4345, lon: 30.9754},
-  {ru: 'Могилёв', en: 'Mogilev', lat: 53.9007, lon: 30.3314},
-  {ru: 'Слуцк', en: 'Slutsk', lat: 53.0273, lon: 27.5499},
-  {ru: 'Волковыск', en: 'Volkovysk', lat: 53.1561, lon: 24.4514},
-  {ru: 'Смиловичи', en: 'Smilovichi', lat: 53.7511, lon: 28.0067},
-  {ru: 'Барановичи', en: 'Baranovichi', lat: 53.1327, lon: 26.0139},
-  {ru: 'Пинск', en: 'Pinsk', lat: 52.1114, lon: 26.1025},
-  {ru: 'Полоцк', en: 'Polotsk', lat: 55.4879, lon: 28.7856},
-  {ru: 'Новополоцк', en: 'Novopolotsk', lat: 55.5318, lon: 28.5987},
-  {ru: 'Борисов', en: 'Borisov', lat: 54.2279, lon: 28.505},
-  {ru: 'Бобруйск', en: 'Bobruisk', lat: 53.1384, lon: 29.2214},
-  {ru: 'Лида', en: 'Lida', lat: 53.8879, lon: 25.2997},
-  {ru: 'Жлобин', en: 'Zhlobin', lat: 52.8926, lon: 30.024},
-  {ru: 'Ратомка', en: 'Ratomka', lat: 53.9372, lon: 27.3358},
-  {ru: 'Раубичи', en: 'Raubichi', lat: 54.0581, lon: 27.7375},
+  {ru: 'Минск', en: 'Minsk', lat: 53.9006, lon: 27.559, aliases: ['minsk', 'минск']},
+  {ru: 'Брест', en: 'Brest', lat: 52.0976, lon: 23.7341, aliases: ['brest', 'брест']},
+  {ru: 'Гродно', en: 'Grodno', lat: 53.6694, lon: 23.8131, aliases: ['grodno', 'hrodna', 'гродно']},
+  {ru: 'Витебск', en: 'Vitebsk', lat: 55.1848, lon: 30.2016, aliases: ['vitebsk', 'vitsyebsk', 'витебск']},
+  {ru: 'Гомель', en: 'Gomel', lat: 52.4345, lon: 30.9754, aliases: ['gomel', 'homyel', 'гомель']},
+  {ru: 'Могилёв', en: 'Mogilev', lat: 53.9007, lon: 30.3314, aliases: ['mogilev', 'mahilyow', 'могилёв', 'могилев']},
+  {ru: 'Слуцк', en: 'Slutsk', lat: 53.0273, lon: 27.5499, aliases: ['slutsk', 'слуцк']},
+  {ru: 'Волковыск', en: 'Volkovysk', lat: 53.1561, lon: 24.4514, aliases: ['volkovysk', 'vawkavysk', 'волковыск']},
+  {ru: 'Смиловичи', en: 'Smilovichi', lat: 53.7511, lon: 28.0067, aliases: ['smilovichi', 'smilavichy', 'смиловичи']},
+  {ru: 'Барановичи', en: 'Baranovichi', lat: 53.1327, lon: 26.0139, aliases: ['baranovichi', 'baranavichy', 'барановичи']},
+  {ru: 'Пинск', en: 'Pinsk', lat: 52.1114, lon: 26.1025, aliases: ['pinsk', 'пинск']},
+  {ru: 'Полоцк', en: 'Polotsk', lat: 55.4879, lon: 28.7856, aliases: ['polotsk', 'polatsk', 'полоцк']},
+  {ru: 'Новополоцк', en: 'Novopolotsk', lat: 55.5318, lon: 28.5987, aliases: ['novopolotsk', 'navapolatsk', 'новополоцк']},
+  {ru: 'Борисов', en: 'Borisov', lat: 54.2279, lon: 28.505, aliases: ['borisov', 'barysaw', 'борисов']},
+  {ru: 'Бобруйск', en: 'Bobruisk', lat: 53.1384, lon: 29.2214, aliases: ['bobruisk', 'babruysk', 'бобруйск']},
+  {ru: 'Лида', en: 'Lida', lat: 53.8879, lon: 25.2997, aliases: ['lida', 'лида']},
+  {ru: 'Жлобин', en: 'Zhlobin', lat: 52.8926, lon: 30.024, aliases: ['zhlobin', 'жлобин']},
+  {ru: 'Ратомка', en: 'Ratomka', lat: 53.9372, lon: 27.3358, aliases: ['ratomka', 'ратомка']},
+  {ru: 'Раубичи', en: 'Raubichi', lat: 54.0581, lon: 27.7375, aliases: ['raubichi', 'раубичи']},
 ];
 
 function haversineKm(lat1, lon1, lat2, lon2) {
@@ -51,6 +51,117 @@ function haversineKm(lat1, lon1, lat2, lon2) {
     Math.sin(dLat / 2) ** 2 +
     Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function getBrowserCoordinates() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve(null);
+      return;
+    }
+    let settled = false;
+    const finish = (val) => {
+      if (settled) return;
+      settled = true;
+      resolve(val);
+    };
+    const timer = setTimeout(() => finish(null), 5500);
+    try {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          clearTimeout(timer);
+          finish({
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude,
+            countryCode: '',
+            cityHint: '',
+            source: 'gps',
+          });
+        },
+        () => {
+          clearTimeout(timer);
+          finish(null);
+        },
+        {enableHighAccuracy: false, timeout: 5000, maximumAge: 300000}
+      );
+    } catch {
+      clearTimeout(timer);
+      finish(null);
+    }
+  });
+}
+
+async function fetchGeoJson(url) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 4500);
+  try {
+    const res = await fetch(url, {signal: ctrl.signal, cache: 'no-store'});
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function getIpCoordinates() {
+  const ipWho = await fetchGeoJson('https://ipwho.is/');
+  if (ipWho && ipWho.success !== false && Number.isFinite(Number(ipWho.latitude)) && Number.isFinite(Number(ipWho.longitude))) {
+    return {
+      latitude: Number(ipWho.latitude),
+      longitude: Number(ipWho.longitude),
+      countryCode: String(ipWho.country_code || '').toUpperCase(),
+      cityHint: String(ipWho.city || ''),
+      countryName: String(ipWho.country || ''),
+      source: 'ip',
+    };
+  }
+
+  const geoJs = await fetchGeoJson('https://get.geojs.io/v1/ip/geo.json');
+  if (geoJs && Number.isFinite(Number(geoJs.latitude)) && Number.isFinite(Number(geoJs.longitude))) {
+    return {
+      latitude: Number(geoJs.latitude),
+      longitude: Number(geoJs.longitude),
+      countryCode: String(geoJs.country_code || '').toUpperCase(),
+      cityHint: String(geoJs.city || ''),
+      countryName: String(geoJs.country || ''),
+      source: 'ip',
+    };
+  }
+
+  const freeIp = await fetchGeoJson('https://freeipapi.com/api/json');
+  if (freeIp && Number.isFinite(Number(freeIp.latitude)) && Number.isFinite(Number(freeIp.longitude))) {
+    return {
+      latitude: Number(freeIp.latitude),
+      longitude: Number(freeIp.longitude),
+      countryCode: String(freeIp.countryCode || '').toUpperCase(),
+      cityHint: String(freeIp.cityName || ''),
+      countryName: String(freeIp.countryName || ''),
+      source: 'ip',
+    };
+  }
+
+  return null;
+}
+
+function findMatchingBelarusCity(coords) {
+  const hint = (coords.cityHint || '').trim().toLowerCase();
+  if (hint) {
+    const byAlias = BELARUS_CITIES.find((c) => c.aliases?.some((al) => hint.includes(al)));
+    if (byAlias) return {city: byAlias, dist: 0};
+  }
+
+  let nearest = BELARUS_CITIES[0];
+  let minDist = Infinity;
+  for (const c of BELARUS_CITIES) {
+    const d = haversineKm(coords.latitude, coords.longitude, c.lat, c.lon);
+    if (d < minDist) {
+      minDist = d;
+      nearest = c;
+    }
+  }
+  return {city: nearest, dist: minDist};
 }
 
 const searchForm = document.getElementById('home-search-form');
@@ -717,55 +828,51 @@ function bindHomeInteractions() {
     });
   });
 
-  detectBtn?.addEventListener('click', () => {
+  detectBtn?.addEventListener('click', async () => {
     const {lang} = getState();
-    if (!navigator.geolocation) {
-      showToast(t('geoDetectDenied', lang));
-      return;
-    }
-
     detectBtn.disabled = true;
     detectBtn.textContent = t('geoDetecting', lang);
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        detectBtn.disabled = false;
-        detectBtn.textContent = t('detectCity', lang);
+    try {
+      let coords = await getBrowserCoordinates();
+      if (!coords) {
+        coords = await getIpCoordinates();
+      }
 
-        const {latitude, longitude} = pos.coords;
-        let nearest = BELARUS_CITIES[0];
-        let minDist = Infinity;
-        for (const c of BELARUS_CITIES) {
-          const d = haversineKm(latitude, longitude, c.lat, c.lon);
-          if (d < minDist) {
-            minDist = d;
-            nearest = c;
-          }
-        }
-
-        if (minDist > 120) {
-          showToast(t('geoDetectOutside', lang));
-          return;
-        }
-
-        if (cityInput) {
-          const cityName = lang === 'ru' ? nearest.ru : nearest.en;
-          cityInput.value = cityName;
-          syncCityUi();
-          updateLiveCount();
-          showToast(
-            lang === 'ru' ? `Определён ближайший город: ${cityName}` : `Nearest city: ${cityName}`,
-            'success'
-          );
-        }
-      },
-      () => {
-        detectBtn.disabled = false;
-        detectBtn.textContent = t('detectCity', lang);
+      if (!coords) {
         showToast(t('geoDetectDenied', lang));
-      },
-      {enableHighAccuracy: false, timeout: 6000, maximumAge: 300000}
-    );
+        return;
+      }
+
+      const {city, dist} = findMatchingBelarusCity(coords);
+      const isBelarus = coords.countryCode === 'BY' || dist <= 180;
+
+      if (!isBelarus) {
+        const place = [coords.cityHint, coords.countryName].filter(Boolean).join(', ');
+        showToast(
+          place
+            ? lang === 'ru'
+              ? `Локация (${place}) вне Беларуси — выберите город ниже или введите вручную`
+              : `Detected (${place}) is outside Belarus — pick a city below or type manually`
+            : t('geoDetectOutside', lang)
+        );
+        return;
+      }
+
+      if (cityInput) {
+        const cityName = lang === 'ru' ? city.ru : city.en;
+        cityInput.value = cityName;
+        syncCityUi();
+        updateLiveCount();
+        showToast(
+          lang === 'ru' ? `Определён город: ${cityName}` : `Detected city: ${cityName}`,
+          'success'
+        );
+      }
+    } finally {
+      detectBtn.disabled = false;
+      detectBtn.textContent = t('detectCity', getState().lang);
+    }
   });
 
   document.querySelectorAll('[data-search-curr]').forEach((btn) => {
