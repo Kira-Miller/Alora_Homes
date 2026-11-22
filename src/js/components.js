@@ -17,7 +17,7 @@ export function createPropertyCard(property, options = {}) {
   const {lang, currency, favorites, compareList} = getState();
   const isSaved = favorites.includes(String(property.id));
   const isCompared = compareList.includes(String(property.id));
-  const prices = formatPrices(property.priceByn, property.priceUsd, currency);
+  const prices = formatPrices(property.priceByn, property.priceUsd, currency, property.dealType, lang);
   const detailUrl = `./property.html?id=${encodeURIComponent(property.id)}`;
 
   const card = document.createElement('article');
@@ -284,7 +284,7 @@ export function openBelarusMapModal(properties, allPropertiesList = null) {
     }
 
     if (selectedWrap && selectedProp) {
-      const pr = formatPrices(selectedProp.priceByn, selectedProp.priceUsd, currency);
+      const pr = formatPrices(selectedProp.priceByn, selectedProp.priceUsd, currency, selectedProp.dealType, lang);
       const isSaved = favorites.includes(String(selectedProp.id));
       const detailUrl = `./property.html?id=${encodeURIComponent(selectedProp.id)}`;
       const s = selectedProp.specs;

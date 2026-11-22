@@ -51,62 +51,102 @@
 
           <!-- Панель расширенной фильтрации -->
           <div class="catalog-toolbar" role="search">
-            <div class="field">
-              <label class="field__label" for="cat-query" data-i18n="labelCity">Город или область</label>
-              <input
-                id="cat-query"
-                class="field__control"
-                type="text"
-                data-i18n-placeholder="placeholderCity"
-                placeholder="Минск, Брест, Гродно..."
-              />
+            <div class="catalog-toolbar__row">
+              <div class="field">
+                <label class="field__label" for="cat-deal-type" data-i18n="labelDealType">Тип сделки</label>
+                <select id="cat-deal-type" class="field__control">
+                  <option value="all" data-i18n="dealAll">Все сделки</option>
+                  <option value="sale" data-i18n="dealBuy">Купить</option>
+                  <option value="rent" data-i18n="dealRent">Снять (Аренда)</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="cat-query" data-i18n="labelCity">Город или область</label>
+                <input
+                  id="cat-query"
+                  class="field__control"
+                  type="text"
+                  data-i18n-placeholder="placeholderCity"
+                  placeholder="Минск, Брест, Гродно..."
+                />
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="cat-region" data-i18n="labelRegion">Регион</label>
+                <select id="cat-region" class="field__control">
+                  <option value="all" data-i18n="regionAll">Вся Беларусь</option>
+                  <option value="minsk" data-i18n="regionMinsk">г. Минск</option>
+                  <option value="minsk-region" data-i18n="regionMinskRegion">Минская область</option>
+                  <option value="brest" data-i18n="regionBrest">Брест и область</option>
+                  <option value="grodno" data-i18n="regionGrodno">Гродно и область</option>
+                  <option value="vitebsk" data-i18n="regionVitebsk">Витебск и область</option>
+                  <option value="gomel" data-i18n="regionGomel">Гомель и область</option>
+                  <option value="mogilev" data-i18n="regionMogilev">Могилёв и область</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="cat-category" data-i18n="labelCategory">Категория</label>
+                <select id="cat-category" class="field__control">
+                  <option value="all" data-i18n="catAll">Все категории</option>
+                  <option value="apartments" data-i18n="catApartments">Квартиры и апартаменты</option>
+                  <option value="houses" data-i18n="catHouses">Загородные дома и таунхаусы</option>
+                  <option value="newbuild" data-i18n="catNewbuild">Новостройки</option>
+                  <option value="commercial" data-i18n="catCommercial">Коммерческая недвижимость</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="cat-rooms" data-i18n="labelRooms">Комнаты</label>
+                <select id="cat-rooms" class="field__control">
+                  <option value="any" data-i18n="roomsAny">Любое количество</option>
+                  <option value="1" data-i18n="rooms1">1 комната</option>
+                  <option value="2" data-i18n="rooms2">2 комнаты</option>
+                  <option value="3" data-i18n="rooms3">3 комнаты</option>
+                  <option value="4" data-i18n="rooms4">4+ комнаты</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="cat-price-max" data-i18n="labelPriceTo">Цена (до)</label>
+                <input id="cat-price-max" class="field__control" type="number" min="0" data-i18n-placeholder="maxPlaceholder" placeholder="Макс." />
+              </div>
             </div>
 
-            <div class="field">
-              <label class="field__label" for="cat-region" data-i18n="labelRegion">Регион</label>
-              <select id="cat-region" class="field__control">
-                <option value="all" data-i18n="regionAll">Вся Беларусь</option>
-                <option value="minsk" data-i18n="regionMinsk">г. Минск</option>
-                <option value="minsk-region" data-i18n="regionMinskRegion">Минская область</option>
-                <option value="brest" data-i18n="regionBrest">Брест и область</option>
-                <option value="grodno" data-i18n="regionGrodno">Гродно и область</option>
-                <option value="vitebsk" data-i18n="regionVitebsk">Витебск и область</option>
-                <option value="gomel" data-i18n="regionGomel">Гомель и область</option>
-                <option value="mogilev" data-i18n="regionMogilev">Могилёв и область</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label class="field__label" for="cat-category" data-i18n="labelCategory">Категория</label>
-              <select id="cat-category" class="field__control">
-                <option value="all" data-i18n="catAll">Все категории</option>
-                <option value="apartments" data-i18n="catApartments">Квартиры и апартаменты</option>
-                <option value="houses" data-i18n="catHouses">Загородные дома и таунхаусы</option>
-                <option value="newbuild" data-i18n="catNewbuild">Новостройки</option>
-                <option value="commercial" data-i18n="catCommercial">Коммерческая недвижимость</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label class="field__label" for="cat-rooms" data-i18n="labelRooms">Комнаты</label>
-              <select id="cat-rooms" class="field__control">
-                <option value="any" data-i18n="roomsAny">Любое количество</option>
-                <option value="1" data-i18n="rooms1">1 комната</option>
-                <option value="2" data-i18n="rooms2">2 комнаты</option>
-                <option value="3" data-i18n="rooms3">3 комнаты</option>
-                <option value="4" data-i18n="rooms4">4+ комнаты</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label class="field__label" for="cat-price-max" data-i18n="labelPriceTo">Цена (до)</label>
-              <input id="cat-price-max" class="field__control" type="number" min="0" data-i18n-placeholder="maxPlaceholder" placeholder="Макс." />
+            <div class="catalog-advanced" id="cat-advanced-filters" hidden>
+              <div class="field">
+                <label class="field__label" for="cat-price-min"><span data-i18n="labelPrice">Цена</span> (<span data-i18n="labelFrom">от</span>)</label>
+                <input id="cat-price-min" class="field__control" type="number" min="0" data-i18n-placeholder="labelFrom" placeholder="от" />
+              </div>
+              <div class="field">
+                <label class="field__label" for="cat-area-min"><span data-i18n="labelArea">Площадь (м²)</span> · <span data-i18n="labelFrom">от</span></label>
+                <input id="cat-area-min" class="field__control" type="number" min="0" data-i18n-placeholder="labelFrom" placeholder="от" />
+              </div>
+              <div class="field">
+                <label class="field__label" for="cat-area-max"><span data-i18n="labelArea">Площадь (м²)</span> · <span data-i18n="labelTo">до</span></label>
+                <input id="cat-area-max" class="field__control" type="number" min="0" data-i18n-placeholder="labelTo" placeholder="до" />
+              </div>
+              <div class="field">
+                <label class="field__label" for="cat-mkad-max" data-i18n="labelMkad">До МКАД (км)</label>
+                <input id="cat-mkad-max" class="field__control" type="number" min="0" data-i18n-placeholder="labelTo" placeholder="до" />
+              </div>
+              <label class="catalog-checkbox">
+                <input id="cat-newbuild-only" type="checkbox" />
+                <span data-i18n="onlyNewbuildsLabel">Только новостройки</span>
+              </label>
             </div>
           </div>
 
           <div class="catalog-meta-bar">
-            <strong id="catalog-count" class="tabular">Найдено объектов: 24</strong>
-            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <strong id="catalog-count" class="tabular">Найдено объектов: 29</strong>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <button type="button" class="btn btn--secondary btn--sm" id="cat-more-filters-btn" aria-expanded="false" aria-controls="cat-advanced-filters" data-i18n="allFiltersBtn">
+                Все фильтры
+              </button>
+              <button type="button" class="btn btn--secondary btn--sm" id="cat-map-bar-btn" data-i18n="mapResultsBtn">
+                На карте
+              </button>
               <select id="cat-sort" class="field__control" style="width:auto;" aria-label="Сортировка">
                 <option value="default" data-i18n="sortDefault">Рекомендуемые</option>
                 <option value="price-asc" data-i18n="sortPriceAsc">Сначала дешевле</option>

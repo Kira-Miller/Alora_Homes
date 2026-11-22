@@ -22,6 +22,7 @@ const DEFAULT_STATE = {
   sellRequests: [],
   consultationRequests: [],
   userReviews: [],
+  userListings: [],
 };
 
 let state = loadState();
@@ -134,6 +135,7 @@ export function addViewingRequest({propertyId, name, phone, date, consultant = '
     date,
     consultant: consultant || 'any',
     status: 'pending',
+    stage: 2,
     createdAt: new Date().toISOString().slice(0, 10),
   };
   state.viewingRequests = [newReq, ...state.viewingRequests];
@@ -141,8 +143,127 @@ export function addViewingRequest({propertyId, name, phone, date, consultant = '
   return newReq;
 }
 
+export function advanceViewingStage(requestId) {
+  state.viewingRequests = state.viewingRequests.map((req) => {
+    if (req.id !== requestId) return req;
+    const cur = Number(req.stage) || 1;
+    const next = cur >= 4 ? 1 : cur + 1;
+    return {
+      ...req,
+      stage: next,
+      status: next >= 2 ? 'confirmed' : 'pending',
+    };
+  });
+  notify();
+}
+
 export function cancelViewingRequest(requestId) {
   state.viewingRequests = state.viewingRequests.filter((r) => r.id !== requestId);
+  notify();
+}
+
+export function addUserListing(payload) {
+  const REGION_COORDS = {
+    minsk: {x: 258, y: 186},
+    'minsk-region': {x: 245, y: 196},
+    brest: {x: 72, y: 300},
+    grodno: {x: 76, y: 186},
+    vitebsk: {x: 345, y: 88},
+    gomel: {x: 375, y: 295},
+    mogilev: {x: 382, y: 185},
+  };
+  const REGION_CITY_DEFAULT = {
+    minsk: {ru: 'г. Минск', en: 'Minsk'},
+    'minsk-region': {ru: 'Минская область', en: 'Minsk Region'},
+    brest: {ru: 'г. Брест', en: 'Brest'},
+    grodno: {ru: 'г. Гродно', en: 'Grodno'},
+    vitebsk: {ru: 'г. Витебск', en: 'Vitebsk'},
+    gomel: {ru: 'г. Гомель', en: 'Gomel'},
+    mogilev: {ru: 'г. Могилёв', en: 'Mogilev'},
+  };
+
+  const region = payload.region || 'minsk';
+  const dealType = payload.dealType === 'rent' ? 'rent' : 'sale';
+  const category = payload.category || 'apartments';
+  const dealGroup = category === 'commercial' ? 'commercial' : 'residential';
+  const area = Math.max(10, Number(payload.area) || 64);
+  const rooms = Math.max(1, Number(payload.rooms) || 2);
+  const priceByn = Math.max(100, Number(payload.priceByn) || 250000);
+  const priceUsd = Math.round(priceByn / 3.23);
+  const cleanTitle = String(payload.title || '').trim();
+  const cleanCity = String(payload.city || '').trim() || REGION_CITY_DEFAULT[region]?.ru || 'г. Минск';
+  const cleanDesc = String(payload.description || '').trim();
+  const coords = REGION_COORDS[region] || {x: 258, y: 186};
+
+  const subMap = {
+    apartments: dealType === 'rent' ? {ru: 'Аренда квартиры', en: 'Apartment Rent'} : {ru: 'Квартира', en: 'Apartment'},
+    houses: dealType === 'rent' ? {ru: 'Аренда дома', en: 'House Rent'} : {ru: 'Загородный дом', en: 'Country House'},
+    commercial: dealType === 'rent' ? {ru: 'Аренда коммерции', en: 'Commercial Rent'} : {ru: 'Коммерческая недвижимость', en: 'Commercial'},
+  };
+  const themeMap = {
+    apartments: 'minsk-tower',
+    houses: 'villa-pine',
+    commercial: 'glass-office',
+  };
+
+  const newProp = {
+    id: `user-${Date.now()}`,
+    isUserListing: true,
+    featured: true,
+    dealGroup,
+    dealType,
+    category,
+    subcategory: subMap[category] || subMap.apartments,
+    region,
+    city: {
+      ru: cleanCity,
+      en: cleanCity,
+    },
+    title: {
+      ru: cleanTitle,
+      en: cleanTitle,
+    },
+    badge: {
+      type: 'new',
+      ru: dealType === 'rent' ? 'Собственник · Аренда' : 'От собственника',
+      en: dealType === 'rent' ? 'Owner · Rent' : 'Owner Listing',
+    },
+    priceByn,
+    priceUsd,
+    specs: {
+      area,
+      livingArea: Math.round(area * 0.68),
+      plotArea: category === 'houses' ? Number(payload.plotArea) || 10 : 0,
+      rooms,
+      floors: Number(payload.floors) || (category === 'houses' ? 2 : 9),
+      floor: Number(payload.floor) || (category === 'houses' ? 1 : 4),
+      mkadDistance: region === 'minsk-region' ? 12 : 0,
+      year: Number(payload.year) || 2024,
+      newbuild: Boolean(payload.newbuild),
+    },
+    visualTheme: themeMap[category] || 'minsk-tower',
+    image: payload.image || '',
+    interiorImage: '',
+    terraceImage: '',
+    mapCoords: coords,
+    description: {
+      ru: cleanDesc || `Объект размещён напрямую собственником (${cleanCity}). Готов к просмотрам по предварительной записи.`,
+      en: cleanDesc || `Listed directly by the owner (${cleanCity}). Available for scheduled viewings.`,
+    },
+    features: [
+      {ru: 'Прямое объявление', en: 'Direct owner listing'},
+      {ru: dealType === 'rent' ? 'Долгосрочная аренда' : 'Готов к сделке', en: dealType === 'rent' ? 'Long-term lease' : 'Ready to close'},
+      {ru: 'Сопровождение Alora Homes', en: 'Alora Homes legal support'},
+    ],
+  };
+
+  state.userListings = [newProp, ...(state.userListings || [])];
+  notify();
+  return newProp;
+}
+
+export function removeUserListing(listingId) {
+  state.userListings = (state.userListings || []).filter((item) => String(item.id) !== String(listingId));
   notify();
 }
 

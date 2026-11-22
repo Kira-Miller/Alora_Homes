@@ -1534,5 +1534,281 @@ export const PROPERTIES_DATA = [
         "en": "14-are plot"
       }
     ]
+  },
+  {
+    "id": "25",
+    "featured": true,
+    "dealGroup": "residential",
+    "dealType": "rent",
+    "category": "apartments",
+    "subcategory": {
+      "ru": "Аренда квартиры",
+      "en": "Apartment Rent"
+    },
+    "region": "minsk",
+    "city": {
+      "ru": "г. Минск, ул. Аэродромная, 28 (Минск-Мир)",
+      "en": "Minsk, Aerodromnaya St, 28"
+    },
+    "title": {
+      "ru": "Дизайнерские 2-комнатные апартаменты в аренду",
+      "en": "Designer 2-Room Apartment for Rent"
+    },
+    "badge": {
+      "type": "new",
+      "ru": "Аренда",
+      "en": "For Rent"
+    },
+    "priceByn": 1950,
+    "priceUsd": 605,
+    "specs": {
+      "area": 58,
+      "livingArea": 38,
+      "plotArea": 0,
+      "rooms": 2,
+      "floors": 25,
+      "floor": 14,
+      "mkadDistance": 0,
+      "year": 2025,
+      "newbuild": true
+    },
+    "visualTheme": "minsk-tower",
+    "image": "./assets/images/prop-11.jpg",
+    "interiorImage": "./assets/images/prop-11-interior.jpg",
+    "terraceImage": "./assets/images/prop-11-terrace.jpg",
+    "mapCoords": {
+      "x": 255,
+      "y": 191
+    },
+    "description": {
+      "ru": "Стильная 2-комнатная квартира в долгосрочную аренду в современном квартале Минска. Полностью укомплектована техникой Bosch, посудомоечной машиной, кондиционером и рабочим местом у панорамного окна.",
+      "en": "Stylish 2-room apartment for long-term rent in a modern Minsk quarter. Fully equipped with Bosch appliances, dishwasher, A/C, and bright home-office nook."
+    },
+    "features": [
+      {"ru": "Вся бытовая техника", "en": "Full appliances"},
+      {"ru": "Панорамные окна", "en": "Floor-to-ceiling glass"},
+      {"ru": "Кондиционер и Wi-Fi", "en": "A/C & Fiber Wi-Fi"},
+      {"ru": "Рядом метро Аэродромная", "en": "Near Aerodromnaya metro"}
+    ]
+  },
+  {
+    "id": "26",
+    "featured": true,
+    "dealGroup": "residential",
+    "dealType": "rent",
+    "category": "houses",
+    "subcategory": {
+      "ru": "Аренда дома",
+      "en": "House Rent"
+    },
+    "region": "minsk-region",
+    "city": {
+      "ru": "Минский р-н, аг. Ратомка, ул. Лесная, 9",
+      "en": "Ratomka, Lesnaya St, 9"
+    },
+    "title": {
+      "ru": "Барнхаус с баней и террасой в аренду",
+      "en": "Barnhouse with Sauna & Deck for Rent"
+    },
+    "badge": {
+      "type": "exclusive",
+      "ru": "Аренда · Хит",
+      "en": "Rent · Hit"
+    },
+    "priceByn": 4845,
+    "priceUsd": 1500,
+    "specs": {
+      "area": 152,
+      "livingArea": 106,
+      "plotArea": 11,
+      "rooms": 4,
+      "floors": 1,
+      "floor": 1,
+      "mkadDistance": 8,
+      "year": 2024,
+      "newbuild": false
+    },
+    "visualTheme": "forest-cottage",
+    "image": "./assets/images/prop-15.jpg",
+    "interiorImage": "./assets/images/prop-15-interior.jpg",
+    "terraceImage": "./assets/images/prop-15-terrace.jpg",
+    "mapCoords": {
+      "x": 242,
+      "y": 180
+    },
+    "description": {
+      "ru": "Светлый одноэтажный барнхаус среди сосен в 8 км от МКАД для комфортного семейного проживания. Газовое отопление, камин, баня на дровах, крытая терраса и ухоженный участок 11 соток.",
+      "en": "Bright single-story barnhouse tucked among pines 8 km from Minsk Ring Road. Gas heating, wood-fired sauna, fireplace, covered deck, and manicured 11-are garden."
+    },
+    "features": [
+      {"ru": "Долгосрочная аренда от 6 мес.", "en": "Long-term lease 6+ mo"},
+      {"ru": "Собственная баня", "en": "Private sauna"},
+      {"ru": "Навес на 2 авто", "en": "2-car carport"}
+    ]
+  },
+  {
+    "id": "27",
+    "featured": true,
+    "dealGroup": "commercial",
+    "dealType": "rent",
+    "category": "commercial",
+    "subcategory": {
+      "ru": "Аренда офиса",
+      "en": "Office Rent"
+    },
+    "region": "minsk",
+    "city": {
+      "ru": "г. Минск, просп. Независимости, 58",
+      "en": "Minsk, Nezavisimosti Ave, 58"
+    },
+    "title": {
+      "ru": "Светлый IT-офис Open Space в центре",
+      "en": "Central Open-Space IT Office for Rent"
+    },
+    "badge": {
+      "type": "top",
+      "ru": "Аренда B+",
+      "en": "Class B+ Rent"
+    },
+    "priceByn": 5490,
+    "priceUsd": 1700,
+    "specs": {
+      "area": 135,
+      "livingArea": 118,
+      "plotArea": 0,
+      "rooms": 4,
+      "floors": 7,
+      "floor": 5,
+      "mkadDistance": 0,
+      "year": 2023,
+      "newbuild": false
+    },
+    "visualTheme": "glass-office",
+    "image": "./assets/images/prop-5.jpg",
+    "interiorImage": "./assets/images/prop-5-interior.jpg",
+    "terraceImage": "./assets/images/prop-5-terrace.jpg",
+    "mapCoords": {
+      "x": 261,
+      "y": 186
+    },
+    "description": {
+      "ru": "Готовый к заезду офис на проспекте Независимости: open space на 18 рабочих мест, переговорная со звукоизоляцией, оборудованная кухня, оптоволокно и круглосуточный доступ СКУД.",
+      "en": "Turnkey office on Nezavisimosti Ave: 18-desk open space, soundproof conference suite, equipped kitchen, redundant fiber internet, and 24/7 keycard access."
+    },
+    "features": [
+      {"ru": "Прямая аренда без скрытых платежей", "en": "Direct landlord lease"},
+      {"ru": "2 минуты до метро Якуба Коласа", "en": "2 min to metro"},
+      {"ru": "Приточно-вытяжная вентиляция", "en": "HVAC climate control"}
+    ]
+  },
+  {
+    "id": "28",
+    "featured": false,
+    "dealGroup": "residential",
+    "dealType": "rent",
+    "category": "apartments",
+    "subcategory": {
+      "ru": "Аренда квартиры",
+      "en": "Apartment Rent"
+    },
+    "region": "grodno",
+    "city": {
+      "ru": "г. Гродно, ул. Ожешко, 18",
+      "en": "Grodno, Ozheshko St, 18"
+    },
+    "title": {
+      "ru": "Уютная евро-трёшка у парка Жилибера",
+      "en": "Cozy 3-Room Flat by Gilibert Park"
+    },
+    "badge": {
+      "type": "new",
+      "ru": "Аренда",
+      "en": "For Rent"
+    },
+    "priceByn": 1420,
+    "priceUsd": 440,
+    "specs": {
+      "area": 78,
+      "livingArea": 52,
+      "plotArea": 0,
+      "rooms": 3,
+      "floors": 5,
+      "floor": 3,
+      "mkadDistance": 0,
+      "year": 2022,
+      "newbuild": false
+    },
+    "visualTheme": "waterfront-loft",
+    "image": "./assets/images/prop-8.jpg",
+    "interiorImage": "./assets/images/prop-8-interior.jpg",
+    "terraceImage": "./assets/images/prop-8-terrace.jpg",
+    "mapCoords": {
+      "x": 74,
+      "y": 184
+    },
+    "description": {
+      "ru": "Просторная трёхкомнатная квартира в самом сердце Гродно в 3 минутах ходьбы от парка Жилибера. Натуральный паркет, тёплый пол в санузле, отдельная гардеробная и тихий закрытый двор.",
+      "en": "Spacious 3-room apartment in central Grodno, 3 minutes from Gilibert Park. Oak parquet floors, heated bathroom tiles, walk-in wardrobe, and quiet courtyard."
+    },
+    "features": [
+      {"ru": "Исторический центр Гродно", "en": "Grodno city center"},
+      {"ru": "Официальный договор аренды", "en": "Official lease contract"},
+      {"ru": "Закрытая парковка во дворе", "en": "Gated courtyard parking"}
+    ]
+  },
+  {
+    "id": "29",
+    "featured": false,
+    "dealGroup": "commercial",
+    "dealType": "rent",
+    "category": "commercial",
+    "subcategory": {
+      "ru": "Аренда ритейла",
+      "en": "Retail Space Rent"
+    },
+    "region": "brest",
+    "city": {
+      "ru": "г. Брест, ул. Советская, 41",
+      "en": "Brest, Sovetskaya St, 41"
+    },
+    "title": {
+      "ru": "Стрит-ритейл с витринами на Советской",
+      "en": "Street-Front Retail on Sovetskaya St"
+    },
+    "badge": {
+      "type": "top",
+      "ru": "Аренда · Центр",
+      "en": "Prime Rent"
+    },
+    "priceByn": 2907,
+    "priceUsd": 900,
+    "specs": {
+      "area": 88,
+      "livingArea": 74,
+      "plotArea": 0,
+      "rooms": 2,
+      "floors": 4,
+      "floor": 1,
+      "mkadDistance": 0,
+      "year": 2024,
+      "newbuild": false
+    },
+    "visualTheme": "glass-office",
+    "image": "./assets/images/prop-9.jpg",
+    "interiorImage": "./assets/images/prop-9-interior.jpg",
+    "terraceImage": "./assets/images/prop-9-terrace.jpg",
+    "mapCoords": {
+      "x": 69,
+      "y": 302
+    },
+    "description": {
+      "ru": "Помещение первого этажа с отдельным входом и витринным остеклением на главной пешеходной улице Бреста. Идеально подойдёт под кофейню, бутик, студию красоты или клиентский офис.",
+      "en": "Ground-floor commercial suite with private entrance and showcase windows on Brest's main pedestrian street. Ideal for a cafe, boutique, or client showroom."
+    },
+    "features": [
+      {"ru": "Высокий пешеходный трафик", "en": "High pedestrian traffic"},
+      {"ru": "Отдельный фасадный вход", "en": "Dedicated street entrance"},
+      {"ru": "Выделенная мощность 25 кВт", "en": "25 kW power supply"}
+    ]
   }
 ];

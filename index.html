@@ -60,26 +60,39 @@
 
           <!-- Форма поиска с живым пересчётом совпадений -->
           <form class="search-panel" id="home-search-form">
-            <div class="search-panel__top-tabs" role="tablist">
-              <button
-                type="button"
-                class="tab-btn is-active"
-                data-deal-tab="all"
-                data-i18n="tabAllObjects"
-              >
-                Все объекты (24)
-              </button>
-              <button
-                type="button"
-                class="tab-btn"
-                data-deal-tab="residential"
-                data-i18n="tabResidential"
-              >
-                Жилая недвижимость
-              </button>
-              <button type="button" class="tab-btn" data-deal-tab="commercial" data-i18n="tabCommercial">
-                Коммерческая недвижимость
-              </button>
+            <div class="search-panel__top-bar">
+              <div class="deal-type-switch" id="search-deal-type" role="group" aria-label="Формат сделки">
+                <button type="button" class="tab-btn is-active" data-deal-type="all" data-i18n="dealAll">
+                  Все сделки
+                </button>
+                <button type="button" class="tab-btn" data-deal-type="sale" data-i18n="dealBuy">
+                  Купить
+                </button>
+                <button type="button" class="tab-btn" data-deal-type="rent" data-i18n="dealRent">
+                  Снять (Аренда)
+                </button>
+              </div>
+              <div class="search-panel__top-tabs" role="group" aria-label="Тип недвижимости">
+                <button
+                  type="button"
+                  class="tab-btn is-active"
+                  data-deal-tab="all"
+                  data-i18n="tabAllObjects"
+                >
+                  Все объекты (29)
+                </button>
+                <button
+                  type="button"
+                  class="tab-btn"
+                  data-deal-tab="residential"
+                  data-i18n="tabResidential"
+                >
+                  Квартиры / Комнаты / Дома
+                </button>
+                <button type="button" class="tab-btn" data-deal-tab="commercial" data-i18n="tabCommercial">
+                  Коммерческая недвижимость
+                </button>
+              </div>
             </div>
 
             <div class="search-panel__grid">
@@ -224,7 +237,7 @@
                   Сбросить фильтры
                 </button>
                 <button type="submit" class="btn btn--primary" id="home-search-submit">
-                  Найти 24 объекта →
+                  Найти 29 объектов →
                 </button>
               </div>
             </div>
@@ -251,6 +264,22 @@
           </div>
           <div class="property-grid" id="featured-grid"></div>
           <div class="featured-bottom-bar" id="featured-pager-bottom"></div>
+        </div>
+      </section>
+
+      <!-- Компактная сводка рынка Беларуси -->
+      <section class="section">
+        <div class="container">
+          <div class="section-header-row">
+            <div>
+              <span class="section-kicker" data-i18n="marketPulseKicker">Пульс рынка Беларуси</span>
+              <h2 class="section-title" data-i18n="marketPulseTitle">Средние цены и динамика сделок</h2>
+            </div>
+            <a href="./analytics.html" class="btn btn--secondary btn--sm" data-i18n="marketPulseBtn">
+              Вся аналитика →
+            </a>
+          </div>
+          <div class="market-pulse-grid" id="home-market-pulse"></div>
         </div>
       </section>
 
@@ -299,9 +328,9 @@
                   <path d="M12 6v12M15 9.5a3 3 0 0 0-6 0c0 2 6 2 6 4a3 3 0 0 1-6 0"/>
                 </svg>
               </div>
-              <h3 class="benefit-card__title" data-i18n="why3Title">Без скрытых комиссий</h3>
+              <h3 class="benefit-card__title" data-i18n="why3Title">Комиссия по факту сделки</h3>
               <p class="benefit-card__desc" data-i18n="why3Desc">
-                Прозрачное ценообразование в BYN и USD, фиксированные условия договора и честный расчёт.
+                0% предоплаты — оплата услуг только после успешного закрытия сделки и передачи расчётов.
               </p>
             </article>
 
@@ -320,6 +349,25 @@
               </p>
             </article>
           </div>
+        </div>
+      </section>
+
+      <!-- Кейсы успешных продаж (Было -> Стало) -->
+      <section class="section">
+        <div class="container">
+          <div class="section-header-row">
+            <div>
+              <span class="section-kicker" data-i18n="casesKicker">Реальная практика</span>
+              <h2 class="section-title" data-i18n="casesTitle">Кейсы успешных продаж</h2>
+              <p class="section-subtitle" style="margin-top:6px;" data-i18n="casesSubtitle">
+                Фиксируем стартовую оценку, срок экспозиции и итоговую выгоду для собственника
+              </p>
+            </div>
+            <a href="./services.html#calculator" class="btn btn--secondary btn--sm" data-i18n="casesLinkBtn">
+              Оценить свой объект →
+            </a>
+          </div>
+          <div class="cases-grid" id="home-cases"></div>
         </div>
       </section>
 
@@ -382,7 +430,7 @@
               <button type="button" class="btn btn--secondary btn--sm" id="open-review-modal-btn" data-i18n="leaveReviewBtn">
                 Оставить отзыв
               </button>
-              <div class="featured-pager" aria-label="Навигация по отзывам">
+              <div class="featured-pager" role="group" aria-label="Навигация по отзывам">
                 <button type="button" class="pager-arrow" id="reviews-prev" aria-label="Предыдущие отзывы">
                   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <polyline points="15 18 9 12 15 6"/>

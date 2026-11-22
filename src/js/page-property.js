@@ -17,15 +17,20 @@ import {
   validateFutureDate,
   validateName,
 } from './validation.js';
-import {loadPropertiesFromXml} from './xml-loader.js';
+import {loadPropertiesFromXml, mergeWithUserListings} from './xml-loader.js';
 
 initLayout('catalog');
 
+let baseCatalog = [];
 let allCatalog = [];
 let currentProperty = null;
 let activeView = 'exterior';
 let activeFloorIdx = 0;
 let activeRoomId = null;
+
+let tourSceneIdx = 0;
+let tourPlaying = true;
+let tourTimerId = null;
 
 const bookingDraft = {
   name: null,
@@ -34,15 +39,162 @@ const bookingDraft = {
   consultant: 'any',
 };
 
+const BANK_PRESETS = [
+  {
+    id: 'belarusbank',
+    nameRu: 'Беларусбанк · 16.5%',
+    nameEn: 'Belarusbank · 16.5%',
+    rate: 16.5,
+    years: 20,
+    downPct: 20,
+  },
+  {
+    id: 'belinvest',
+    nameRu: 'Белинвестбанк · 15.9%',
+    nameEn: 'Belinvestbank · 15.9%',
+    rate: 15.9,
+    years: 20,
+    downPct: 20,
+  },
+  {
+    id: 'priorbank',
+    nameRu: 'Приорбанк · 16.9%',
+    nameEn: 'Priorbank · 16.9%',
+    rate: 16.9,
+    years: 15,
+    downPct: 25,
+  },
+  {
+    id: 'installment',
+    nameRu: 'Рассрочка · 7.5%',
+    nameEn: 'Installment · 7.5%',
+    rate: 7.5,
+    years: 5,
+    downPct: 30,
+  },
+];
+
+const financeDraft = {
+  presetId: 'belarusbank',
+  downPct: 20,
+  years: 20,
+  rate: 16.5,
+  leaseMonths: 12,
+  includeDeposit: true,
+};
+
 const rootEl = document.getElementById('property-detail-root');
+
+function stopTourTimer() {
+  if (tourTimerId) {
+    clearInterval(tourTimerId);
+    tourTimerId = null;
+  }
+}
+
+function calcMortgageNumbers(priceByn, priceUsd, downPct, years, rate) {
+  const ratioUsd = priceByn > 0 ? priceUsd / priceByn : 1 / 3.23;
+  const downByn = Math.round(priceByn * (downPct / 100));
+  const loanByn = Math.max(0, priceByn - downByn);
+  const months = Math.max(1, years * 12);
+  const monthlyRate = rate / 100 / 12;
+
+  let monthlyByn = 0;
+  if (loanByn > 0) {
+    if (monthlyRate <= 0) {
+      monthlyByn = loanByn / months;
+    } else {
+      const pow = Math.pow(1 + monthlyRate, months);
+      monthlyByn = (loanByn * monthlyRate * pow) / (pow - 1);
+    }
+  }
+  const monthlyBynRounded = Math.round(monthlyByn);
+  const totalPaidByn = monthlyBynRounded * months;
+  const overpayByn = Math.max(0, totalPaidByn - loanByn);
+
+  return {
+    downByn,
+    downUsd: Math.round(downByn * ratioUsd),
+    loanByn,
+    loanUsd: Math.round(loanByn * ratioUsd),
+    monthlyByn: monthlyBynRounded,
+    monthlyUsd: Math.round(monthlyBynRounded * ratioUsd),
+    overpayByn,
+    overpayUsd: Math.round(overpayByn * ratioUsd),
+  };
+}
+
+function updateFinanceResultsInDom() {
+  if (!currentProperty) return;
+  const {lang, currency} = getState();
+  const p = currentProperty;
+
+  if ((p.dealType || 'sale') === 'rent') {
+    const months = Number(financeDraft.leaseMonths) || 12;
+    const depositMult = financeDraft.includeDeposit ? 1 : 0;
+    const firstMonthP = formatPrices(p.priceByn, p.priceUsd, currency, 'rent', lang);
+    const moveInByn = p.priceByn * (1 + depositMult);
+    const moveInUsd = p.priceUsd * (1 + depositMult);
+    const moveInP = formatPrices(moveInByn, moveInUsd, currency, 'sale', lang);
+    const totalContractByn = p.priceByn * months;
+    const totalContractUsd = p.priceUsd * months;
+    const contractP = formatPrices(totalContractByn, totalContractUsd, currency, 'sale', lang);
+
+    const mEl = document.getElementById('rent-movein-val');
+    const mSubEl = document.getElementById('rent-movein-sub');
+    const monthEl = document.getElementById('rent-monthly-val');
+    const contractEl = document.getElementById('rent-contract-val');
+    if (mEl) mEl.textContent = moveInP.primary;
+    if (mSubEl) mSubEl.textContent = moveInP.secondary;
+    if (monthEl) monthEl.textContent = firstMonthP.primary;
+    if (contractEl) contractEl.textContent = contractP.primary;
+    return;
+  }
+
+  const res = calcMortgageNumbers(
+    p.priceByn,
+    p.priceUsd,
+    financeDraft.downPct,
+    financeDraft.years,
+    financeDraft.rate
+  );
+
+  const mFmt = formatPrices(res.monthlyByn, res.monthlyUsd, currency, 'rent', lang);
+  const loanFmt = formatPrices(res.loanByn, res.loanUsd, currency, 'sale', lang);
+  const downFmt = formatPrices(res.downByn, res.downUsd, currency, 'sale', lang);
+  const overFmt = formatPrices(res.overpayByn, res.overpayUsd, currency, 'sale', lang);
+
+  const downLabelEl = document.getElementById('mort-down-label');
+  const yearsLabelEl = document.getElementById('mort-years-label');
+  const rateLabelEl = document.getElementById('mort-rate-label');
+  if (downLabelEl) downLabelEl.textContent = `${financeDraft.downPct}% (${downFmt.primary})`;
+  if (yearsLabelEl) {
+    yearsLabelEl.textContent = `${financeDraft.years} ${lang === 'ru' ? 'лет' : 'yrs'}`;
+  }
+  if (rateLabelEl) rateLabelEl.textContent = `${financeDraft.rate.toFixed(1)}%`;
+
+  const mValEl = document.getElementById('mort-monthly-val');
+  const mSubEl = document.getElementById('mort-monthly-sub');
+  const loanEl = document.getElementById('mort-loan-val');
+  const downEl = document.getElementById('mort-down-val');
+  const overEl = document.getElementById('mort-overpay-val');
+
+  if (mValEl) mValEl.textContent = mFmt.primary;
+  if (mSubEl) mSubEl.textContent = mFmt.secondary;
+  if (loanEl) loanEl.textContent = loanFmt.primary;
+  if (downEl) downEl.textContent = downFmt.primary;
+  if (overEl) overEl.textContent = overFmt.primary;
+}
 
 function renderPropertyPage() {
   if (!rootEl || !currentProperty) return;
+  stopTourTimer();
 
   const {lang, currency, favorites, user} = getState();
   const p = currentProperty;
   const s = p.specs;
-  const prices = formatPrices(p.priceByn, p.priceUsd, currency);
+  const isRent = (p.dealType || 'sale') === 'rent';
+  const prices = formatPrices(p.priceByn, p.priceUsd, currency, p.dealType || 'sale', lang);
   const isSaved = favorites.includes(String(p.id));
 
   document.title = `${p.title[lang]} — Alora Homes`;
@@ -77,7 +229,36 @@ function renderPropertyPage() {
     {id: 'exterior', label: t('viewExterior', lang)},
     {id: 'interior', label: t('viewInterior', lang)},
     {id: 'terrace', label: t('viewTerrace', lang)},
+    {id: 'tour', label: t('viewTour', lang)},
   ];
+
+  const tourScenes = [
+    {
+      id: 'exterior',
+      labelRu: '01 · Фасад и подъезд',
+      labelEn: '01 · Facade & Approach',
+      img: p.image,
+      capRu: 'Архитектурный облик и придомовая территория',
+      capEn: 'Exterior architecture and surrounding grounds',
+    },
+    {
+      id: 'interior',
+      labelRu: '02 · Интерьер и свет',
+      labelEn: '02 · Living Interior',
+      img: p.interiorImage || p.image,
+      capRu: 'Планировка гостиной и естественное освещение',
+      capEn: 'Living space proportions and natural daylight',
+    },
+    {
+      id: 'terrace',
+      labelRu: '03 · Панорама и детали',
+      labelEn: '03 · Panorama & View',
+      img: p.terraceImage || p.interiorImage || p.image,
+      capRu: 'Видовые характеристики и отделка',
+      capEn: 'Terrace outlook and architectural finishes',
+    },
+  ];
+  if (tourSceneIdx >= tourScenes.length) tourSceneIdx = 0;
 
   const kpis = [
     {val: `${s.area} ${t('areaUnit', lang)}`, label: t('specTotalArea', lang)},
@@ -91,6 +272,50 @@ function renderPropertyPage() {
   ];
 
   const renderGalleryMedia = (viewId, imgStyle, svgUid, isMain = false) => {
+    if (viewId === 'tour') {
+      if (isMain) {
+        const curScene = tourScenes[tourSceneIdx] || tourScenes[0];
+        const sceneVisual = curScene.img
+          ? `<img src="${curScene.img}" alt="${p.title[lang]}" class="tour-stage__img ${tourPlaying ? 'is-playing' : ''}" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;position:absolute;inset:0;width:100%;height:100%;">${getPropertySvg(p.visualTheme, curScene.id, svgUid)}</div>`
+          : `<div class="tour-stage__img ${tourPlaying ? 'is-playing' : ''}" style="position:absolute;inset:0;">${getPropertySvg(p.visualTheme, curScene.id, svgUid)}</div>`;
+        return `
+          <div class="tour-stage" id="property-tour-stage">
+            ${sceneVisual}
+            <div class="tour-stage__scrim"></div>
+            <div class="tour-stage__top">
+              <span class="tour-stage__tag">${t('viewTour', lang)}</span>
+              <button type="button" class="tour-stage__play" id="tour-play-toggle" aria-label="${tourPlaying ? 'Pause' : 'Play'}">
+                ${getIconSvg(tourPlaying ? 'pause' : 'play', 14)}
+                <span>${tourPlaying ? (lang === 'ru' ? 'Пауза' : 'Pause') : (lang === 'ru' ? 'Запуск' : 'Play')}</span>
+              </button>
+            </div>
+            <div class="tour-stage__bottom">
+              <div class="tour-stage__desc" id="tour-scene-caption">${lang === 'ru' ? curScene.capRu : curScene.capEn}</div>
+              <div class="tour-stage__scenes">
+                ${tourScenes
+                  .map(
+                    (sc, idx) => `
+                  <button type="button" class="tour-scene-btn ${idx === tourSceneIdx ? 'is-active' : ''}" data-tour-scene="${idx}">
+                    ${lang === 'ru' ? sc.labelRu : sc.labelEn}
+                  </button>
+                `
+                  )
+                  .join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      const thumbImg = p.interiorImage || p.image || '';
+      const thumbVisual = thumbImg
+        ? `<img src="${thumbImg}" alt="${t('viewTour', lang)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="${imgStyle}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><div style="display:none;position:absolute;inset:0;width:100%;height:100%;">${getPropertySvg(p.visualTheme, 'interior', svgUid)}</div>`
+        : getPropertySvg(p.visualTheme, 'interior', svgUid);
+      return `
+        ${thumbVisual}
+        <span class="tour-thumb-badge" aria-hidden="true">${getIconSvg('play', 18)}</span>
+      `;
+    }
+
     const viewSrcMap = {
       exterior: p.image,
       interior: p.interiorImage,
@@ -114,6 +339,131 @@ function renderPropertyPage() {
   const nextObj = hasMultipleObjects
     ? allCatalog[(currentIdx + 1) % allCatalog.length]
     : null;
+
+  const priceLabelText = isRent
+    ? lang === 'ru'
+      ? 'Арендная ставка в месяц'
+      : 'Monthly Lease Rate'
+    : t('objectPriceLabel', lang);
+
+  const financeSectionHtml = isRent
+    ? `
+      <section class="mortgage-card" aria-label="${lang === 'ru' ? 'Расчёт заселения и аренды' : 'Rental Move-In Estimator'}">
+        <div class="mortgage-card__head">
+          <div>
+            <span class="section-kicker" style="margin-bottom:4px;">${lang === 'ru' ? 'Прозрачная аренда' : 'Transparent Lease'}</span>
+            <h2 class="section-title" style="font-size:1.45rem;margin:0;">${lang === 'ru' ? 'Калькулятор заселения и срока аренды' : 'Lease & Move-In Estimator'}</h2>
+          </div>
+          <span class="mortgage-card__badge">${lang === 'ru' ? '0% скрытых сборов' : 'Zero hidden fees'}</span>
+        </div>
+        <div class="mortgage-card__grid">
+          <div class="mortgage-controls">
+            <div class="field">
+              <span class="field__label">${lang === 'ru' ? 'Срок договора аренды' : 'Lease Term'}</span>
+              <div class="mortgage-presets">
+                ${[3, 6, 12, 24]
+                  .map(
+                    (m) => `
+                  <button type="button" class="tab-btn ${financeDraft.leaseMonths === m ? 'is-active' : ''}" data-lease-months="${m}">
+                    ${m} ${lang === 'ru' ? 'мес.' : 'mo'}
+                  </button>
+                `
+                  )
+                  .join('')}
+              </div>
+            </div>
+            <label class="catalog-checkbox" style="margin-top:6px;">
+              <input id="rent-deposit-toggle" type="checkbox" ${financeDraft.includeDeposit ? 'checked' : ''} />
+              <span>${lang === 'ru' ? 'Включить возвратный депозит (1 месяц)' : 'Include refundable security deposit (1 mo)'}</span>
+            </label>
+          </div>
+          <div class="mortgage-result">
+            <span class="section-kicker" style="margin-bottom:4px;">${lang === 'ru' ? 'Бюджет при заселении' : 'Move-In Total'}</span>
+            <div class="mortgage-result__main" id="rent-movein-val">—</div>
+            <div class="mortgage-result__sub" id="rent-movein-sub">—</div>
+            <div class="mortgage-result__meta">
+              <div>
+                <span>${lang === 'ru' ? 'Ежемесячный платёж' : 'Monthly Rent'}</span>
+                <strong id="rent-monthly-val">—</strong>
+              </div>
+              <div>
+                <span>${lang === 'ru' ? 'Сумма за весь срок' : 'Total Lease Value'}</span>
+                <strong id="rent-contract-val">—</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    `
+    : `
+      <section class="mortgage-card" aria-label="${lang === 'ru' ? 'Калькулятор кредита и рассрочки' : 'Mortgage & Installment Calculator'}">
+        <div class="mortgage-card__head">
+          <div>
+            <span class="section-kicker" style="margin-bottom:4px;">${lang === 'ru' ? 'Финансирование в Беларуси' : 'Belarus Financing Options'}</span>
+            <h2 class="section-title" style="font-size:1.45rem;margin:0;">${lang === 'ru' ? 'Калькулятор ипотеки и рассрочки' : 'Bank Credit & Installment Calculator'}</h2>
+          </div>
+          <span class="mortgage-card__badge">${lang === 'ru' ? 'Беларусбанк · Белинвест · Приор' : 'Belarusbank · Belinvest · Prior'}</span>
+        </div>
+
+        <div class="mortgage-presets" role="group" aria-label="${lang === 'ru' ? 'Программы банков' : 'Bank Programs'}">
+          ${BANK_PRESETS.map(
+            (bp) => `
+            <button type="button" class="tab-btn ${financeDraft.presetId === bp.id ? 'is-active' : ''}" data-bank-preset="${bp.id}">
+              ${lang === 'ru' ? bp.nameRu : bp.nameEn}
+            </button>
+          `
+          ).join('')}
+        </div>
+
+        <div class="mortgage-card__grid">
+          <div class="mortgage-controls">
+            <div class="mortgage-slider">
+              <div class="mortgage-slider__top">
+                <label for="mort-down-range">${lang === 'ru' ? 'Первоначальный взнос' : 'Down Payment'}</label>
+                <strong id="mort-down-label" class="tabular">${financeDraft.downPct}%</strong>
+              </div>
+              <input id="mort-down-range" type="range" min="10" max="75" step="5" value="${financeDraft.downPct}" />
+            </div>
+
+            <div class="mortgage-slider">
+              <div class="mortgage-slider__top">
+                <label for="mort-years-range">${lang === 'ru' ? 'Срок кредитования' : 'Loan Term'}</label>
+                <strong id="mort-years-label" class="tabular">${financeDraft.years} ${lang === 'ru' ? 'лет' : 'yrs'}</strong>
+              </div>
+              <input id="mort-years-range" type="range" min="1" max="20" step="1" value="${financeDraft.years}" />
+            </div>
+
+            <div class="mortgage-slider">
+              <div class="mortgage-slider__top">
+                <label for="mort-rate-range">${lang === 'ru' ? 'Процентная ставка' : 'Annual Interest Rate'}</label>
+                <strong id="mort-rate-label" class="tabular">${financeDraft.rate.toFixed(1)}%</strong>
+              </div>
+              <input id="mort-rate-range" type="range" min="0" max="22" step="0.1" value="${financeDraft.rate}" />
+            </div>
+          </div>
+
+          <div class="mortgage-result">
+            <span class="section-kicker" style="margin-bottom:4px;">${lang === 'ru' ? 'Ежемесячный платёж' : 'Estimated Monthly Payment'}</span>
+            <div class="mortgage-result__main" id="mort-monthly-val">—</div>
+            <div class="mortgage-result__sub" id="mort-monthly-sub">—</div>
+            <div class="mortgage-result__meta">
+              <div>
+                <span>${lang === 'ru' ? 'Сумма кредита' : 'Loan Amount'}</span>
+                <strong id="mort-loan-val">—</strong>
+              </div>
+              <div>
+                <span>${lang === 'ru' ? 'Свой взнос' : 'Down Payment'}</span>
+                <strong id="mort-down-val">—</strong>
+              </div>
+              <div>
+                <span>${lang === 'ru' ? 'Переплата по %' : 'Total Interest'}</span>
+                <strong id="mort-overpay-val">—</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    `;
 
   rootEl.innerHTML = `
     <div class="property-topbar">
@@ -166,15 +516,21 @@ function renderPropertyPage() {
     <section class="gallery-bento" aria-label="Property gallery">
       <div class="gallery-bento__main" id="gallery-main-view">
         ${renderGalleryMedia(activeView, 'width:100%;height:100%;object-fit:cover;', `detail-main-${p.id}`, true)}
-        <button type="button" class="gallery-bento__arrow gallery-bento__arrow--prev" data-gallery-step="-1" aria-label="${t('prevSlide', lang)}">
-          ${getIconSvg('chevron-left', 20)}
-        </button>
-        <button type="button" class="gallery-bento__arrow gallery-bento__arrow--next" data-gallery-step="1" aria-label="${t('nextSlide', lang)}">
-          ${getIconSvg('chevron-right', 20)}
-        </button>
-        <span class="gallery-bento__caption">${views.find((v) => v.id === activeView)?.label}</span>
+        ${
+          activeView !== 'tour'
+            ? `
+          <button type="button" class="gallery-bento__arrow gallery-bento__arrow--prev" data-gallery-step="-1" aria-label="${t('prevSlide', lang)}">
+            ${getIconSvg('chevron-left', 20)}
+          </button>
+          <button type="button" class="gallery-bento__arrow gallery-bento__arrow--next" data-gallery-step="1" aria-label="${t('nextSlide', lang)}">
+            ${getIconSvg('chevron-right', 20)}
+          </button>
+          <span class="gallery-bento__caption">${views.find((v) => v.id === activeView)?.label}</span>
+        `
+            : ''
+        }
       </div>
-      <div class="gallery-bento__side">
+      <div class="gallery-bento__side gallery-bento__side--three">
         ${views
           .filter((v) => v.id !== activeView)
           .map(
@@ -191,7 +547,7 @@ function renderPropertyPage() {
 
     <div class="property-price-strip">
       <div>
-        <span class="section-kicker" style="margin-bottom:4px;">${t('objectPriceLabel', lang)}</span>
+        <span class="section-kicker" style="margin-bottom:4px;">${priceLabelText}</span>
         <div class="property-price-strip__values">
           <div class="property-sidebar__price">${prices.primary}</div>
           <div class="property-sidebar__subprice">${prices.secondary}</div>
@@ -340,10 +696,12 @@ function renderPropertyPage() {
       </div>
     </section>
 
+    ${financeSectionHtml}
+
     <section class="property-booking-section" id="property-booking-section" aria-label="${t('bookingTitle', lang)}">
       <div class="property-booking-grid">
         <div class="property-next-step">
-          <span class="section-kicker">${t('objectPriceLabel', lang)}</span>
+          <span class="section-kicker">${priceLabelText}</span>
           <div class="property-sidebar__price">${prices.primary}</div>
           <div class="property-sidebar__subprice" style="margin-bottom:14px;">${prices.secondary}</div>
           <h3 style="font-size:1.25rem;margin-bottom:8px;">${t('nextStepTitle', lang)}</h3>
@@ -419,6 +777,76 @@ function renderPropertyPage() {
 
     <div class="print-only-footer">${t('printCardNote', lang)} · ${window.location.href}</div>
   `;
+
+  updateFinanceResultsInDom();
+
+  if (activeView === 'tour') {
+    if (tourPlaying) {
+      tourTimerId = setInterval(() => {
+        tourSceneIdx = (tourSceneIdx + 1) % tourScenes.length;
+        renderPropertyPage();
+      }, 3800);
+    }
+    document.getElementById('tour-play-toggle')?.addEventListener('click', () => {
+      tourPlaying = !tourPlaying;
+      renderPropertyPage();
+    });
+    rootEl.querySelectorAll('[data-tour-scene]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        tourSceneIdx = Number(btn.getAttribute('data-tour-scene')) || 0;
+        renderPropertyPage();
+      });
+    });
+  }
+
+  rootEl.querySelectorAll('[data-bank-preset]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-bank-preset');
+      const preset = BANK_PRESETS.find((b) => b.id === id);
+      if (!preset) return;
+      financeDraft.presetId = preset.id;
+      financeDraft.downPct = preset.downPct;
+      financeDraft.years = preset.years;
+      financeDraft.rate = preset.rate;
+      const dEl = document.getElementById('mort-down-range');
+      const yEl = document.getElementById('mort-years-range');
+      const rEl = document.getElementById('mort-rate-range');
+      if (dEl) dEl.value = String(preset.downPct);
+      if (yEl) yEl.value = String(preset.years);
+      if (rEl) rEl.value = String(preset.rate);
+      rootEl.querySelectorAll('[data-bank-preset]').forEach((b) =>
+        b.classList.toggle('is-active', b === btn)
+      );
+      updateFinanceResultsInDom();
+    });
+  });
+
+  document.getElementById('mort-down-range')?.addEventListener('input', (e) => {
+    financeDraft.downPct = Number(e.target.value) || 20;
+    updateFinanceResultsInDom();
+  });
+  document.getElementById('mort-years-range')?.addEventListener('input', (e) => {
+    financeDraft.years = Number(e.target.value) || 20;
+    updateFinanceResultsInDom();
+  });
+  document.getElementById('mort-rate-range')?.addEventListener('input', (e) => {
+    financeDraft.rate = Number(e.target.value) || 16.5;
+    updateFinanceResultsInDom();
+  });
+
+  rootEl.querySelectorAll('[data-lease-months]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      financeDraft.leaseMonths = Number(btn.getAttribute('data-lease-months')) || 12;
+      rootEl.querySelectorAll('[data-lease-months]').forEach((b) =>
+        b.classList.toggle('is-active', b === btn)
+      );
+      updateFinanceResultsInDom();
+    });
+  });
+  document.getElementById('rent-deposit-toggle')?.addEventListener('change', (e) => {
+    financeDraft.includeDeposit = Boolean(e.target.checked);
+    updateFinanceResultsInDom();
+  });
 
   rootEl.querySelectorAll('[data-switch-view]').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -593,7 +1021,9 @@ async function initPropertyDetail() {
   const {lang} = getState();
 
   try {
-    allCatalog = await loadPropertiesFromXml();
+    const loaded = await loadPropertiesFromXml();
+    baseCatalog = loaded.filter((p) => !p.isUserListing);
+    allCatalog = mergeWithUserListings(baseCatalog);
     currentProperty = allCatalog.find((item) => String(item.id) === String(id)) || allCatalog[0];
     document.title = `${currentProperty.title[getState().lang]} — Alora Homes`;
     renderPropertyPage();
@@ -611,7 +1041,11 @@ async function initPropertyDetail() {
     console.error(err);
   }
 
-  subscribe(() => renderPropertyPage());
+  subscribe(() => {
+    allCatalog = mergeWithUserListings(baseCatalog);
+    currentProperty = allCatalog.find((item) => String(item.id) === String(id)) || allCatalog[0];
+    renderPropertyPage();
+  });
 }
 
 initPropertyDetail();

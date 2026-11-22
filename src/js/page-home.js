@@ -3,22 +3,69 @@
 // ==========================================================================
 
 import {createPropertyCard, openBelarusMapModal, showToast} from './components.js';
-import {pluralObjects, t} from './i18n.js';
+import {formatPrices, pluralObjects, t} from './i18n.js';
 import {initLayout, openGuestGateModal} from './layout.js';
 import {REALTORS} from './realtors-data.js';
 import {addConsultationRequest, addUserReview, getState, isGuest, setCurrency, subscribe} from './state.js';
 import {getIconSvg, getRealtorPortraitSvg} from './svg-art.js';
 import {clearFormErrors, setFieldError, validateBelarusPhone, validateName, attachPhoneMask} from './validation.js';
-import {FALLBACK_PROPERTIES, filterProperties, loadPropertiesFromXml} from './xml-loader.js';
+import {FALLBACK_PROPERTIES, filterProperties, loadPropertiesFromXml, mergeWithUserListings} from './xml-loader.js';
 
 initLayout('home');
 
-let allProperties = FALLBACK_PROPERTIES;
+let baseProperties = FALLBACK_PROPERTIES;
+let allProperties = mergeWithUserListings(FALLBACK_PROPERTIES);
+let activeDealType = 'all';
 let activeDealGroup = 'all';
 let activeFeaturedTab = 'all';
 let activeReviewCategory = 'all';
 let featuredPage = 0;
 const FEATURED_PAGE_SIZE = 6;
+
+const SALES_CASES = [
+  {
+    cityRu: 'Минск · Новая Боровая',
+    cityEn: 'Minsk · Novaya Borovaya',
+    titleRu: '3-комнатная квартира в закрытом квартале',
+    titleEn: '3-Room Apartment in Gated Quarter',
+    days: 18,
+    beforeByn: 512000,
+    beforeUsd: 158500,
+    afterByn: 555500,
+    afterUsd: 172000,
+    gainPct: '+8.5%',
+    noteRu: 'Хоум-стейджинг, 3D-тур и торги с 4 претендентами без снижения стартовой цены.',
+    noteEn: 'Home staging, 3D tour, and 4 qualified offers without discounting.',
+  },
+  {
+    cityRu: 'Минский р-н · Ратомка',
+    cityEn: 'Minsk District · Ratomka',
+    titleRu: 'Коттедж 210 м² у соснового леса',
+    titleEn: '210 m² Pine-Edge Cottage',
+    days: 26,
+    beforeByn: 823600,
+    beforeUsd: 255000,
+    afterByn: 891500,
+    afterUsd: 276000,
+    gainPct: '+8.2%',
+    noteRu: 'Полный аудит техдокументов БТИ до показа и таргетированная кампания среди IT-покупателей.',
+    noteEn: 'Pre-viewing BTI legal audit and targeted campaign among tech-sector buyers.',
+  },
+  {
+    cityRu: 'Гродно · Центр',
+    cityEn: 'Grodno · Center',
+    titleRu: 'Сталинка с высокими потолками + трейд-ин',
+    titleEn: 'High-Ceiling Residence + Trade-In',
+    days: 21,
+    beforeByn: 306800,
+    beforeUsd: 95000,
+    afterByn: 331000,
+    afterUsd: 102500,
+    gainPct: '+7.9%',
+    noteRu: 'Синхронизировали встречную сделку за 3 недели с оплатой комиссии строго по факту расчёта.',
+    noteEn: 'Synchronized trade-in chain in 3 weeks with zero upfront brokerage fee.',
+  },
+];
 
 const BELARUS_CITIES = [
   {ru: 'Минск', en: 'Minsk', lat: 53.9006, lon: 27.559, aliases: ['minsk', 'минск']},
@@ -338,6 +385,7 @@ const REVIEWS = [
 function getSearchFilters() {
   const {currency} = getState();
   return {
+    dealType: activeDealType,
     dealGroup: activeDealGroup,
     query: document.getElementById('search-city')?.value || '',
     category: document.getElementById('search-category')?.value || 'all',
@@ -377,6 +425,7 @@ function renderFeaturedTabs() {
     houses: allProperties.filter((p) => p.category === 'houses').length,
     commercial: allProperties.filter((p) => p.category === 'commercial').length,
     newbuild: allProperties.filter((p) => p.specs.newbuild).length,
+    rent: allProperties.filter((p) => (p.dealType || 'sale') === 'rent').length,
   };
 
   const tabs = [
@@ -385,6 +434,7 @@ function renderFeaturedTabs() {
     {id: 'houses', label: `${t('tabHouses', lang)} (${counts.houses})`},
     {id: 'commercial', label: `${t('tabCommercialShort', lang)} (${counts.commercial})`},
     {id: 'newbuild', label: `${t('tabNewbuild', lang)} (${counts.newbuild})`},
+    {id: 'rent', label: `${t('tabRent', lang)} (${counts.rent})`},
   ];
 
   featuredTabsEl.innerHTML = tabs
@@ -471,7 +521,8 @@ function renderFeaturedPagerControls(totalPages) {
 
 function renderFeaturedGrid() {
   if (!featuredGrid) return;
-  const filtered = filterProperties(allProperties, {category: activeFeaturedTab});
+  const filters = activeFeaturedTab === 'rent' ? {dealType: 'rent'} : {category: activeFeaturedTab};
+  const filtered = filterProperties(allProperties, filters);
   const totalPages = Math.max(1, Math.ceil(filtered.length / FEATURED_PAGE_SIZE));
   if (featuredPage >= totalPages) featuredPage = 0;
 
@@ -484,6 +535,84 @@ function renderFeaturedGrid() {
   });
 
   renderFeaturedPagerControls(totalPages);
+}
+
+function renderMarketPulseAndCases() {
+  const {lang, currency} = getState();
+  const pulseEl = document.getElementById('home-market-pulse');
+  if (pulseEl) {
+    const minskSqm = formatPrices(5290, 1640, currency, 'sale', lang);
+    const regSqm = formatPrices(3290, 1020, currency, 'sale', lang);
+    const unitSqm = lang === 'ru' ? '/м²' : '/m²';
+    const items = [
+      {
+        value: `${minskSqm.primary}${unitSqm}`,
+        sub: `${minskSqm.secondary}${unitSqm}`,
+        label: t('pulseMinskSqm', lang),
+      },
+      {
+        value: `${regSqm.primary}${unitSqm}`,
+        sub: `${regSqm.secondary}${unitSqm}`,
+        label: t('pulseRegionsSqm', lang),
+      },
+      {
+        value: '+6.1%',
+        sub: lang === 'ru' ? 'Ноябрь 2025 → Ноябрь 2026' : 'Nov 2025 → Nov 2026',
+        label: t('pulseYoY', lang),
+      },
+      {
+        value: lang === 'ru' ? '34 дня' : '34 days',
+        sub: lang === 'ru' ? 'По закрытым сделкам Alora' : 'Across closed Alora deals',
+        label: t('pulseAvgDays', lang),
+      },
+    ];
+    pulseEl.innerHTML = items
+      .map(
+        (it) => `
+        <article class="pulse-card">
+          <div class="pulse-card__val">${it.value}</div>
+          <div class="pulse-card__sub">${it.sub}</div>
+          <div class="pulse-card__label">${it.label}</div>
+        </article>
+      `
+      )
+      .join('');
+  }
+
+  const casesEl = document.getElementById('home-cases');
+  if (casesEl) {
+    casesEl.innerHTML = SALES_CASES.map((c) => {
+      const beforeP = formatPrices(c.beforeByn, c.beforeUsd, currency, 'sale', lang);
+      const afterP = formatPrices(c.afterByn, c.afterUsd, currency, 'sale', lang);
+      const daysLabel = lang === 'ru' ? `Продано за ${c.days} дн.` : `Sold in ${c.days} days`;
+      return `
+        <article class="case-card">
+          <div class="case-card__meta">
+            <span>${lang === 'ru' ? c.cityRu : c.cityEn}</span>
+            <span aria-hidden="true">·</span>
+            <span>${daysLabel}</span>
+          </div>
+          <h3 class="case-card__title">${lang === 'ru' ? c.titleRu : c.titleEn}</h3>
+          <div class="case-card__delta">
+            <div>
+              <span>${lang === 'ru' ? 'Было' : 'Initial'}</span>
+              <s>${beforeP.primary}</s>
+            </div>
+            <div class="case-card__arrow" aria-hidden="true">→</div>
+            <div>
+              <span>${lang === 'ru' ? 'Продано' : 'Final Sale'}</span>
+              <strong>${afterP.primary}</strong>
+            </div>
+            <div class="case-card__gain">
+              <span>${lang === 'ru' ? 'Выгода' : 'Gain'}</span>
+              <strong>${c.gainPct}</strong>
+            </div>
+          </div>
+          <p class="case-card__note">${lang === 'ru' ? c.noteRu : c.noteEn}</p>
+        </article>
+      `;
+    }).join('');
+  }
 }
 
 function getAllCombinedReviews() {
@@ -787,6 +916,16 @@ function syncSearchCurrencyButtons() {
 }
 
 function bindHomeInteractions() {
+  document.querySelectorAll('[data-deal-type]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeDealType = btn.getAttribute('data-deal-type') || 'all';
+      document.querySelectorAll('[data-deal-type]').forEach((b) =>
+        b.classList.toggle('is-active', b === btn)
+      );
+      updateLiveCount();
+    });
+  });
+
   document.querySelectorAll('[data-deal-tab]').forEach((btn) => {
     btn.addEventListener('click', () => {
       activeDealGroup = btn.getAttribute('data-deal-tab') || 'residential';
@@ -887,7 +1026,11 @@ function bindHomeInteractions() {
 
   document.getElementById('reset-search-btn')?.addEventListener('click', () => {
     searchForm?.reset();
+    activeDealType = 'all';
     activeDealGroup = 'all';
+    document.querySelectorAll('[data-deal-type]').forEach((b, i) =>
+      b.classList.toggle('is-active', i === 0)
+    );
     document.querySelectorAll('[data-deal-tab]').forEach((b, i) =>
       b.classList.toggle('is-active', i === 0)
     );
@@ -899,6 +1042,7 @@ function bindHomeInteractions() {
     e.preventDefault();
     const f = getSearchFilters();
     const params = new URLSearchParams();
+    if (f.dealType && f.dealType !== 'all') params.set('dealType', f.dealType);
     if (f.query) params.set('query', f.query);
     if (f.category && f.category !== 'all') params.set('category', f.category);
     else if (activeDealGroup === 'commercial') params.set('category', 'commercial');
@@ -980,6 +1124,7 @@ async function initHome() {
   populateCityDatalist();
   syncCityUi();
   syncSearchCurrencyButtons();
+  renderMarketPulseAndCases();
   renderRealtorsAndReviews();
 
   renderFeaturedTabs();
@@ -987,7 +1132,9 @@ async function initHome() {
   updateLiveCount();
 
   try {
-    allProperties = await loadPropertiesFromXml();
+    const loaded = await loadPropertiesFromXml();
+    baseProperties = loaded.filter((p) => !p.isUserListing);
+    allProperties = mergeWithUserListings(baseProperties);
     renderFeaturedTabs();
     renderFeaturedGrid();
     updateLiveCount();
@@ -1002,9 +1149,11 @@ async function initHome() {
   }
 
   subscribe(() => {
+    allProperties = mergeWithUserListings(baseProperties);
     populateCityDatalist();
     syncCityUi();
     syncSearchCurrencyButtons();
+    renderMarketPulseAndCases();
     renderFeaturedTabs();
     renderFeaturedGrid();
     renderRealtorsAndReviews();

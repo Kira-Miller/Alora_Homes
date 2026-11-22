@@ -1,0 +1,58 @@
+name: Super-Linter & W3C Code Quality
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  statuses: write
+
+jobs:
+  lint:
+    name: Super-Linter (HTML5, XML, JS, YAML, JSON, Markdown)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run GitHub Super-Linter
+        uses: super-linter/super-linter/slim@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BRANCH: main
+          VALIDATE_ALL_CODEBASE: true
+          IGNORE_GITIGNORED_FILES: true
+          FILTER_REGEX_EXCLUDE: (css/main\.css|dist/.*|public/.*|assets/.*|bun\.lock|package-lock\.json|.*\.ts)
+          VALIDATE_HTML: true
+          VALIDATE_XML: true
+          VALIDATE_JAVASCRIPT_ES: true
+          VALIDATE_MARKDOWN: true
+          VALIDATE_YAML: true
+          VALIDATE_JSON: true
+          VALIDATE_GITHUB_ACTIONS: true
+          HTML_CONFIG_FILE: .htmlhintrc
+          MARKDOWN_CONFIG_FILE: .markdownlint.json
+          JAVASCRIPT_ES_CONFIG_FILE: eslint.config.mjs
+
+  scss-build-check:
+    name: Verify SCSS compilation to CSS3
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Compile SCSS and verify CSS output
+        run: |
+          npx --yes sass src/scss/main.scss /tmp/main-check.css --no-source-map
+          test -s /tmp/main-check.css

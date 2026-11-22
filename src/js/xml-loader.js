@@ -3,8 +3,14 @@
 // ==========================================================================
 
 import {PROPERTIES_DATA} from './properties-data.js';
+import {getState} from './state.js';
 
 let cachedCatalog = null;
+
+export function mergeWithUserListings(baseList = PROPERTIES_DATA) {
+  const custom = getState()?.userListings || [];
+  return [...custom, ...baseList];
+}
 
 export const FALLBACK_PROPERTIES = PROPERTIES_DATA;
 
@@ -13,7 +19,7 @@ export const FALLBACK_PROPERTIES = PROPERTIES_DATA;
  */
 export async function loadPropertiesFromXml() {
   if (cachedCatalog) {
-    return cachedCatalog;
+    return mergeWithUserListings(cachedCatalog);
   }
 
   const candidateUrls = ['./data/properties.xml', '/data/properties.xml', 'data/properties.xml'];
@@ -84,6 +90,7 @@ export async function loadPropertiesFromXml() {
               id: propId,
               featured: node.getAttribute('featured') === 'true',
               dealGroup: node.getAttribute('dealGroup') || 'residential',
+              dealType: node.getAttribute('dealType') || 'sale',
               category: getText('category'),
               subcategory: {
                 ru: getAttr('subcategory', 'ru'),
@@ -131,7 +138,7 @@ export async function loadPropertiesFromXml() {
               features,
             };
           });
-          return cachedCatalog;
+          return mergeWithUserListings(cachedCatalog);
         }
       }
     } catch {
@@ -140,7 +147,7 @@ export async function loadPropertiesFromXml() {
   }
 
   cachedCatalog = PROPERTIES_DATA;
-  return cachedCatalog;
+  return mergeWithUserListings(cachedCatalog);
 }
 
 /**
@@ -148,7 +155,15 @@ export async function loadPropertiesFromXml() {
  */
 export function filterProperties(properties, filters = {}) {
   return properties.filter((item) => {
+    if (filters.dealType && filters.dealType !== 'all' && (item.dealType || 'sale') !== filters.dealType) {
+      return false;
+    }
+
     if (filters.dealGroup && filters.dealGroup !== 'all' && item.dealGroup !== filters.dealGroup) {
+      return false;
+    }
+
+    if (filters.newbuildOnly && !item.specs.newbuild) {
       return false;
     }
 

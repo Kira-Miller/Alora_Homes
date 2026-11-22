@@ -34,7 +34,7 @@ export const DICT = {
     pageTitleAnalytics: 'Аналитика рынка недвижимости Беларуси — Alora Homes',
     pageTitleAbout: 'О компании и контакты — Alora Homes',
     pageTitleCabinet: 'Личный кабинет — Alora Homes',
-    tabAllObjects: 'Все объекты (24)',
+    tabAllObjects: 'Все объекты (29)',
     tabAllObjectsLabel: 'Все объекты',
 
     // Главная страница: Hero и поиск
@@ -44,6 +44,9 @@ export const DICT = {
     heroTitleBrand: 'с Alora Homes',
     heroSubtitle:
       'Тщательно подобранный каталог жилой, коммерческой и загородной недвижимости по всей Беларуси с полным юридическим сопровождением.',
+    dealAll: 'Все сделки',
+    dealBuy: 'Купить',
+    dealRent: 'Снять (Аренда)',
     tabResidential: 'Квартиры / Комнаты / Дома',
     tabCommercial: 'Коммерческая недвижимость',
     labelCity: 'Город или область',
@@ -90,6 +93,7 @@ export const DICT = {
     tabHouses: 'Загородные дома',
     tabCommercialShort: 'Коммерческая',
     tabNewbuild: 'Новостройки',
+    tabRent: 'Аренда',
 
     // Почему выбирают нас
     whyKicker: 'Работаем с заботой',
@@ -99,10 +103,25 @@ export const DICT = {
     why1Desc: 'Проверяем историю права собственности и юридическую чистоту каждого объекта перед сделкой.',
     why2Title: 'Быстрая оценка за 24 часа',
     why2Desc: 'Анализируем реальные сделки и предоставляем точный отчёт о рыночной стоимости объекта.',
-    why3Title: 'Без скрытых комиссий',
-    why3Desc: 'Прозрачное ценообразование в BYN и USD, фиксированные условия договора и честный расчёт.',
+    why3Title: 'Комиссия по факту сделки',
+    why3Desc: '0% предоплаты — оплата услуг только после успешного закрытия сделки и передачи расчётов.',
     why4Title: 'Персональный агент',
     why4Desc: 'Выделенный эксперт ведёт вашу сделку от первого просмотра до торжественной передачи ключей.',
+
+    // Сводка рынка и кейсы продаж (главная)
+    marketPulseKicker: 'Пульс рынка Беларуси',
+    marketPulseTitle: 'Средние цены и динамика сделок',
+    marketPulseBtn: 'Вся аналитика →',
+    pulseMinskSqm: 'Средний м² в Минске',
+    pulseRegionsSqm: 'Средний м² в областях',
+    pulseYoY: 'Рост цен за год',
+    pulseAvgDays: 'Средний срок сделки',
+    casesKicker: 'Реальная практика',
+    casesTitle: 'Кейсы успешных продаж',
+    casesSubtitle: 'Фиксируем стартовую оценку, срок экспозиции и итоговую выгоду для собственника',
+    casesLinkBtn: 'Оценить свой объект →',
+    guaranteeBannerTitle: 'Гарантия Alora Homes: оплата комиссии только по факту сделки',
+    guaranteeBannerDesc: 'Никаких авансов за рекламу или показы. Вы оплачиваете работу агентства только в день успешной сделки.',
 
     // Как мы работаем
     processKicker: 'Прозрачный процесс',
@@ -158,6 +177,11 @@ export const DICT = {
     maxPlaceholder: 'Макс.',
     emptyCatalogTitle: 'По заданным параметрам объекты не найдены',
     emptyCatalogDesc: 'Попробуйте изменить регион, расширить диапазон цены или сбросить фильтры.',
+    labelDealType: 'Тип сделки',
+    allFiltersBtn: 'Все фильтры',
+    hideFiltersBtn: 'Скрыть фильтры',
+    onlyNewbuildsLabel: 'Только новостройки',
+    mapResultsBtn: 'На карте',
 
     // Детальная страница объекта
     crumbHome: 'Главная',
@@ -165,6 +189,7 @@ export const DICT = {
     viewExterior: 'Экстерьер',
     viewInterior: 'Интерьер',
     viewTerrace: 'Терраса и участок',
+    viewTour: 'Видеотур 3D',
     viewFloorplan: 'Планировка',
     floorplanKicker: 'Архитектурный чертёж',
     floorplanTitle: 'Интерактивная планировка этажей',
@@ -242,6 +267,14 @@ export const DICT = {
     tabSaved: 'Сохранённые объекты',
     tabCompare: 'Сравнение характеристик',
     tabRequests: 'Мои заявки на показ',
+    tabMyListings: 'Мои объявления',
+    publishListingBtn: 'Подать своё объявление',
+    deleteListingBtn: 'Снять с публикации',
+    stage1Label: 'Заявка принята',
+    stage2Label: 'Показ согласован',
+    stage3Label: 'Проверка БТИ и истории',
+    stage4Label: 'Готово к сделке',
+    advanceStageBtn: 'Следующий этап →',
     guestBannerTitle: 'Вы просматриваете кабинет в режиме гостя',
     guestBannerDesc: 'Избранное и заявки сохраняются локально в браузере. Зарегистрируйтесь, чтобы закрепить профиль.',
     registerBtn: 'Войти / Регистрация',
@@ -421,7 +454,7 @@ export const DICT = {
     pageTitleAnalytics: 'Belarus Real Estate Market Analytics — Alora Homes',
     pageTitleAbout: 'About & Contacts — Alora Homes',
     pageTitleCabinet: 'Personal Account — Alora Homes',
-    tabAllObjects: 'All Properties (24)',
+    tabAllObjects: 'All Properties (29)',
     tabAllObjectsLabel: 'All Properties',
 
     heroKicker: 'Spatial Aesthetics · All of Belarus',
@@ -430,6 +463,9 @@ export const DICT = {
     heroTitleBrand: 'with Alora Homes',
     heroSubtitle:
       'A curated catalog of residential, commercial, and country properties across Belarus with end-to-end legal protection.',
+    dealAll: 'All Deals',
+    dealBuy: 'Buy',
+    dealRent: 'Rent',
     tabResidential: 'Apartments / Rooms / Houses',
     tabCommercial: 'Commercial Real Estate',
     labelCity: 'City or region',
@@ -475,6 +511,7 @@ export const DICT = {
     tabHouses: 'Country Houses',
     tabCommercialShort: 'Commercial',
     tabNewbuild: 'New Builds',
+    tabRent: 'For Rent',
 
     whyKicker: 'Built with Care',
     whyTitle: 'Why Choose Alora Homes',
@@ -483,10 +520,24 @@ export const DICT = {
     why1Desc: 'We audit title history and legal clearance of every single property prior to closing.',
     why2Title: '24-Hour Valuation',
     why2Desc: 'We analyze verified transactions and deliver an accurate market value report in 24 hours.',
-    why3Title: 'Zero Hidden Fees',
-    why3Desc: 'Transparent pricing in BYN and USD, fixed contract terms, and honest brokerage.',
+    why3Title: 'Success-Fee Only',
+    why3Desc: '0% upfront fees — agency commission is payable only upon successful closing and settlement.',
     why4Title: 'Dedicated Advisor',
     why4Desc: 'A personal specialist guides your transaction from the first viewing to key handover.',
+
+    marketPulseKicker: 'Belarus Market Pulse',
+    marketPulseTitle: 'Average Prices & Deal Velocity',
+    marketPulseBtn: 'Full Analytics →',
+    pulseMinskSqm: 'Minsk Avg per m²',
+    pulseRegionsSqm: 'Regional Avg per m²',
+    pulseYoY: 'Annual Price Growth',
+    pulseAvgDays: 'Avg. Deal Cycle',
+    casesKicker: 'Verified Outcomes',
+    casesTitle: 'Successful Sale Case Studies',
+    casesSubtitle: 'Transparent tracking of initial valuation, days on market, and net owner gain',
+    casesLinkBtn: 'Value your property →',
+    guaranteeBannerTitle: 'Alora Homes Guarantee: Commission Payable Only at Closing',
+    guaranteeBannerDesc: 'Zero upfront charges for photography, marketing, or viewings — you pay only when the deal closes.',
 
     processKicker: 'Transparent Process',
     processTitle: 'How We Work',
@@ -539,12 +590,18 @@ export const DICT = {
     maxPlaceholder: 'Max',
     emptyCatalogTitle: 'No properties match these filters',
     emptyCatalogDesc: 'Try selecting another region, widening your price range, or resetting filters.',
+    labelDealType: 'Deal Type',
+    allFiltersBtn: 'All Filters',
+    hideFiltersBtn: 'Hide Filters',
+    onlyNewbuildsLabel: 'New builds only',
+    mapResultsBtn: 'On Map',
 
     crumbHome: 'Home',
     crumbCatalog: 'Catalog',
     viewExterior: 'Exterior',
     viewInterior: 'Interior',
     viewTerrace: 'Terrace & Grounds',
+    viewTour: '3D Video Tour',
     viewFloorplan: 'Floor Plan',
     floorplanKicker: 'Architectural Blueprint',
     floorplanTitle: 'Interactive Floor Plan',
@@ -620,6 +677,14 @@ export const DICT = {
     tabSaved: 'Saved Properties',
     tabCompare: 'Compare Specs',
     tabRequests: 'Viewing Requests',
+    tabMyListings: 'My Listings',
+    publishListingBtn: 'Post a Listing',
+    deleteListingBtn: 'Unpublish',
+    stage1Label: 'Request Received',
+    stage2Label: 'Viewing Scheduled',
+    stage3Label: 'Title & BTI Audit',
+    stage4Label: 'Ready to Close',
+    advanceStageBtn: 'Next Stage →',
     guestBannerTitle: 'You are browsing in Guest mode',
     guestBannerDesc: 'Saved items and viewing requests are stored locally in your browser. Register to save your profile.',
     registerBtn: 'Sign In / Register',
@@ -799,9 +864,10 @@ export function pluralFloors(count, lang = 'ru') {
 /**
  * Форматирует цену в основной и дополнительной валютах (BYN / USD)
  */
-export function formatPrices(priceByn, priceUsd, currency = 'BYN') {
-  const fmtByn = `${Number(priceByn).toLocaleString('ru-RU')} BYN`;
-  const fmtUsd = `$${Number(priceUsd).toLocaleString('ru-RU')}`;
+export function formatPrices(priceByn, priceUsd, currency = 'BYN', dealType = 'sale', lang = 'ru') {
+  const suffix = dealType === 'rent' ? (lang === 'ru' ? '/мес' : '/mo') : '';
+  const fmtByn = `${Number(priceByn).toLocaleString('ru-RU')} BYN${suffix}`;
+  const fmtUsd = `$${Number(priceUsd).toLocaleString('ru-RU')}${suffix}`;
   if (currency === 'USD') {
     return {primary: fmtUsd, secondary: fmtByn};
   }

@@ -187,6 +187,7 @@ const MONTHLY_TREND = {
 
 const ADVICE_CARDS = [
   {
+    id: 'audit-bti',
     icon: 'scale',
     titleRu: 'Проверка истории объекта и БТИ перед задатком',
     titleEn: 'Title & Registry Audit Before Deposit',
@@ -194,8 +195,25 @@ const ADVICE_CARDS = [
       'Запросите выписку из ЕГРНИ о правах и обременениях, проверьте согласование перепланировок по техпаспорту БТИ и отсутствие зарегистрированных третьих лиц.',
     bodyEn:
       'Always request a fresh state registry extract verifying title and encumbrances, match floor layouts against the technical passport, and confirm vacant registration status.',
+    fullRu: [
+      'Перед подписанием предварительного договора и внесением задатка необходимо убедиться, что продавец обладает полным правом распоряжения объектом и отсутствуют скрытые ограничения.',
+      'Чек-лист Alora Homes из 5 обязательных шагов:',
+      '1. Актуальная выписка из ЕГРНИ (выданная не позднее чем за 3 дня до сделки) — подтверждает отсутствие арестов, ипотечных залогов и судебных запретов.',
+      '2. Сверка фактической планировки с техпаспортом БТИ — несогласованные сносы стен или перенос мокрых зон снижают ипотечную привлекательность объекта на 10–15%.',
+      '3. Копия лицевого счёта (форма о зарегистрированных лицах) и проверка на право проживания бывших членов семьи или несовершеннолетних.',
+      '4. При продаже по доверенности — нотариальная проверка её действительности в реестре нотариальной палаты на день подписания договора.',
+    ],
+    fullEn: [
+      'Before signing a preliminary agreement or handing over a deposit, verify that the seller holds unrestricted legal title with no hidden third-party claims.',
+      'Alora Homes 5-Step Pre-Deposit Checklist:',
+      '1. Fresh State Real Estate Registry extract (issued within 3 days) confirming zero liens, court freezes, or mortgage encumbrances.',
+      '2. Architectural blueprint cross-check against the official BTI technical passport to catch unpermitted structural alterations.',
+      '3. Occupancy & registration certificate audit verifying all minors or former household members have vacated or consented.',
+      '4. If signing via Power of Attorney, live notarial verification on the exact date of closing.',
+    ],
   },
   {
+    id: 'budget-byn',
     icon: 'building',
     titleRu: 'Расчёт реального бюджета в BYN и USD',
     titleEn: 'Dual-Currency Budgeting (BYN & USD)',
@@ -203,8 +221,23 @@ const ADVICE_CARDS = [
       'Согласно законодательству РБ расчёты производятся в белорусских рублях. Закладывайте 2–3% от цены на нотариальное оформление, госпошлины и банковскую комиссию.',
     bodyEn:
       'Settlements in Belarus are legally executed in BYN. Reserve 2–3% above the purchase price for notary fees, state registration duties, and bank transfers.',
+    fullRu: [
+      'Рынок Беларуси исторически использует долларовый ориентир при переговорах, однако официальные расчёты по договорам купли-продажи производятся в белорусских рублях по курсу НБ РБ или согласованному банковскому курсу.',
+      'Что важно заложить в финансовую модель сделки:',
+      '1. Резерв 2–3% сверх цены объекта на оформление: нотариальное удостоверение или регистратор БТИ, выдача нового свидетельства, банковская комиссия за перевод или пересчёт наличных.',
+      '2. Проверка условий безналичного расчёта через аккредитив или банковский перевод — это избавляет от курсовых потерь при крупных суммах.',
+      '3. Для кредитных сделок Беларусбанка или Белинвестбанка учитывайте оценку стоимости залога сертифицированным оценщиком (в среднем 150–250 BYN).',
+    ],
+    fullEn: [
+      'While Belarus listing benchmarks often quote USD equivalents, all legal closings settle in Belarusian Rubles (BYN) indexed at the National Bank or agreed bank rate.',
+      'Key budgeting items beyond the headline price:',
+      '1. Reserve 2–3% extra for notary certification, BTI state registration, updated title certificates, and bank settlement fees.',
+      '2. Prefer bank letters of credit or direct wire transfers to eliminate currency conversion spreads on large closing amounts.',
+      '3. For Belarusian bank mortgages, budget 150–250 BYN for an accredited independent collateral appraisal report.',
+    ],
   },
   {
+    id: 'house-checklist',
     icon: 'trees',
     titleRu: 'Чек-лист при покупке загородного дома',
     titleEn: 'Country Estate Engineering Checklist',
@@ -212,8 +245,25 @@ const ADVICE_CARDS = [
       'Оцените мощность выделенного электричества (от 15 кВт), глубину скважины, наличие магистрального газа, правовой статус участка (ПНВ или частная собственность) и подъезд зимой.',
     bodyEn:
       'Verify electrical capacity (15+ kW), well water yield, gas connection status, land ownership tenure, and all-season road clearance before closing.',
+    fullRu: [
+      'Загородный дом требует отдельной технической и земельно-правовой экспертизы: устранение скрытых ошибок в инженерии может обойтись дороже косметического ремонта.',
+      'На что смотрят эксперты Alora Homes при выезде:',
+      '1. Статус земли: частная собственность, пожизненное наследуемое владение (ПНВ) или аренда — это напрямую влияет на возможность продажи иностранцам и наследования.',
+      '2. Электроснабжение: оптимально 3 фазы 380В и выделенная мощность от 15 кВт (особенно если используется тепловой насос или электрокотёл).',
+      '3. Вода и канализация: паспорт скважины (глубина на второй водоносный горизонт от 45 м), тип септика или станция биоочистки, отсутствие высокого уровня грунтовых вод весной.',
+      '4. Тепловизионный осмотр фасада, кровли и узлов примыкания окон в холодный сезон.',
+    ],
+    fullEn: [
+      'Acquiring a suburban home or cottage requires deeper engineering and land-tenure due diligence than an urban apartment.',
+      'Critical inspection points used by Alora Homes advisors:',
+      '1. Land tenure status: private freehold vs. heritable life estate vs. lease — affects future resale flexibility.',
+      '2. Power supply: 3-phase 380V service with at least 15 kW capacity for heat pumps, EV chargers, or electric boilers.',
+      '3. Water & septic engineering: certified borehole log (typically 45+ m depth), biological treatment tank specs, and spring groundwater drainage.',
+      '4. Thermal-camera inspection of roof insulation, facade joints, and window seals.',
+    ],
   },
   {
+    id: 'liquidity-3y',
     icon: 'briefcase',
     titleRu: 'Как оценить ликвидность через 3–5 лет',
     titleEn: 'Assessing 3–5 Year Resale Liquidity',
@@ -221,11 +271,26 @@ const ADVICE_CARDS = [
       'Объекты в пешей доступности от метро, в кварталах с готовой школьной инфраструктурой или у крупных магистралей (М1, Р23) сохраняют цену и продаются на 30% быстрее.',
     bodyEn:
       'Properties within walking distance of metro lines, completed schools, or major highways retain capital value better and resell 30% faster.',
+    fullRu: [
+      'Даже если вы покупаете квартиру для собственной семьи, стоит оценить, насколько легко её будет продать или сдать в аренду через 3–5 лет без потери капитала.',
+      'Факторы максимальной ликвидности в Беларуси:',
+      '1. Транспортный радиус: до 10–12 минут пешком до станции метро в Минске или остановок ключевых магистралей в областных центрах.',
+      '2. Функциональная планировка: изолированные спальни, просторная кухня-гостиная от 18 м², отсутствие длинных «тёмных» коридоров.',
+      '3. Дворовая среда без транзитного транспорта, готовые детские сады и школы в пешей доступности — главный драйвер семейного спроса.',
+    ],
+    fullEn: [
+      'Even when purchasing a primary family residence, evaluating 3-to-5 year exit liquidity protects your long-term capital.',
+      'Top value-retention drivers across Belarus:',
+      '1. Transit proximity: within a 10–12 minute walk of Minsk metro stations or primary regional boulevards.',
+      '2. Efficient floor plans: private bedrooms paired with an 18+ m² kitchen-living area and minimal wasted corridor footage.',
+      '3. Pedestrian-friendly courtyards, completed kindergartens/schools, and on-site parking infrastructure.',
+    ],
   },
 ];
 
 const MARKET_NEWS = [
   {
+    id: 'news-townhouses',
     dateRu: '16 ноября 2026',
     dateEn: 'Nov 16, 2026',
     tagRu: 'Минск и пригород',
@@ -236,8 +301,19 @@ const MARKET_NEWS = [
       'Покупатели всё чаще выбирают формат «городской комфорт на своей земле» с готовым отоплением, газом и оптоволокном вместо самостоятельной долгой стройки.',
     summaryEn:
       'Buyers increasingly favor turnkey townhouses with gas heating and fiber internet over multi-year ground-up construction.',
+    fullRu: [
+      'По внутренней статистике сделок Alora Homes за 2026 год доля запросов на готовые таунхаусы и компактные дома площадью 120–180 м² в направлении Ратомки, Боровлян и Смиловичей увеличилась на 18%.',
+      'Ключевой мотив семейных покупателей — отказ от 2–3 лет самостоятельной стройки на фоне удорожания отделочных материалов. Готовый дом с подключённым газом, асфальтированным подъездом и террасой стоит сопоставимо с просторной 3–4-комнатной квартирой в пределах МКАД.',
+      'При этом средний срок продажи укомплектованного таунхауса с проверкой БТИ сократился с 54 до 36 дней.',
+    ],
+    fullEn: [
+      'Internal transaction data from Alora Homes for 2026 shows demand for move-in-ready 120–180 m² townhouses along the Ratomka, Borovlyany, and Smilovichi corridors grew 18% YoY.',
+      'Family buyers are increasingly skipping multi-year custom builds, opting instead for completed developments with natural gas, paved access roads, and private terraces priced comparably to 3–4 bedroom urban apartments.',
+      'Average time on market for BTI-verified turnkey townhouses shortened from 54 to 36 days.',
+    ],
   },
   {
+    id: 'news-tradein',
     dateRu: '11 ноября 2026',
     dateEn: 'Nov 11, 2026',
     tagRu: 'Регионы Беларуси',
@@ -248,8 +324,17 @@ const MARKET_NEWS = [
       'Синхронные цепочки «продажа старой квартиры + покупка большей площади» сократились с 65 до 38 дней благодаря прозрачной оценке и предпроверке документов.',
     summaryEn:
       'Coordinated sell-and-buy chains dropped from 65 to 38 days thanks to pre-audited documentation and transparent 24-hour appraisals.',
+    fullRu: [
+      'В региональных центрах и городах-спутниках свыше 34% сделок сегодня проходят в формате встречной цепочки (обмен меньшей квартиры на более просторное жильё с доплатой или привлечением кредита).',
+      'Ранее такие сделки затягивались до 2–3 месяцев из-за расхождения ожиданий продавцов по цене. Использование экспресс-оценки за 24 часа на базе реальных цен закрытия и предварительная подготовка справок позволили сократить средний цикл до 38 дней.',
+    ],
+    fullEn: [
+      'In regional capitals and satellite towns, over 34% of residential closings now operate as synchronized trade-in chains upgrading from smaller flats into larger family homes.',
+      'Combining 24-hour market-comp valuations with advance document verification cut average chain closing times from 65 days down to 38 days.',
+    ],
   },
   {
+    id: 'news-commercial',
     dateRu: '04 ноября 2026',
     dateEn: 'Nov 04, 2026',
     tagRu: 'Коммерческая недвижимость',
@@ -260,6 +345,14 @@ const MARKET_NEWS = [
       'Наибольший интерес инвесторов сосредоточен на помещениях с готовым долгосрочным арендатором на первых линиях центральных проспектов.',
     summaryEn:
       'Investor interest centers on prime street-level retail and flexible office blocks with established long-term tenants.',
+    fullRu: [
+      'Частные инвесторы всё активнее диверсифицируют портфели между жилой арендой (доходность 5–6% годовых) и компактными помещениями стрит-ритейла в Минске, Бресте и Гродно (8–10% годовых в валютном эквиваленте).',
+      'Наиболее устойчивый спрос сохраняется на помещения от 65 до 180 м² с отдельным входом, витринными окнами и выделенной электрической мощностью под кофейни, медицинские кабинеты и шоурумы.',
+    ],
+    fullEn: [
+      'Private investors are balancing residential rental yields (5–6% p.a.) with prime street-retail units in Minsk, Brest, and Grodno generating 8–10% annual returns.',
+      'Spaces between 65 and 180 m² with direct street entry, display glazing, and upgraded electrical capacity for cafes, clinics, or showrooms show near-zero vacancy.',
+    ],
   },
 ];
 
@@ -714,10 +807,11 @@ function renderAnalyticsPage() {
       <div class="advice-grid">
         ${ADVICE_CARDS.map(
           (card) => `
-          <article class="benefit-card">
+          <article class="benefit-card article-card-clickable" data-open-advice="${card.id}" tabindex="0" role="button">
             <div class="benefit-card__icon">${getIconSvg(card.icon, 22)}</div>
             <h3 class="benefit-card__title">${lang === 'ru' ? card.titleRu : card.titleEn}</h3>
             <p class="benefit-card__desc">${lang === 'ru' ? card.bodyRu : card.bodyEn}</p>
+            <span class="article-read-more">${lang === 'ru' ? 'Открыть чек-лист →' : 'Read full guide →'}</span>
           </article>
         `
         ).join('')}
@@ -731,7 +825,7 @@ function renderAnalyticsPage() {
       <div class="news-grid">
         ${MARKET_NEWS.map(
           (item) => `
-          <article class="news-card">
+          <article class="news-card article-card-clickable" data-open-news="${item.id}" tabindex="0" role="button">
             <div class="news-card__meta">
               <span>${lang === 'ru' ? item.dateRu : item.dateEn}</span>
               <span aria-hidden="true">·</span>
@@ -739,6 +833,7 @@ function renderAnalyticsPage() {
             </div>
             <h3 class="news-card__title">${lang === 'ru' ? item.titleRu : item.titleEn}</h3>
             <p class="news-card__summary">${lang === 'ru' ? item.summaryRu : item.summaryEn}</p>
+            <span class="article-read-more">${lang === 'ru' ? 'Читать обзор полностью →' : 'Read full briefing →'}</span>
           </article>
         `
         ).join('')}
@@ -796,10 +891,89 @@ function renderAnalyticsPage() {
     });
   });
 
+  root.querySelectorAll('[data-open-advice]').forEach((card) => {
+    const open = () => {
+      const id = card.getAttribute('data-open-advice');
+      const item = ADVICE_CARDS.find((c) => c.id === id);
+      if (item) openArticleModal(item, 'advice');
+    };
+    card.addEventListener('click', open);
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        open();
+      }
+    });
+  });
+
+  root.querySelectorAll('[data-open-news]').forEach((card) => {
+    const open = () => {
+      const id = card.getAttribute('data-open-news');
+      const item = MARKET_NEWS.find((n) => n.id === id);
+      if (item) openArticleModal(item, 'news');
+    };
+    card.addEventListener('click', open);
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        open();
+      }
+    });
+  });
+
   const barWrap = document.getElementById('bar-chart-wrap');
   const trendWrap = document.getElementById('trend-chart-wrap');
   if (barWrap && prevBarScrollLeft > 0) barWrap.scrollLeft = prevBarScrollLeft;
   if (trendWrap && prevTrendScrollLeft > 0) trendWrap.scrollLeft = prevTrendScrollLeft;
+}
+
+function openArticleModal(item, kind) {
+  const {lang} = getState();
+  let modal = document.getElementById('analytics-article-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'analytics-article-modal';
+    modal.className = 'modal-backdrop';
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('is-open');
+    });
+    document.body.appendChild(modal);
+  }
+
+  const title = lang === 'ru' ? item.titleRu : item.titleEn;
+  const kicker =
+    kind === 'news'
+      ? `${lang === 'ru' ? item.dateRu : item.dateEn} · ${lang === 'ru' ? item.tagRu : item.tagEn}`
+      : lang === 'ru'
+        ? 'Экспертный чек-лист Alora Homes'
+        : 'Alora Homes Expert Checklist';
+  const paragraphs = lang === 'ru' ? item.fullRu : item.fullEn;
+
+  modal.innerHTML = `
+    <div class="modal-dialog modal-dialog--wide" role="dialog" aria-modal="true" aria-label="${title}">
+      <div class="modal-dialog__header">
+        <div>
+          <span class="section-kicker" style="margin-bottom:4px;">${kicker}</span>
+          <h2 class="modal-dialog__title" style="font-size:1.35rem;">${title}</h2>
+        </div>
+        <button type="button" class="modal-dialog__close js-close-article" aria-label="Close">✕</button>
+      </div>
+
+      <div class="article-modal-body">
+        ${paragraphs.map((p) => `<p>${p}</p>`).join('')}
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;margin-top:18px;">
+        <a href="./catalog.html" class="btn btn--secondary btn--sm">${lang === 'ru' ? 'Перейти в каталог' : 'Browse Catalog'}</a>
+        <button type="button" class="btn btn--primary btn--sm js-close-article">${lang === 'ru' ? 'Закрыть' : 'Close'}</button>
+      </div>
+    </div>
+  `;
+
+  modal.querySelectorAll('.js-close-article').forEach((btn) => {
+    btn.addEventListener('click', () => modal.classList.remove('is-open'));
+  });
+  modal.classList.add('is-open');
 }
 
 renderAnalyticsPage();

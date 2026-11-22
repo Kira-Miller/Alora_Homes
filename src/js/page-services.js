@@ -6,7 +6,7 @@
 import {showToast} from './components.js';
 import {formatPrices, t} from './i18n.js';
 import {initLayout} from './layout.js';
-import {addConsultationRequest, addSellRequest, getState, subscribe} from './state.js';
+import {addConsultationRequest, addSellRequest, addUserListing, getState, subscribe} from './state.js';
 import {getIconSvg} from './svg-art.js';
 import {attachPhoneMask, clearFormErrors, setFieldError, validateBelarusPhone, validateName} from './validation.js';
 
@@ -22,6 +22,7 @@ const calcData = {
 
 const wizardRoot = document.getElementById('sell-wizard-body');
 const uploadedFiles = [];
+const uploadedDataUrls = [];
 
 function applyUrlServiceParam() {
   const params = new URLSearchParams(window.location.search);
@@ -260,9 +261,11 @@ function bindServicesInteractions() {
         uploadedFiles.push(file.name);
         const reader = new FileReader();
         reader.onload = (ev) => {
+          const dataUrl = String(ev.target?.result || '');
+          if (dataUrl) uploadedDataUrls.push(dataUrl);
           const thumb = document.createElement('div');
           thumb.className = 'dropzone__thumb';
-          thumb.innerHTML = `<img src="${ev.target?.result}" alt="${file.name}" />`;
+          thumb.innerHTML = `<img src="${dataUrl}" alt="${file.name}" />`;
           previewBox?.appendChild(thumb);
         };
         reader.readAsDataURL(file);
@@ -286,6 +289,13 @@ function bindServicesInteractions() {
 
   const sellForm = document.getElementById('sell-form');
   const sellPhoneEl = document.getElementById('sell-phone');
+  const directCheckEl = document.getElementById('sell-publish-direct');
+  const directFieldsEl = document.getElementById('sell-direct-fields');
+
+  directCheckEl?.addEventListener('change', () => {
+    if (directFieldsEl) directFieldsEl.hidden = !directCheckEl.checked;
+  });
+
   attachPhoneMask(sellPhoneEl, true);
   sellForm?.querySelectorAll('input, textarea').forEach((inp) => {
     inp.addEventListener('input', () => setFieldError(inp, ''));
@@ -335,13 +345,51 @@ function bindServicesInteractions() {
       comment,
       photosCount: uploadedFiles.length,
     });
+
+    let publishedProp = null;
+    if (directCheckEl?.checked) {
+      const catMap = {apartment: 'apartments', house: 'houses', land: 'houses', commercial: 'commercial'};
+      const rawTitle = document.getElementById('sell-pub-title')?.value.trim();
+      const dealType = document.getElementById('sell-pub-deal')?.value || 'sale';
+      const region = document.getElementById('sell-pub-region')?.value || 'minsk';
+      const city = document.getElementById('sell-pub-city')?.value.trim() || '';
+      const priceByn = Number(document.getElementById('sell-pub-price')?.value) || 250000;
+      const area = Number(document.getElementById('sell-pub-area')?.value) || 64;
+      const rooms = Number(document.getElementById('sell-pub-rooms')?.value) || 2;
+      const defaultTitle =
+        lang === 'ru'
+          ? `${rooms}-комнатный объект (${area} м²)`
+          : `${rooms}-Room Property (${area} m²)`;
+
+      publishedProp = addUserListing({
+        title: rawTitle || defaultTitle,
+        dealType,
+        category: catMap[type] || 'apartments',
+        region,
+        city,
+        priceByn,
+        area,
+        rooms,
+        description: comment,
+        image: uploadedDataUrls[0] || '',
+      });
+    }
+
     sellForm.reset();
     if (sellPhoneEl) sellPhoneEl.value = '+375 ';
     if (previewBox) previewBox.innerHTML = '';
+    if (directFieldsEl) directFieldsEl.hidden = true;
+    uploadedFiles.length = 0;
+    uploadedDataUrls.length = 0;
+
     showToast(
-      lang === 'ru'
-        ? 'Заявка отправлена! Агент Alora Homes свяжется с вами сегодня.'
-        : 'Request submitted! An Alora Homes advisor will reach out today.',
+      publishedProp
+        ? lang === 'ru'
+          ? 'Заявка принята, а объект уже опубликован в каталоге и разделе «Мои объявления»!'
+          : 'Request saved and your property is now live in the catalog!'
+        : lang === 'ru'
+          ? 'Заявка отправлена! Агент Alora Homes свяжется с вами сегодня.'
+          : 'Request submitted! An Alora Homes advisor will reach out today.',
       'success'
     );
   });
