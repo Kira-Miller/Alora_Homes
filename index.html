@@ -146,9 +146,13 @@
                     type="button"
                     class="search-panel__detect"
                     id="detect-city-btn"
-                    data-i18n="detectCity"
+                    aria-label="Определить город по геолокации"
+                    title="Определить город по геолокации"
                   >
-                    Определить
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
                   </button>
                 </div>
                 <datalist id="belarus-cities-list"></datalist>
@@ -159,10 +163,10 @@
                 <div class="search-panel__input-row">
                   <select id="search-category">
                     <option value="all" data-i18n="catAll">Все категории</option>
-                    <option value="apartments" data-i18n="catApartments">Квартиры и апартаменты</option>
-                    <option value="houses" data-i18n="catHouses">Загородные дома и таунхаусы</option>
+                    <option value="apartments" data-i18n="catApartments">Квартиры</option>
+                    <option value="houses" data-i18n="catHouses">Дома / дачи</option>
                     <option value="newbuild" data-i18n="catNewbuild">Новостройки</option>
-                    <option value="commercial" data-i18n="catCommercial">Коммерческая недвижимость</option>
+                    <option value="commercial" data-i18n="catCommercial">Коммерческая</option>
                   </select>
                 </div>
               </div>
@@ -186,7 +190,7 @@
                 <label for="search-rooms" data-i18n="labelRooms">Комнаты</label>
                 <div class="search-panel__input-row">
                   <select id="search-rooms">
-                    <option value="any" data-i18n="roomsAny">Любое количество</option>
+                    <option value="any" data-i18n="roomsAny">Любое кол-во</option>
                     <option value="1" data-i18n="rooms1">1 комната</option>
                     <option value="2" data-i18n="rooms2">2 комнаты</option>
                     <option value="3" data-i18n="rooms3">3 комнаты</option>

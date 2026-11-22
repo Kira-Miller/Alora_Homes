@@ -88,13 +88,40 @@
 
               <div class="field">
                 <label class="field__label" for="cat-query" data-i18n="labelCity">Город или область</label>
-                <input
-                  id="cat-query"
-                  class="field__control"
-                  type="text"
-                  data-i18n-placeholder="placeholderCity"
-                  placeholder="Минск, Брест, Гродно..."
-                />
+                <div class="search-panel__input-row">
+                  <input
+                    id="cat-query"
+                    class="field__control"
+                    type="text"
+                    list="belarus-cities-list"
+                    data-i18n-placeholder="placeholderCity"
+                    placeholder="Минск, Слуцк, Волковыск..."
+                    autocomplete="off"
+                  />
+                  <button
+                    type="button"
+                    class="search-panel__clear"
+                    id="cat-clear-city-btn"
+                    hidden
+                    aria-label="Очистить город"
+                    title="Очистить город"
+                  >
+                    ✕
+                  </button>
+                  <button
+                    type="button"
+                    class="search-panel__detect"
+                    id="cat-detect-city-btn"
+                    aria-label="Определить город по геолокации"
+                    title="Определить город по геолокации"
+                  >
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                  </button>
+                </div>
+                <datalist id="belarus-cities-list"></datalist>
               </div>
 
               <div class="field">
@@ -102,12 +129,12 @@
                 <select id="cat-region" class="field__control">
                   <option value="all" data-i18n="regionAll">Вся Беларусь</option>
                   <option value="minsk" data-i18n="regionMinsk">г. Минск</option>
-                  <option value="minsk-region" data-i18n="regionMinskRegion">Минская область</option>
-                  <option value="brest" data-i18n="regionBrest">Брест и область</option>
-                  <option value="grodno" data-i18n="regionGrodno">Гродно и область</option>
-                  <option value="vitebsk" data-i18n="regionVitebsk">Витебск и область</option>
-                  <option value="gomel" data-i18n="regionGomel">Гомель и область</option>
-                  <option value="mogilev" data-i18n="regionMogilev">Могилёв и область</option>
+                  <option value="minsk-region" data-i18n="regionMinskRegion">Минская обл.</option>
+                  <option value="brest" data-i18n="regionBrest">Брестская обл.</option>
+                  <option value="grodno" data-i18n="regionGrodno">Гродненская обл.</option>
+                  <option value="vitebsk" data-i18n="regionVitebsk">Витебская обл.</option>
+                  <option value="gomel" data-i18n="regionGomel">Гомельская обл.</option>
+                  <option value="mogilev" data-i18n="regionMogilev">Могилёвская обл.</option>
                 </select>
               </div>
 
@@ -115,17 +142,17 @@
                 <label class="field__label" for="cat-category" data-i18n="labelCategory">Категория</label>
                 <select id="cat-category" class="field__control">
                   <option value="all" data-i18n="catAll">Все категории</option>
-                  <option value="apartments" data-i18n="catApartments">Квартиры и апартаменты</option>
-                  <option value="houses" data-i18n="catHouses">Загородные дома и таунхаусы</option>
+                  <option value="apartments" data-i18n="catApartments">Квартиры</option>
+                  <option value="houses" data-i18n="catHouses">Дома / дачи</option>
                   <option value="newbuild" data-i18n="catNewbuild">Новостройки</option>
-                  <option value="commercial" data-i18n="catCommercial">Коммерческая недвижимость</option>
+                  <option value="commercial" data-i18n="catCommercial">Коммерческая</option>
                 </select>
               </div>
 
               <div class="field">
                 <label class="field__label" for="cat-rooms" data-i18n="labelRooms">Комнаты</label>
                 <select id="cat-rooms" class="field__control">
-                  <option value="any" data-i18n="roomsAny">Любое количество</option>
+                  <option value="any" data-i18n="roomsAny">Любое кол-во</option>
                   <option value="1" data-i18n="rooms1">1 комната</option>
                   <option value="2" data-i18n="rooms2">2 комнаты</option>
                   <option value="3" data-i18n="rooms3">3 комнаты</option>

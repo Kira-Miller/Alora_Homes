@@ -223,20 +223,25 @@
 
   &__detect {
     color: var(--accent-primary);
-    font-size: 0.78rem;
-    font-weight: 600;
-    white-space: nowrap;
+    width: 32px;
+    height: 32px;
+    border-radius: $radius-pill;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    padding-left: 10px;
-    border-left: 1px solid var(--border-subtle);
-
-    @include respond-down($bp-sm) {
-      padding-left: 8px;
-      font-size: 0.74rem;
-    }
+    transition: background $transition-fast, color $transition-fast;
 
     &:hover {
-      text-decoration: underline;
+      background: var(--bg-surface);
+      color: var(--text-primary);
+    }
+
+    svg.is-spinning {
+      animation: aloraSpin 0.8s linear infinite;
     }
   }
 

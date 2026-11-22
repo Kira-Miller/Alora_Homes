@@ -979,10 +979,12 @@ function bindHomeInteractions() {
     });
   });
 
+  const mapPinSvg = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>`;
+
   detectBtn?.addEventListener('click', async () => {
     const {lang} = getState();
     detectBtn.disabled = true;
-    detectBtn.textContent = t('geoDetecting', lang);
+    detectBtn.innerHTML = `<svg class="is-spinning" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9" opacity="0.3"></circle><path d="M21 12a9 9 0 00-9-9"></path></svg>`;
 
     try {
       let coords = await getBrowserCoordinates();
@@ -1022,7 +1024,7 @@ function bindHomeInteractions() {
       }
     } finally {
       detectBtn.disabled = false;
-      detectBtn.textContent = t('detectCity', getState().lang);
+      detectBtn.innerHTML = mapPinSvg;
     }
   });
 
