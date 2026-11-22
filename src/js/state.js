@@ -4,6 +4,7 @@
 // ==========================================================================
 
 const STORAGE_KEY = 'alora_homes_state_v2';
+export const MODERATION_DELAY_MS = 8000;
 
 const DEFAULT_STATE = {
   theme: 'dark',
@@ -67,10 +68,20 @@ function loadState() {
       consultationRequests: Array.isArray(parsed.consultationRequests) ? parsed.consultationRequests : [],
       userReviews: Array.isArray(parsed.userReviews) ? parsed.userReviews : [],
       userListings: Array.isArray(parsed.userListings)
-        ? parsed.userListings.map((item) => ({
-            ...item,
-            moderationStatus: item?.moderationStatus === 'approved' ? 'approved' : 'pending',
-          }))
+        ? parsed.userListings.map((item) => {
+            const nowMs = Date.now();
+            const submittedAtMs = Number(item?.submittedAtMs) || 0;
+            const autoApproved =
+              item?.moderationStatus !== 'approved' &&
+              submittedAtMs > 0 &&
+              nowMs - submittedAtMs >= MODERATION_DELAY_MS;
+            return {
+              ...item,
+              submittedAtMs: submittedAtMs || nowMs,
+              moderationStatus: item?.moderationStatus === 'approved' || autoApproved ? 'approved' : 'pending',
+              approvedAt: autoApproved ? item?.approvedAt || new Date().toISOString().slice(0, 10) : item?.approvedAt,
+            };
+          })
         : [],
     };
   } catch {
@@ -247,6 +258,7 @@ export function addUserListing(payload) {
     isUserListing: true,
     moderationStatus: 'pending',
     submittedAt: new Date().toISOString().slice(0, 10),
+    submittedAtMs: Date.now(),
     featured: true,
     dealGroup,
     dealType,
@@ -300,17 +312,49 @@ export function addUserListing(payload) {
   return newProp;
 }
 
-export function approveUserListing(listingId) {
-  state.userListings = (state.userListings || []).map((item) =>
-    String(item.id) === String(listingId)
-      ? {
-          ...item,
-          moderationStatus: 'approved',
-          approvedAt: new Date().toISOString().slice(0, 10),
-        }
-      : item
-  );
-  notify();
+export function processPendingModerations() {
+  const nowMs = Date.now();
+  const newlyApproved = [];
+  let changed = false;
+
+  state.userListings = (state.userListings || []).map((item) => {
+    if (item.moderationStatus === 'approved') return item;
+    const submittedAtMs = Number(item.submittedAtMs) || 0;
+    if (!submittedAtMs) {
+      changed = true;
+      return {...item, submittedAtMs: nowMs};
+    }
+    if (nowMs - submittedAtMs >= MODERATION_DELAY_MS) {
+      changed = true;
+      const updated = {
+        ...item,
+        moderationStatus: 'approved',
+        approvedAt: new Date().toISOString().slice(0, 10),
+      };
+      newlyApproved.push(updated);
+      return updated;
+    }
+    return item;
+  });
+
+  if (changed) notify();
+  return newlyApproved;
+}
+
+let moderationWatcherId = null;
+
+export function startModerationWatcher(onApproved) {
+  const initialApproved = processPendingModerations();
+  if (initialApproved.length && typeof onApproved === 'function') {
+    onApproved(initialApproved);
+  }
+  if (moderationWatcherId) return;
+  moderationWatcherId = window.setInterval(() => {
+    const approved = processPendingModerations();
+    if (approved.length && typeof onApproved === 'function') {
+      onApproved(approved);
+    }
+  }, 1500);
 }
 
 export function removeUserListing(listingId) {

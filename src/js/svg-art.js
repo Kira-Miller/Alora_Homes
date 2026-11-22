@@ -261,17 +261,21 @@ export function getBelarusMapSvg(
   ];
 
   const towns = [
-    {id: '13', name: lang === 'ru' ? 'Слуцк' : 'Slutsk', x: 253, y: 244},
+    {id: '13', name: lang === 'ru' ? 'Слуцк' : 'Slutsk', x: 253, y: 244, labelAbove: true},
     {id: '14', name: lang === 'ru' ? 'Волковыск' : 'Volkovysk', x: 122, y: 236},
     {id: '15', name: lang === 'ru' ? 'Смиловичи' : 'Smilovichi', x: 278, y: 198},
-    {id: '19', name: lang === 'ru' ? 'Барановичи' : 'Baranavichy', x: 188, y: 238},
+    {id: '19', name: lang === 'ru' ? 'Барановичи' : 'Baranovichi', x: 188, y: 238},
     {id: '22', name: lang === 'ru' ? 'Лида' : 'Lida', x: 158, y: 188},
     {id: '17', name: lang === 'ru' ? 'Пинск' : 'Pinsk', x: 192, y: 304},
     {id: '18', name: lang === 'ru' ? 'Полоцк' : 'Polotsk', x: 305, y: 85},
-    {id: '20', name: lang === 'ru' ? 'Борисов' : 'Barysau', x: 293, y: 166},
-    {id: '21', name: lang === 'ru' ? 'Бобруйск' : 'Babruysk', x: 324, y: 237},
-    {id: '23', name: lang === 'ru' ? 'Новополоцк' : 'Novopolotsk', x: 300, y: 80},
+    {id: '20', name: lang === 'ru' ? 'Борисов' : 'Borisov', x: 293, y: 166},
+    {id: '21', name: lang === 'ru' ? 'Бобруйск' : 'Bobruisk', x: 324, y: 237},
+    {id: '23', name: lang === 'ru' ? 'Новополоцк' : 'Novopolotsk', x: 300, y: 80, labelAbove: true},
     {id: '24', name: lang === 'ru' ? 'Жлобин' : 'Zhlobin', x: 358, y: 253},
+    {id: '31', name: lang === 'ru' ? 'Солигорск' : 'Soligorsk', x: 252, y: 264},
+    {id: '32', name: lang === 'ru' ? 'Молодечно' : 'Molodechno', x: 218, y: 158},
+    {id: '33', name: lang === 'ru' ? 'Орша' : 'Orsha', x: 374, y: 146},
+    {id: '34', name: lang === 'ru' ? 'Мозырь' : 'Mozyr', x: 326, y: 306},
   ];
 
   const minskDistricts = isMinskZoom
@@ -295,8 +299,9 @@ export function getBelarusMapSvg(
         />
         <text x="258" y="180" text-anchor="middle" fill="#cbd5e1" font-size="${7.2 * zoomScale}" font-weight="700">${lang === 'ru' ? 'МКАД / Центр' : 'Ring Rd / Center'}</text>
         <text x="238" y="174" text-anchor="middle" fill="#94a3b8" font-size="${6.2 * zoomScale}">${lang === 'ru' ? 'Ратомка' : 'Ratomka'}</text>
-        <text x="272" y="162" text-anchor="middle" fill="#94a3b8" font-size="${6.2 * zoomScale}">${lang === 'ru' ? 'Раубичи' : 'Raubichi'}</text>
-        <text x="278" y="176" text-anchor="middle" fill="#94a3b8" font-size="${6.2 * zoomScale}">${lang === 'ru' ? 'Новая Боровая' : 'Novaya Borovaya'}</text>
+        <text x="272" y="160" text-anchor="middle" fill="#94a3b8" font-size="${6.2 * zoomScale}">${lang === 'ru' ? 'Раубичи' : 'Raubichi'}</text>
+        <text x="267" y="171" text-anchor="middle" fill="#94a3b8" font-size="${6.2 * zoomScale}">${lang === 'ru' ? 'Новая Боровая' : 'Novaya Borovaya'}</text>
+        <text x="285" y="177" text-anchor="middle" fill="#94a3b8" font-size="${6.2 * zoomScale}">${lang === 'ru' ? 'Смолевичи' : 'Smolevichi'}</text>
         <text x="268" y="208" text-anchor="middle" fill="#94a3b8" font-size="${6.2 * zoomScale}">${lang === 'ru' ? 'Серебрянка' : 'Serebryanka'}</text>
       </g>
     `
@@ -333,14 +338,16 @@ export function getBelarusMapSvg(
     .join('');
 
   const townLabels = towns
-    .map(
-      (tItem) => `
+    .map((tItem) => {
+      const boxY = tItem.labelAbove ? tItem.y - 21 * zoomScale : tItem.y + 6 * zoomScale;
+      const textY = tItem.labelAbove ? tItem.y - 10 * zoomScale : tItem.y + 17 * zoomScale;
+      return `
       <g class="belarus-map__text-label" data-map-id="${tItem.id}" role="button" tabindex="0" style="cursor:pointer;">
-        <rect x="${tItem.x - 32 * zoomScale}" y="${tItem.y + 6 * zoomScale}" width="${64 * zoomScale}" height="${15 * zoomScale}" rx="${3.5 * zoomScale}" fill="rgba(15, 23, 42, 0.75)" stroke="rgba(139, 92, 246, 0.35)" stroke-width="${0.8 * zoomScale}" />
-        <text x="${tItem.x}" y="${tItem.y + 17 * zoomScale}" text-anchor="middle" fill="#cbd5e1" font-size="${7.8 * zoomScale}" font-weight="600">${tItem.name}</text>
+        <rect x="${tItem.x - 32 * zoomScale}" y="${boxY}" width="${64 * zoomScale}" height="${15 * zoomScale}" rx="${3.5 * zoomScale}" fill="rgba(15, 23, 42, 0.75)" stroke="rgba(139, 92, 246, 0.35)" stroke-width="${0.8 * zoomScale}" />
+        <text x="${tItem.x}" y="${textY}" text-anchor="middle" fill="#cbd5e1" font-size="${7.8 * zoomScale}" font-weight="600">${tItem.name}</text>
       </g>
-    `
-    )
+    `;
+    })
     .join('');
 
   return `

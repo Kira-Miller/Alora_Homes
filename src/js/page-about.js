@@ -8,7 +8,14 @@ import {initLayout} from './layout.js';
 import {REALTORS} from './realtors-data.js';
 import {getState, subscribe} from './state.js';
 import {getIconSvg, getRealtorPortraitSvg, getSocialLinksHtml} from './svg-art.js';
-import {attachPhoneMask, clearFormErrors, setFieldError, validateBelarusPhone, validateName} from './validation.js';
+import {
+  attachPhoneMask,
+  clearFormErrors,
+  setFieldError,
+  syncProfileAutofill,
+  validateBelarusPhone,
+  validateName,
+} from './validation.js';
 
 initLayout('about');
 
@@ -46,8 +53,13 @@ function renderAboutWidgets() {
   }
 }
 
+const ABOUT_AUTOFILL_FIELDS = [
+  {el: 'contact-name', type: 'name'},
+  {el: 'contact-phone', type: 'phone', withCountryCode: true},
+];
 const contactForm = document.getElementById('about-contact-form');
 const contactPhoneEl = document.getElementById('contact-phone');
+syncProfileAutofill(ABOUT_AUTOFILL_FIELDS, getState().user, {force: false});
 attachPhoneMask(contactPhoneEl, true);
 contactForm?.querySelectorAll('input, textarea').forEach((inp) => {
   inp.addEventListener('input', () => setFieldError(inp, ''));
@@ -55,7 +67,7 @@ contactForm?.querySelectorAll('input, textarea').forEach((inp) => {
 contactForm?.addEventListener('submit', (e) => {
   e.preventDefault();
   clearFormErrors(contactForm);
-  const {lang} = getState();
+  const {lang, user} = getState();
   const nameEl = document.getElementById('contact-name');
   const phoneEl = document.getElementById('contact-phone');
   const msgEl = document.getElementById('contact-msg');
@@ -87,7 +99,7 @@ contactForm?.addEventListener('submit', (e) => {
   }
 
   contactForm.reset();
-  if (contactPhoneEl) contactPhoneEl.value = '+375 ';
+  syncProfileAutofill(ABOUT_AUTOFILL_FIELDS, user, {force: true});
   showToast(
     lang === 'ru'
       ? 'Сообщение отправлено. Специалист Alora Homes свяжется с вами!'
@@ -97,4 +109,13 @@ contactForm?.addEventListener('submit', (e) => {
 });
 
 renderAboutWidgets();
-subscribe(() => renderAboutWidgets());
+let lastAuthSig = `${getState().user.mode}|${getState().user.name}|${getState().user.phone}`;
+subscribe(() => {
+  const curUser = getState().user;
+  const nextAuthSig = `${curUser.mode}|${curUser.name}|${curUser.phone}`;
+  if (nextAuthSig !== lastAuthSig) {
+    lastAuthSig = nextAuthSig;
+    syncProfileAutofill(ABOUT_AUTOFILL_FIELDS, curUser, {force: true});
+  }
+  renderAboutWidgets();
+});

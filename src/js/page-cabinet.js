@@ -5,15 +5,13 @@
 
 import {createPropertyCard, openBelarusMapModal, showToast} from './components.js';
 import {formatPrices, t} from './i18n.js';
-import {initLayout, openAuthModal} from './layout.js';
+import {initLayout, openAuthModal, openLogoutConfirmModal} from './layout.js';
 import {getRealtorLabel, getRealtorSelectOptionsHtml, renderRealtorMiniCardHtml} from './realtors-data.js';
 import {
   addUserListing,
   addViewingRequest,
   advanceViewingStage,
-  approveUserListing,
   cancelViewingRequest,
-  continueAsGuest,
   getState,
   isGuest,
   removeUserListing,
@@ -236,6 +234,11 @@ function renderCabinet() {
           </strong>
           <div class="cabinet-banner__meta">
             <span>${isReg ? user.email : t('guestBannerDesc', lang)}</span>
+            ${
+              isReg && user.phone
+                ? `<span class="cabinet-banner__phone-sep" aria-hidden="true">·</span><span class="cabinet-banner__phone">${user.phone}</span>`
+                : ''
+            }
             <span aria-hidden="true">·</span>
             <span class="tabular">${favorites.length} ${t('savedCountText', lang)}</span>
             <span aria-hidden="true">·</span>
@@ -271,10 +274,7 @@ function renderCabinet() {
   `;
 
   document.getElementById('cab-auth-btn')?.addEventListener('click', () => openAuthModal('register'));
-  document.getElementById('cab-logout-btn')?.addEventListener('click', () => {
-    continueAsGuest();
-    showToast(lang === 'ru' ? 'Вы перешли в режим гостя' : 'Switched to guest mode');
-  });
+  document.getElementById('cab-logout-btn')?.addEventListener('click', () => openLogoutConfirmModal());
 
   rootEl.querySelectorAll('[data-cab-tab]').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -610,8 +610,8 @@ function renderCabinet() {
           `
           : `
             <div class="listing-moderation__status">
-              <span>${lang === 'ru' ? 'Ожидает одобрения' : 'Awaiting Approval'}</span>
-              <span>⏳</span>
+              <span>${lang === 'ru' ? 'На проверке модератором' : 'Pending Moderation'}</span>
+              <span class="listing-moderation__spinner" aria-hidden="true"></span>
             </div>
             <div class="listing-moderation__steps">
               <span class="is-done">1. ${lang === 'ru' ? 'Подано' : 'Submitted'} ✓</span>
@@ -623,8 +623,8 @@ function renderCabinet() {
             <div class="listing-moderation__hint">
               ${
                 lang === 'ru'
-                  ? 'Пока скрыто из общего каталога и карты Беларуси до завершения проверки.'
-                  : 'Hidden from the public catalog and Belarus map until approved.'
+                  ? 'Автоматическая проверка занимает ~8 сек. Пока скрыто из общего каталога и карты Беларуси.'
+                  : 'Automated verification takes ~8 sec. Hidden from the public catalog and map until approved.'
               }
             </div>
           `;
@@ -638,23 +638,11 @@ function renderCabinet() {
             <button type="button" class="btn btn--secondary btn--sm js-del-listing">${t('deleteListingBtn', lang)}</button>
           `
           : `
-            <button type="button" class="btn btn--primary btn--sm js-approve-listing">${
-              lang === 'ru' ? 'Одобрить (демо)' : 'Approve (Demo)'
-            }</button>
             <button type="button" class="btn btn--secondary btn--sm js-del-listing">${
-              lang === 'ru' ? 'Удалить' : 'Delete'
+              lang === 'ru' ? 'Отозвать заявку' : 'Withdraw Listing'
             }</button>
           `;
 
-        btnBar.querySelector('.js-approve-listing')?.addEventListener('click', () => {
-          approveUserListing(p.id);
-          showToast(
-            lang === 'ru'
-              ? 'Объявление одобрено и опубликовано в общем каталоге и на карте!'
-              : 'Listing approved and published to the public catalog & map!',
-            'success'
-          );
-        });
         btnBar.querySelector('.js-map-listing')?.addEventListener('click', () => {
           openBelarusMapModal([p], allProperties);
         });
@@ -724,7 +712,7 @@ function renderCabinet() {
                     <a href="./property.html?id=${encodeURIComponent(req.propertyId)}">${title}</a>
                   </strong>
                   <div class="request-row__meta">
-                    ${req.name} · ${req.phone}
+                    ${req.name}<span class="request-row__phone-sep" aria-hidden="true"> · </span><span class="request-row__phone">${req.phone}</span>
                   </div>
                   <div class="request-row__date">
                     ${t('inputDate', lang)}: <strong class="tabular">${req.date}</strong>

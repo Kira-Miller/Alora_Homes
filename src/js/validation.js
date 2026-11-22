@@ -244,3 +244,42 @@ export function clearFormErrors(formEl) {
     el.textContent = '';
   });
 }
+
+export function syncProfileAutofill(fieldsConfig = [], user = {}, options = {}) {
+  const {force = false} = options;
+  const isReg = user?.mode === 'registered';
+  const regName = isReg && user.name && user.name !== 'Гость' ? user.name : '';
+  const regPhone = isReg && user.phone ? user.phone : '';
+
+  fieldsConfig.forEach((cfg) => {
+    const el = typeof cfg.el === 'string' ? document.getElementById(cfg.el) : cfg.el;
+    if (!el) return;
+
+    if (el.dataset.autofillBound !== '1') {
+      el.dataset.autofillBound = '1';
+      el.addEventListener('input', (e) => {
+        if (e.isTrusted) {
+          el.dataset.userEdited = '1';
+        }
+      });
+    }
+
+    if (force) {
+      delete el.dataset.userEdited;
+    }
+
+    if (el.dataset.userEdited === '1') return;
+
+    if (cfg.type === 'name') {
+      el.value = regName;
+    } else if (cfg.type === 'phone') {
+      const withPrefix = cfg.withCountryCode !== false;
+      el.value = regPhone
+        ? formatBelarusPhoneInput(regPhone, withPrefix, withPrefix)
+        : withPrefix
+          ? '+375 '
+          : '';
+    }
+  });
+}
+

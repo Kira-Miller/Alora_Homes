@@ -8,7 +8,14 @@ import {initLayout, openGuestGateModal} from './layout.js';
 import {REALTORS} from './realtors-data.js';
 import {addConsultationRequest, addUserReview, getState, isGuest, setCurrency, subscribe} from './state.js';
 import {getIconSvg, getRealtorPortraitSvg} from './svg-art.js';
-import {clearFormErrors, setFieldError, validateBelarusPhone, validateName, attachPhoneMask} from './validation.js';
+import {
+  clearFormErrors,
+  setFieldError,
+  syncProfileAutofill,
+  validateBelarusPhone,
+  validateName,
+  attachPhoneMask,
+} from './validation.js';
 import {FALLBACK_PROPERTIES, filterProperties, loadPropertiesFromXml, mergeWithUserListings} from './xml-loader.js';
 
 initLayout('home');
@@ -77,6 +84,7 @@ const BELARUS_CITIES = [
   {ru: 'Слуцк', en: 'Slutsk', lat: 53.0273, lon: 27.5499, aliases: ['slutsk', 'слуцк']},
   {ru: 'Волковыск', en: 'Volkovysk', lat: 53.1561, lon: 24.4514, aliases: ['volkovysk', 'vawkavysk', 'волковыск']},
   {ru: 'Смиловичи', en: 'Smilovichi', lat: 53.7511, lon: 28.0067, aliases: ['smilovichi', 'smilavichy', 'смиловичи']},
+  {ru: 'Смолевичи', en: 'Smolevichi', lat: 54.0289, lon: 28.0819, aliases: ['smolevichi', 'smalyavichy', 'смолевичи']},
   {ru: 'Барановичи', en: 'Baranovichi', lat: 53.1327, lon: 26.0139, aliases: ['baranovichi', 'baranavichy', 'барановичи']},
   {ru: 'Пинск', en: 'Pinsk', lat: 52.1114, lon: 26.1025, aliases: ['pinsk', 'пинск']},
   {ru: 'Полоцк', en: 'Polotsk', lat: 55.4879, lon: 28.7856, aliases: ['polotsk', 'polatsk', 'полоцк']},
@@ -85,6 +93,10 @@ const BELARUS_CITIES = [
   {ru: 'Бобруйск', en: 'Bobruisk', lat: 53.1384, lon: 29.2214, aliases: ['bobruisk', 'babruysk', 'бобруйск']},
   {ru: 'Лида', en: 'Lida', lat: 53.8879, lon: 25.2997, aliases: ['lida', 'лида']},
   {ru: 'Жлобин', en: 'Zhlobin', lat: 52.8926, lon: 30.024, aliases: ['zhlobin', 'жлобин']},
+  {ru: 'Солигорск', en: 'Soligorsk', lat: 52.7875, lon: 27.5414, aliases: ['soligorsk', 'salihorsk', 'солигорск']},
+  {ru: 'Молодечно', en: 'Molodechno', lat: 54.3167, lon: 26.85, aliases: ['molodechno', 'maladzyechna', 'молодечно']},
+  {ru: 'Орша', en: 'Orsha', lat: 54.5092, lon: 30.4258, aliases: ['orsha', 'vorša', 'орша']},
+  {ru: 'Мозырь', en: 'Mozyr', lat: 52.0495, lon: 29.2456, aliases: ['mozyr', 'mazyr', 'мозырь']},
   {ru: 'Ратомка', en: 'Ratomka', lat: 53.9372, lon: 27.3358, aliases: ['ratomka', 'ратомка']},
   {ru: 'Раубичи', en: 'Raubichi', lat: 54.0581, lon: 27.7375, aliases: ['raubichi', 'раубичи']},
 ];
@@ -1096,6 +1108,11 @@ function bindHomeInteractions() {
     });
   });
 
+  const HOME_AUTOFILL_FIELDS = [
+    {el: 'consult-name', type: 'name'},
+    {el: 'consult-phone', type: 'phone', withCountryCode: false},
+  ];
+  syncProfileAutofill(HOME_AUTOFILL_FIELDS, getState().user, {force: false});
   attachPhoneMask(document.getElementById('consult-phone'), false);
   consultForm?.querySelectorAll('input').forEach((inp) => {
     inp.addEventListener('input', () => setFieldError(inp, ''));
@@ -1103,7 +1120,7 @@ function bindHomeInteractions() {
   consultForm?.addEventListener('submit', (e) => {
     e.preventDefault();
     clearFormErrors(consultForm);
-    const {lang} = getState();
+    const {lang, user} = getState();
     const intent = consultForm.querySelector('input[name="consult-intent"]:checked')?.value || 'buy';
     const nameEl = document.getElementById('consult-name');
     const phoneEl = document.getElementById('consult-phone');
@@ -1129,6 +1146,7 @@ function bindHomeInteractions() {
 
     addConsultationRequest({intent, name: nameRes.value, phone: phoneRes.value, city});
     consultForm.reset();
+    syncProfileAutofill(HOME_AUTOFILL_FIELDS, user, {force: true});
     showToast(
       lang === 'ru'
         ? 'Заявка на консультацию принята! Специалист скоро позвонит.'
@@ -1167,7 +1185,22 @@ async function initHome() {
     console.error(err);
   }
 
+  let lastAuthSig = `${getState().user.mode}|${getState().user.name}|${getState().user.phone}`;
   subscribe(() => {
+    const curUser = getState().user;
+    const nextAuthSig = `${curUser.mode}|${curUser.name}|${curUser.phone}`;
+    if (nextAuthSig !== lastAuthSig) {
+      lastAuthSig = nextAuthSig;
+      syncProfileAutofill(
+        [
+          {el: 'consult-name', type: 'name'},
+          {el: 'consult-phone', type: 'phone', withCountryCode: false},
+        ],
+        curUser,
+        {force: true}
+      );
+    }
+
     allProperties = mergeWithUserListings(baseProperties);
     populateCityDatalist();
     syncCityUi();

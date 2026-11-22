@@ -8,7 +8,14 @@ import {formatPrices, t} from './i18n.js';
 import {initLayout} from './layout.js';
 import {addConsultationRequest, addSellRequest, addUserListing, getState, subscribe} from './state.js';
 import {getIconSvg} from './svg-art.js';
-import {attachPhoneMask, clearFormErrors, setFieldError, validateBelarusPhone, validateName} from './validation.js';
+import {
+  attachPhoneMask,
+  clearFormErrors,
+  setFieldError,
+  syncProfileAutofill,
+  validateBelarusPhone,
+  validateName,
+} from './validation.js';
 
 initLayout('services');
 
@@ -309,10 +316,20 @@ function bindServicesInteractions() {
   const directCheckEl = document.getElementById('sell-publish-direct');
   const directFieldsEl = document.getElementById('sell-direct-fields');
 
+  const SELL_AUTOFILL_FIELDS = [
+    {el: 'sell-name', type: 'name'},
+    {el: 'sell-phone', type: 'phone', withCountryCode: true},
+  ];
+  const SRV_CONSULT_AUTOFILL_FIELDS = [
+    {el: 'srv-consult-name', type: 'name'},
+    {el: 'srv-consult-phone', type: 'phone', withCountryCode: false},
+  ];
+
   directCheckEl?.addEventListener('change', () => {
     if (directFieldsEl) directFieldsEl.hidden = !directCheckEl.checked;
   });
 
+  syncProfileAutofill(SELL_AUTOFILL_FIELDS, getState().user, {force: false});
   attachPhoneMask(sellPhoneEl, true);
   sellForm?.querySelectorAll('input, textarea').forEach((inp) => {
     inp.addEventListener('input', () => setFieldError(inp, ''));
@@ -321,7 +338,7 @@ function bindServicesInteractions() {
   sellForm?.addEventListener('submit', (e) => {
     e.preventDefault();
     clearFormErrors(sellForm);
-    const {lang} = getState();
+    const {lang, user} = getState();
     const nameEl = document.getElementById('sell-name');
     const phoneEl = document.getElementById('sell-phone');
     const agreeEl = document.getElementById('sell-agree');
@@ -393,7 +410,7 @@ function bindServicesInteractions() {
     }
 
     sellForm.reset();
-    if (sellPhoneEl) sellPhoneEl.value = '+375 ';
+    syncProfileAutofill(SELL_AUTOFILL_FIELDS, user, {force: true});
     if (previewBox) previewBox.innerHTML = '';
     if (directFieldsEl) directFieldsEl.hidden = true;
     uploadedFiles.length = 0;
@@ -412,6 +429,7 @@ function bindServicesInteractions() {
   });
 
   const consultForm = document.getElementById('services-consult-form');
+  syncProfileAutofill(SRV_CONSULT_AUTOFILL_FIELDS, getState().user, {force: false});
   attachPhoneMask(document.getElementById('srv-consult-phone'), false);
   consultForm?.querySelectorAll('input').forEach((inp) => {
     inp.addEventListener('input', () => setFieldError(inp, ''));
@@ -419,7 +437,7 @@ function bindServicesInteractions() {
   consultForm?.addEventListener('submit', (e) => {
     e.preventDefault();
     clearFormErrors(consultForm);
-    const {lang} = getState();
+    const {lang, user} = getState();
     const intent = consultForm.querySelector('input[name="srv-intent"]:checked')?.value || 'sell';
     const nameEl = document.getElementById('srv-consult-name');
     const phoneEl = document.getElementById('srv-consult-phone');
@@ -445,6 +463,7 @@ function bindServicesInteractions() {
 
     addConsultationRequest({intent, name: nameRes.value, phone: phoneRes.value, city});
     consultForm.reset();
+    syncProfileAutofill(SRV_CONSULT_AUTOFILL_FIELDS, user, {force: true});
     showToast(
       lang === 'ru'
         ? 'Заявка на консультацию принята! Специалист скоро позвонит.'
@@ -457,4 +476,22 @@ function bindServicesInteractions() {
 applyUrlServiceParam();
 renderWizard();
 bindServicesInteractions();
-subscribe(() => renderWizard());
+let lastAuthSig = `${getState().user.mode}|${getState().user.name}|${getState().user.phone}`;
+subscribe(() => {
+  const curUser = getState().user;
+  const nextAuthSig = `${curUser.mode}|${curUser.name}|${curUser.phone}`;
+  if (nextAuthSig !== lastAuthSig) {
+    lastAuthSig = nextAuthSig;
+    syncProfileAutofill(
+      [
+        {el: 'sell-name', type: 'name'},
+        {el: 'sell-phone', type: 'phone', withCountryCode: true},
+        {el: 'srv-consult-name', type: 'name'},
+        {el: 'srv-consult-phone', type: 'phone', withCountryCode: false},
+      ],
+      curUser,
+      {force: true}
+    );
+  }
+  renderWizard();
+});

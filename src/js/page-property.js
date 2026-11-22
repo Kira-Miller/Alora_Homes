@@ -37,6 +37,7 @@ const bookingDraft = {
   phone: null,
   date: '2026-11-24',
   consultant: 'any',
+  authSig: `${getState().user.mode}|${getState().user.name}|${getState().user.phone}`,
 };
 
 const BANK_PRESETS = [
@@ -199,20 +200,33 @@ function renderPropertyPage() {
 
   document.title = `${p.title[lang]} — Alora Homes`;
 
-  const existingName = document.getElementById('view-name')?.value;
-  const existingPhone = document.getElementById('view-phone')?.value;
+  const currentAuthSig = `${user.mode}|${user.name}|${user.phone}`;
+  if (bookingDraft.authSig !== currentAuthSig) {
+    bookingDraft.authSig = currentAuthSig;
+    bookingDraft.name = null;
+    bookingDraft.phone = null;
+  } else {
+    const existingName = document.getElementById('view-name')?.value;
+    const existingPhone = document.getElementById('view-phone')?.value;
+    if (existingName !== undefined) bookingDraft.name = existingName;
+    if (existingPhone !== undefined) bookingDraft.phone = existingPhone;
+  }
   const existingDate = document.getElementById('view-date')?.value;
   const existingConsultant = document.getElementById('view-consultant')?.value;
-  if (existingName !== undefined) bookingDraft.name = existingName;
-  if (existingPhone !== undefined) bookingDraft.phone = existingPhone;
   if (existingDate !== undefined) bookingDraft.date = existingDate;
   if (existingConsultant !== undefined) bookingDraft.consultant = existingConsultant;
 
-  const draftName = bookingDraft.name !== null ? bookingDraft.name : user.name && user.name !== 'Гость' ? user.name : '';
+  const isReg = user.mode === 'registered';
+  const draftName =
+    bookingDraft.name !== null
+      ? bookingDraft.name
+      : isReg && user.name && user.name !== 'Гость'
+        ? user.name
+        : '';
   const draftPhone =
     bookingDraft.phone !== null
       ? formatBelarusPhoneInput(bookingDraft.phone, true, true)
-      : user.phone
+      : isReg && user.phone
         ? formatBelarusPhoneInput(user.phone, true, true)
         : '+375 ';
 

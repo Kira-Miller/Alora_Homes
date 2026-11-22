@@ -10,6 +10,7 @@ import {
   getState,
   loginUser,
   registerUser,
+  startModerationWatcher,
   subscribe,
   toggleCurrency,
   toggleLang,
@@ -56,8 +57,29 @@ export function initLayout(activePage = 'home') {
   applyStaticTranslations(initialLang);
   syncDocumentTitle(activePage, initialLang);
 
+  const loaderEl = document.getElementById('alora-loader');
+  if (loaderEl) {
+    requestAnimationFrame(() => {
+      loaderEl.classList.add('is-hidden');
+      setTimeout(() => loaderEl.remove(), 260);
+    });
+  }
+
   if (!layoutGlobalListenersBound) {
     layoutGlobalListenersBound = true;
+    startModerationWatcher((approvedItems) => {
+      const curLang = getState().lang;
+      approvedItems.forEach((item) => {
+        const title = item.title?.[curLang] || item.title?.ru || '';
+        showToast(
+          curLang === 'ru'
+            ? `Модератор одобрил объявление «${title}» — оно опубликовано в каталоге и на карте!`
+            : `Moderator approved "${title}" — it is now live in the public catalog & map!`,
+          'success'
+        );
+      });
+    });
+
     document.addEventListener('click', (e) => {
       const dropdown = document.getElementById('services-dropdown');
       const trigger = dropdown?.querySelector('.site-header__dropdown-trigger');
@@ -74,6 +96,7 @@ export function initLayout(activePage = 'home') {
           dropdown.classList.remove('is-open');
           trigger?.setAttribute('aria-expanded', 'false');
         }
+        document.querySelectorAll('.modal-backdrop.is-open').forEach((m) => m.classList.remove('is-open'));
       }
     });
     window.addEventListener('hashchange', () => {
@@ -415,6 +438,50 @@ function ensureModals() {
     });
     document.body.appendChild(gateModal);
   }
+
+  if (!document.getElementById('logout-confirm-modal')) {
+    const logoutModal = document.createElement('div');
+    logoutModal.id = 'logout-confirm-modal';
+    logoutModal.className = 'modal-backdrop';
+    logoutModal.addEventListener('click', (e) => {
+      if (e.target === logoutModal) logoutModal.classList.remove('is-open');
+    });
+    document.body.appendChild(logoutModal);
+  }
+}
+
+export function openLogoutConfirmModal(onConfirmed) {
+  ensureModals();
+  const modal = document.getElementById('logout-confirm-modal');
+  if (!modal) return;
+  const {lang} = getState();
+
+  modal.innerHTML = `
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-label="${t('logoutConfirmTitle', lang)}">
+      <div class="modal-dialog__header">
+        <h2 class="modal-dialog__title">${t('logoutConfirmTitle', lang)}</h2>
+        <button type="button" class="modal-dialog__close js-cancel-logout" aria-label="Close">✕</button>
+      </div>
+      <p class="logout-confirm-desc">${t('logoutConfirmDesc', lang)}</p>
+      <div class="logout-confirm-actions">
+        <button type="button" class="btn btn--secondary js-cancel-logout">${t('logoutConfirmCancel', lang)}</button>
+        <button type="button" class="btn btn--primary js-confirm-logout">${t('logoutConfirmYes', lang)}</button>
+      </div>
+    </div>
+  `;
+
+  modal.querySelectorAll('.js-cancel-logout').forEach((btn) => {
+    btn.addEventListener('click', () => modal.classList.remove('is-open'));
+  });
+  modal.querySelector('.js-confirm-logout')?.addEventListener('click', () => {
+    continueAsGuest();
+    modal.classList.remove('is-open');
+    document.getElementById('auth-modal')?.classList.remove('is-open');
+    if (typeof onConfirmed === 'function') onConfirmed();
+    showToast(lang === 'ru' ? 'Вы перешли в режим гостя' : 'Switched to guest mode');
+  });
+
+  modal.classList.add('is-open');
 }
 
 /**
@@ -488,9 +555,10 @@ export function openAuthModal(defaultTab = 'register') {
             <h2 class="modal-dialog__title">${user.name}</h2>
             <button type="button" class="modal-dialog__close js-close-auth" aria-label="Close">✕</button>
           </div>
-          <p style="color:var(--text-secondary);margin-bottom:18px;">
-            ${user.email}${user.phone ? ` · ${user.phone}` : ''}
-          </p>
+          <div class="auth-profile-meta">
+            <div class="auth-profile-meta__email">${user.email}</div>
+            ${user.phone ? `<div class="auth-profile-meta__phone">${user.phone}</div>` : ''}
+          </div>
           <div style="display:flex;flex-direction:column;gap:10px;">
             <a href="./cabinet.html" class="btn btn--primary btn--full">${t('navCabinet', lang)}</a>
             <button type="button" class="btn btn--secondary btn--full js-logout">${t('signOut', lang)}</button>
@@ -499,9 +567,8 @@ export function openAuthModal(defaultTab = 'register') {
       `;
       modal.querySelector('.js-close-auth')?.addEventListener('click', () => modal.classList.remove('is-open'));
       modal.querySelector('.js-logout')?.addEventListener('click', () => {
-        continueAsGuest();
         modal.classList.remove('is-open');
-        showToast(lang === 'ru' ? 'Вы перешли в режим гостя' : 'Switched to guest mode');
+        openLogoutConfirmModal();
       });
       return;
     }

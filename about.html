@@ -17,9 +17,33 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
       rel="stylesheet"
     />
+    <script>
+      try {
+        var _ah = JSON.parse(localStorage.getItem("alora_homes_state_v2") || "{}");
+        document.documentElement.setAttribute("data-theme", _ah.theme === "light" ? "light" : "dark");
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+      setTimeout(function () {
+        var l = document.getElementById("alora-loader");
+        if (l) l.classList.add("is-hidden");
+      }, 1800);
+    </script>
     <link rel="stylesheet" href="./css/main.css" />
   </head>
   <body>
+    <div id="alora-loader" class="alora-loader" aria-hidden="true">
+      <div class="alora-loader__card">
+        <div class="alora-loader__orbit">
+          <span class="alora-loader__ring"></span>
+          <svg class="alora-loader__emblem" viewBox="0 0 36 36" width="28" height="28" fill="none" aria-hidden="true">
+            <path d="M18 6L6 30h5.4l6.6-13.6L24.6 30H30L18 6z" fill="currentColor" />
+            <path d="M12.5 23h11" stroke="var(--accent-cyan)" stroke-width="2.4" stroke-linecap="round" />
+          </svg>
+        </div>
+        <span class="alora-loader__label">Alora Homes</span>
+      </div>
+    </div>
     <a class="skip-link" href="#main-content">Перейти к основному содержанию</a>
     <header id="site-header" class="site-header">
       <div class="container site-header__inner">
@@ -153,7 +177,7 @@
                   </li>
                   <li class="site-footer__contact-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <span data-i18n="footerAddress">г. Минск, пр-т Победителей, 7</span>
+                    <span data-i18n="footerAddress">г. Минск, ул. П. Бровки, 12к1</span>
                   </li>
                 </ul>
 

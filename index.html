@@ -22,9 +22,33 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
       rel="stylesheet"
     />
+    <script>
+      try {
+        var _ah = JSON.parse(localStorage.getItem("alora_homes_state_v2") || "{}");
+        document.documentElement.setAttribute("data-theme", _ah.theme === "light" ? "light" : "dark");
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+      setTimeout(function () {
+        var l = document.getElementById("alora-loader");
+        if (l) l.classList.add("is-hidden");
+      }, 1800);
+    </script>
     <link rel="stylesheet" href="./css/main.css" />
   </head>
   <body>
+    <div id="alora-loader" class="alora-loader" aria-hidden="true">
+      <div class="alora-loader__card">
+        <div class="alora-loader__orbit">
+          <span class="alora-loader__ring"></span>
+          <svg class="alora-loader__emblem" viewBox="0 0 36 36" width="28" height="28" fill="none" aria-hidden="true">
+            <path d="M18 6L6 30h5.4l6.6-13.6L24.6 30H30L18 6z" fill="currentColor" />
+            <path d="M12.5 23h11" stroke="var(--accent-cyan)" stroke-width="2.4" stroke-linecap="round" />
+          </svg>
+        </div>
+        <span class="alora-loader__label">Alora Homes</span>
+      </div>
+    </div>
     <a class="skip-link" href="#main-content">Перейти к основному содержанию</a>
 
     <!-- Семантическая шапка сайта -->
@@ -80,7 +104,7 @@
                   data-deal-tab="all"
                   data-i18n="tabAllObjects"
                 >
-                  Все объекты (29)
+                  Все объекты (35)
                 </button>
                 <button
                   type="button"
@@ -220,6 +244,7 @@
               <button type="button" class="quick-city-btn" data-quick-city="Гомель" data-city-ru="Гомель" data-city-en="Gomel">Гомель</button>
               <button type="button" class="quick-city-btn" data-quick-city="Могилёв" data-city-ru="Могилёв" data-city-en="Mogilev">Могилёв</button>
               <button type="button" class="quick-city-btn" data-quick-city="Слуцк" data-city-ru="Слуцк" data-city-en="Slutsk">Слуцк</button>
+              <button type="button" class="quick-city-btn" data-quick-city="Смолевичи" data-city-ru="Смолевичи" data-city-en="Smolevichi">Смолевичи</button>
               <button type="button" class="quick-city-btn" data-quick-city="Волковыск" data-city-ru="Волковыск" data-city-en="Volkovysk">Волковыск</button>
               <button type="button" class="quick-city-btn" data-quick-city="Смиловичи" data-city-ru="Смиловичи" data-city-en="Smilovichi">Смиловичи</button>
             </div>
@@ -238,7 +263,7 @@
                   Сбросить фильтры
                 </button>
                 <button type="submit" class="btn btn--primary" id="home-search-submit">
-                  Найти 29 объектов →
+                  Найти 35 объектов →
                 </button>
               </div>
             </div>

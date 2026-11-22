@@ -24,7 +24,7 @@ export async function loadPropertiesFromXml() {
     return mergeWithUserListings(cachedCatalog);
   }
 
-  const cacheTag = 'v=20261122c';
+  const cacheTag = 'v=20261122d';
   const candidateUrls = [
     `./data/properties.xml?${cacheTag}`,
     `/data/properties.xml?${cacheTag}`,

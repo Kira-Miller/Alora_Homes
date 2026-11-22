@@ -626,7 +626,7 @@
     <category>apartments</category>
     <subcategory ru="3-комнатная квартира" en="3-Room Apartment" />
     <region>brest</region>
-    <city ru="г. Барановичи, ул. Ленина, 35" en="Baranavichy, Lenina St, 35" />
+    <city ru="г. Барановичи, ул. Ленина, 35" en="Baranovichi, Lenina St, 35" />
     <title ru="Стильная квартира в историческом кирпичном доме" en="Stylish Apartment in Historic Brick Building" />
     <badge type="top" ru="Топ предложение" en="Top Pick" />
     <price byn="274295" usd="85000" />
@@ -648,7 +648,7 @@
     <mapCoords x="188" y="238" />
     <description
       ru="Просторная трёхкомнатная квартира с потолками 3,2 метра, дубовым паркетом «ёлочка» и французским балконом в зелёном центре Барановичей."
-      en="Spacious 3-room apartment with 3.2 m ceilings, herringbone oak parquet, and French balcony overlooking a leafy courtyard in central Baranavichy." />
+      en="Spacious 3-room apartment with 3.2 m ceilings, herringbone oak parquet, and French balcony overlooking a leafy courtyard in central Baranovichi." />
     <features>
       <feature ru="Потолки 3.2 м" en="3.2 m Ceilings" />
       <feature ru="Французский балкон" en="French balcony" />
@@ -660,7 +660,7 @@
     <category>houses</category>
     <subcategory ru="Коттедж" en="Cottage" />
     <region>minsk-region</region>
-    <city ru="г. Борисов, ул. Гагарина, 88" en="Barysau, Gagarina St, 88" />
+    <city ru="г. Борисов, ул. Гагарина, 88" en="Borisov, Gagarina St, 88" />
     <title ru="Скандинавский коттедж у соснового леса" en="Nordic Timber Cottage by Pine Forest" />
     <badge type="new" ru="Новинка" en="New" />
     <price byn="448553" usd="139000" />
@@ -682,7 +682,7 @@
     <mapCoords x="293" y="166" />
     <description
       ru="Светлый дом со вторым светом, панорамным остеклением, дровяным камином и просторной лесной террасой с костровой зоной в Борисове."
-      en="Double-height Nordic residence with panoramic pine views, minimalist wood fireplace, and spacious timber deck with firepit near Barysau." />
+      en="Double-height Nordic residence with panoramic pine views, minimalist wood fireplace, and spacious timber deck with firepit near Borisov." />
     <features>
       <feature ru="Второй свет" en="Double-height living" />
       <feature ru="Выход в хвойный лес" en="Direct pine forest edge" />
@@ -694,8 +694,8 @@
     <category>commercial</category>
     <subcategory ru="Шоурум и клиника" en="Showroom &amp; Clinic" />
     <region>mogilev</region>
-    <city ru="г. Бобруйск, ул. Социалистическая, 64" en="Babruysk, Sotsialisticheskaya St, 64" />
-    <title ru="Витринное помещение в центре Бобруйска" en="Street-Level Showcase Space in Babruysk" />
+    <city ru="г. Бобруйск, ул. Социалистическая, 64" en="Bobruisk, Sotsialisticheskaya St, 64" />
+    <title ru="Витринное помещение в центре Бобруйска" en="Street-Level Showcase Space in Bobruisk" />
     <badge type="commercial" ru="Коммерция" en="Commercial" />
     <price byn="477596" usd="148000" />
     <specs>
@@ -716,7 +716,7 @@
     <mapCoords x="324" y="237" />
     <description
       ru="Готовое коммерческое пространство на пешеходной улице Бобруйска с отдельным входом, кирпичными сводами, дизайнерским ресепшеном и тихим внутренним двориком."
-      en="Turnkey street-level space on central Babruysk avenue featuring historic brick arches, travertine reception, glass meeting room, and landscaped inner courtyard." />
+      en="Turnkey street-level space on central Bobruisk avenue featuring historic brick arches, travertine reception, glass meeting room, and landscaped inner courtyard." />
     <features>
       <feature ru="Отдельный вход 1 этаж" en="Private 1st-floor entrance" />
       <feature ru="Высокий трафик" en="High foot traffic" />
@@ -762,7 +762,7 @@
     <category>apartments</category>
     <subcategory ru="Новостройка" en="New Build" />
     <region>vitebsk</region>
-    <city ru="г. Новополоцк, ул. Молодёжная, 158" en="Navapolatsk, Molodyozhnaya St, 158" />
+    <city ru="г. Новополоцк, ул. Молодёжная, 158" en="Novopolotsk, Molodyozhnaya St, 158" />
     <title ru="Панорамная новостройка с видовой лоджией" en="Panoramic New Build with Glazed Loggia" />
     <badge type="new" ru="Новинка" en="New" />
     <price byn="238798" usd="74000" />
@@ -784,7 +784,7 @@
     <mapCoords x="300" y="80" />
     <description
       ru="Современная евро-двухкомнатная квартира в новом жилом комплексе Новополоцка с панорамными окнами в пол, тёплой лоджией и закрытым двором-парком."
-      en="Contemporary open-plan apartment in a brand-new Navapolatsk residence featuring floor-to-ceiling glazing, insulated lounge loggia, and car-free park courtyard." />
+      en="Contemporary open-plan apartment in a brand-new Novopolotsk residence featuring floor-to-ceiling glazing, insulated lounge loggia, and car-free park courtyard." />
     <features>
       <feature ru="Дом сдан 2026" en="Completed 2026" />
       <feature ru="Двор без машин" en="Car-free courtyard" />
@@ -996,6 +996,211 @@
       <feature ru="Выделенная мощность 25 кВт" en="25 kW power supply" />
     </features>
   </property>
+
+  <property id="30" featured="true" dealGroup="residential" dealType="sale">
+    <category>houses</category>
+    <subcategory ru="Загородный коттедж" en="Country Cottage" />
+    <region>minsk-region</region>
+    <city ru="г. Смолевичи, ул. Социалистическая, 48" en="Smolevichi, Sotsialisticheskaya St, 48" />
+    <title ru="Коттедж с террасой у Смолевичского водохранилища" en="Modern Terrace Cottage Near Smolevichi Lake" />
+    <badge type="new" ru="Новинка · Смолевичи" en="New · Smolevichi" />
+    <price byn="478000" usd="148000" />
+    <specs>
+      <area>184</area>
+      <livingArea>122</livingArea>
+      <plotArea>12</plotArea>
+      <rooms>4</rooms>
+      <floors>2</floors>
+      <floor>1</floor>
+      <mkadDistance>28</mkadDistance>
+      <year>2025</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>forest-cottage</visualTheme>
+    <image>./src/assets/images/prop_smolevichi_house_1795370283279.jpg</image>
+    <interiorImage>./src/assets/images/prop_14_int_1795024003936.jpg</interiorImage>
+    <terraceImage>./src/assets/images/prop_14_ter_1795024004775.jpg</terraceImage>
+    <mapCoords x="279" y="174" />
+    <description
+      ru="Современный энергоэффективный коттедж в городе-спутнике Смолевичи в пешей доступности от водохранилища и сосновой рощи. Панорамная гостиная, газовое отопление, крытая терраса и ровный участок 12 соток."
+      en="Contemporary energy-efficient residence in satellite town Smolevichi near the reservoir and pine grove. Panoramic living room, gas heating, covered timber deck, and 12-are landscaped plot." />
+    <features>
+      <feature ru="28 км от МКАД" en="28 km from Minsk Ring Rd" />
+      <feature ru="У Смолевичского озера" en="Near Smolevichi reservoir" />
+      <feature ru="Газ и центральная вода" en="Gas &amp; central water" />
+    </features>
+  </property>
+
+  <property id="31" featured="true" dealGroup="residential" dealType="sale">
+    <category>apartments</category>
+    <subcategory ru="3-комнатная квартира" en="3-Room Apartment" />
+    <region>minsk-region</region>
+    <city ru="г. Солигорск, ул. Набережная, 22" en="Soligorsk, Naberezhnaya St, 22" />
+    <title ru="Видовая 3-комнатная квартира у Солигорского водохранилища" en="Waterfront 3-Room Apartment in Soligorsk" />
+    <badge type="top" ru="Топ выбор" en="Top Choice" />
+    <price byn="268000" usd="83000" />
+    <specs>
+      <area>82</area>
+      <livingArea>54</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>3</rooms>
+      <floors>12</floors>
+      <floor>9</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2025</year>
+      <newbuild>true</newbuild>
+    </specs>
+    <visualTheme>minsk-tower</visualTheme>
+    <image>./src/assets/images/prop_soligorsk_flat_1795370283204.jpg</image>
+    <interiorImage>./src/assets/images/prop_5_interior_1795023309845.jpg</interiorImage>
+    <terraceImage>./src/assets/images/prop_5_terrace_1795023309897.jpg</terraceImage>
+    <mapCoords x="252" y="264" />
+    <description
+      ru="Светлая трёхкомнатная квартира на 9 этаже нового кирпично-монолитного дома на первой линии у набережной Солигорска. Гардеробная, два санузла и остеклённая лоджия с видом на воду."
+      en="Bright 3-room apartment on the 9th floor of a modern residence overlooking the Soligorsk waterfront promenade. Walk-in closet, two bathrooms, and glazed lake-view loggia." />
+    <features>
+      <feature ru="Первая линия набережной" en="Waterfront promenade" />
+      <feature ru="Дом сдан 2025" en="Completed 2025" />
+      <feature ru="Два санузла" en="2 Bathrooms" />
+    </features>
+  </property>
+
+  <property id="32" featured="false" dealGroup="residential" dealType="rent">
+    <category>houses</category>
+    <subcategory ru="Аренда таунхауса" en="Townhouse Rent" />
+    <region>minsk-region</region>
+    <city ru="г. Молодечно, ул. Великий Гостинец, 114" en="Molodechno, Veliky Gostinets St, 114" />
+    <title ru="Таунхаус у Парка Победы в аренду" en="Park-Edge Townhouse for Rent in Molodechno" />
+    <badge type="new" ru="Аренда" en="For Rent" />
+    <price byn="3100" usd="960" />
+    <specs>
+      <area>132</area>
+      <livingArea>92</livingArea>
+      <plotArea>4</plotArea>
+      <rooms>4</rooms>
+      <floors>2</floors>
+      <floor>1</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2024</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>townhouse-dusk</visualTheme>
+    <image>./src/assets/images/prop_molodechno_town_1795370283357.jpg</image>
+    <interiorImage>./src/assets/images/prop_18_int_1795024009981.jpg</interiorImage>
+    <terraceImage>./src/assets/images/prop_18_terrace_1795024010863.jpg</terraceImage>
+    <mapCoords x="218" y="158" />
+    <description
+      ru="Стильный двухуровневый таунхаус в Молодечно на длительную аренду рядом с Парком Победы. Полная меблировка, тёплый пол на первом этаже, внутренний дворик и собственное паркоместо."
+      en="Contemporary two-story townhouse for long-term rent in Molodechno next to Victory Park. Fully furnished, underfloor heating, enclosed patio, and private parking." />
+    <features>
+      <feature ru="Сдан с мебелью и техникой" en="Turnkey furnished" />
+      <feature ru="Приватный дворик" en="Private patio" />
+      <feature ru="У Парка Победы" en="By Victory Park" />
+    </features>
+  </property>
+
+  <property id="33" featured="false" dealGroup="commercial" dealType="sale">
+    <category>commercial</category>
+    <subcategory ru="Коммерческий особняк" en="Commercial Building" />
+    <region>vitebsk</region>
+    <city ru="г. Орша, ул. Ленина, 32" en="Orsha, Lenina St, 32" />
+    <title ru="Торгово-офисный особняк в центре Орши" en="Commercial &amp; Retail Building in Central Orsha" />
+    <badge type="commercial" ru="Коммерция" en="Commercial" />
+    <price byn="510000" usd="158000" />
+    <specs>
+      <area>225</area>
+      <livingArea>196</livingArea>
+      <plotArea>3</plotArea>
+      <rooms>5</rooms>
+      <floors>2</floors>
+      <floor>1</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2023</year>
+      <newbuild>false</newbuild>
+    </specs>
+    <visualTheme>glass-office</visualTheme>
+    <image>./src/assets/images/prop_orsha_comm_1795370283136.jpg</image>
+    <interiorImage>./src/assets/images/prop_17_int_1795024008334.jpg</interiorImage>
+    <terraceImage>./src/assets/images/prop_17_ter_1795024009080.jpg</terraceImage>
+    <mapCoords x="374" y="146" />
+    <description
+      ru="Реконструированный двухэтажный торгово-офисный особняк на центральной улице Орши. Большие арочные витрины, зал 110 м² на первом этаже, кабинетный блок наверху и парковка во дворе."
+      en="Restored two-story commercial building on central Lenina St in Orsha. Arched showcase windows, 110 m² ground-floor showroom, upstairs office suites, and courtyard parking." />
+    <features>
+      <feature ru="Первая линия ул. Ленина" en="Prime Lenina St frontage" />
+      <feature ru="Окупаемость 7.8 лет" en="7.8-yr payback" />
+      <feature ru="Два автономных входа" en="Dual entrances" />
+    </features>
+  </property>
+
+  <property id="34" featured="true" dealGroup="residential" dealType="sale">
+    <category>apartments</category>
+    <subcategory ru="3-комнатная квартира" en="3-Room Apartment" />
+    <region>gomel</region>
+    <city ru="г. Мозырь, бул. Юности, 55" en="Mozyr, Yunosti Blvd, 55" />
+    <title ru="Панорамная 3-комнатная квартира над Припятью" en="Panoramic 3-Room Residence Overlooking Pripyat" />
+    <badge type="exclusive" ru="Видовая" en="River View" />
+    <price byn="245000" usd="76000" />
+    <specs>
+      <area>79</area>
+      <livingArea>51</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>3</rooms>
+      <floors>11</floors>
+      <floor>8</floor>
+      <mkadDistance>0</mkadDistance>
+      <year>2026</year>
+      <newbuild>true</newbuild>
+    </specs>
+    <visualTheme>waterfront-loft</visualTheme>
+    <image>./src/assets/images/prop_mozyr_flat_1795370282771.jpg</image>
+    <interiorImage>./src/assets/images/prop_16_int_1795024006789.jpg</interiorImage>
+    <terraceImage>./src/assets/images/prop_16_ter_1795024008168.jpg</terraceImage>
+    <mapCoords x="326" y="306" />
+    <description
+      ru="Просторная видовая квартира в новой кирпичной секции в Мозыре с панорамой на долину Припяти. Кухня-гостиная 26 м², две изолированные спальни, тёплая лоджия и бесшумный лифт."
+      en="Elevated brick-built 3-room residence in Mozyr with sweeping vistas of the Pripyat valley. Features a 26 m² kitchen-lounge, two bedrooms, heated loggia, and quiet elevator." />
+    <features>
+      <feature ru="Вид на пойму Припяти" en="Pripyat valley panorama" />
+      <feature ru="Новостройка 2026" en="2026 New build" />
+      <feature ru="Кухня-гостиная 26 м²" en="26 m² kitchen-lounge" />
+    </features>
+  </property>
+
+  <property id="35" featured="false" dealGroup="residential" dealType="rent">
+    <category>apartments</category>
+    <subcategory ru="Аренда квартиры" en="Apartment Rent" />
+    <region>minsk-region</region>
+    <city ru="г. Смолевичи, ул. Гавриила Тихова, 6" en="Smolevichi, Gavriila Tikhova St, 6" />
+    <title ru="Светлая 2-комнатная в городе-спутнике в аренду" en="Bright 2-Room Apartment for Rent in Smolevichi" />
+    <badge type="new" ru="Аренда · Смолевичи" en="Rent · Smolevichi" />
+    <price byn="1290" usd="400" />
+    <specs>
+      <area>61</area>
+      <livingArea>40</livingArea>
+      <plotArea>0</plotArea>
+      <rooms>2</rooms>
+      <floors>9</floors>
+      <floor>6</floor>
+      <mkadDistance>27</mkadDistance>
+      <year>2025</year>
+      <newbuild>true</newbuild>
+    </specs>
+    <visualTheme>minsk-tower</visualTheme>
+    <image>./src/assets/images/prop_smolevichi_rent_1795370282628.jpg</image>
+    <interiorImage>./src/assets/images/prop_7_interior_1795023311063.jpg</interiorImage>
+    <terraceImage>./src/assets/images/prop_7_terrace_1795023311550.jpg</terraceImage>
+    <mapCoords x="283" y="171" />
+    <description
+      ru="Уютная новая 2-комнатная квартира в современном квартале Смолевичей — 25 минут до Минска по скоростной трассе М1 или на электричке. Вся мебель, встроенная техника и зелёный двор без машин."
+      en="Fresh 2-room apartment in a modern Smolevichi residential quarter — 25 minutes from Minsk via the M1 expressway or rail. Fully furnished with built-in appliances and car-free courtyard." />
+    <features>
+      <feature ru="25 мин. до Минска" en="25 min to Minsk" />
+      <feature ru="Официальный договор" en="Official lease contract" />
+      <feature ru="Первое заселение" en="Brand new interior" />
+    </features>
+  </property>
 </catalog>
+
 
 
