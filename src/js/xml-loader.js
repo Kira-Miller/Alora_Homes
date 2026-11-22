@@ -22,12 +22,17 @@ export async function loadPropertiesFromXml() {
     return mergeWithUserListings(cachedCatalog);
   }
 
-  const candidateUrls = ['./data/properties.xml', '/data/properties.xml', 'data/properties.xml'];
+  const cacheTag = 'v=20261122b';
+  const candidateUrls = [
+    `./data/properties.xml?${cacheTag}`,
+    `/data/properties.xml?${cacheTag}`,
+    `data/properties.xml?${cacheTag}`,
+  ];
   let xmlText = null;
 
   for (const url of candidateUrls) {
     try {
-      const response = await fetch(url, {cache: 'no-cache'});
+      const response = await fetch(url, {cache: 'no-store'});
       if (response.ok) {
         xmlText = await response.text();
         if (xmlText && xmlText.includes('<catalog')) {
@@ -69,7 +74,7 @@ export async function loadPropertiesFromXml() {
         };
 
         if (propertyNodes.length >= 20) {
-          cachedCatalog = propertyNodes.map((node) => {
+          const parsedList = propertyNodes.map((node) => {
             const propId = node.getAttribute('id') || '';
             const fallbackProp = PROPERTIES_DATA.find((item) => String(item.id) === String(propId));
             const getText = (path) => getByPath(node, path)?.textContent?.trim() || '';
@@ -83,44 +88,44 @@ export async function loadPropertiesFromXml() {
 
             const parsedX = Number(getAttr('mapCoords', 'x'));
             const parsedY = Number(getAttr('mapCoords', 'y'));
-            const mapX = Number.isFinite(parsedX) && parsedX > 0 ? parsedX : fallbackProp?.mapCoords?.x || 258;
-            const mapY = Number.isFinite(parsedY) && parsedY > 0 ? parsedY : fallbackProp?.mapCoords?.y || 184;
+            const mapX = fallbackProp?.mapCoords?.x || (Number.isFinite(parsedX) && parsedX > 0 ? parsedX : 258);
+            const mapY = fallbackProp?.mapCoords?.y || (Number.isFinite(parsedY) && parsedY > 0 ? parsedY : 184);
 
             return {
               id: propId,
               featured: node.getAttribute('featured') === 'true',
-              dealGroup: node.getAttribute('dealGroup') || 'residential',
-              dealType: node.getAttribute('dealType') || 'sale',
-              category: getText('category'),
+              dealGroup: node.getAttribute('dealGroup') || fallbackProp?.dealGroup || 'residential',
+              dealType: node.getAttribute('dealType') || fallbackProp?.dealType || 'sale',
+              category: getText('category') || fallbackProp?.category || 'apartments',
               subcategory: {
-                ru: getAttr('subcategory', 'ru'),
-                en: getAttr('subcategory', 'en'),
+                ru: getAttr('subcategory', 'ru') || fallbackProp?.subcategory?.ru || '',
+                en: getAttr('subcategory', 'en') || fallbackProp?.subcategory?.en || '',
               },
-              region: getText('region'),
+              region: getText('region') || fallbackProp?.region || 'minsk',
               city: {
-                ru: getAttr('city', 'ru'),
-                en: getAttr('city', 'en'),
+                ru: getAttr('city', 'ru') || fallbackProp?.city?.ru || '',
+                en: getAttr('city', 'en') || fallbackProp?.city?.en || '',
               },
               title: {
-                ru: getAttr('title', 'ru'),
-                en: getAttr('title', 'en'),
+                ru: getAttr('title', 'ru') || fallbackProp?.title?.ru || '',
+                en: getAttr('title', 'en') || fallbackProp?.title?.en || '',
               },
               badge: {
-                type: getAttr('badge', 'type') || 'top',
-                ru: getAttr('badge', 'ru'),
-                en: getAttr('badge', 'en'),
+                type: getAttr('badge', 'type') || fallbackProp?.badge?.type || 'top',
+                ru: getAttr('badge', 'ru') || fallbackProp?.badge?.ru || '',
+                en: getAttr('badge', 'en') || fallbackProp?.badge?.en || '',
               },
-              priceByn: Number(getAttr('price', 'byn')) || 0,
-              priceUsd: Number(getAttr('price', 'usd')) || 0,
+              priceByn: Number(getAttr('price', 'byn')) || fallbackProp?.priceByn || 0,
+              priceUsd: Number(getAttr('price', 'usd')) || fallbackProp?.priceUsd || 0,
               specs: {
-                area: Number(getText('specs > area')) || 0,
-                livingArea: Number(getText('specs > livingArea')) || 0,
-                plotArea: Number(getText('specs > plotArea')) || 0,
-                rooms: Number(getText('specs > rooms')) || 0,
-                floors: Number(getText('specs > floors')) || 1,
-                floor: Number(getText('specs > floor')) || 1,
-                mkadDistance: Number(getText('specs > mkadDistance')) || 0,
-                year: Number(getText('specs > year')) || 2024,
+                area: Number(getText('specs > area')) || fallbackProp?.specs?.area || 0,
+                livingArea: Number(getText('specs > livingArea')) || fallbackProp?.specs?.livingArea || 0,
+                plotArea: Number(getText('specs > plotArea')) || fallbackProp?.specs?.plotArea || 0,
+                rooms: Number(getText('specs > rooms')) || fallbackProp?.specs?.rooms || 0,
+                floors: Number(getText('specs > floors')) || fallbackProp?.specs?.floors || 1,
+                floor: Number(getText('specs > floor')) || fallbackProp?.specs?.floor || 1,
+                mkadDistance: Number(getText('specs > mkadDistance')) || fallbackProp?.specs?.mkadDistance || 0,
+                year: Number(getText('specs > year')) || fallbackProp?.specs?.year || 2024,
                 newbuild: getText('specs > newbuild') === 'true',
               },
               visualTheme: getText('visualTheme') || fallbackProp?.visualTheme || 'villa-pine',
@@ -132,12 +137,18 @@ export async function loadPropertiesFromXml() {
                 y: mapY,
               },
               description: {
-                ru: getAttr('description', 'ru'),
-                en: getAttr('description', 'en'),
+                ru: getAttr('description', 'ru') || fallbackProp?.description?.ru || '',
+                en: getAttr('description', 'en') || fallbackProp?.description?.en || '',
               },
-              features,
+              features: features.length ? features : fallbackProp?.features || [],
             };
           });
+
+          // Гарантируем сохранение всех объектов из PROPERTIES_DATA (включая аренду #25-#29),
+          // даже если браузер или CDN вернули устаревшую кэшированную версию XML
+          const parsedIds = new Set(parsedList.map((item) => String(item.id)));
+          const missingFromXml = PROPERTIES_DATA.filter((item) => !parsedIds.has(String(item.id)));
+          cachedCatalog = [...parsedList, ...missingFromXml];
           return mergeWithUserListings(cachedCatalog);
         }
       }

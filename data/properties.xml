@@ -952,7 +952,7 @@
     <image>./assets/images/prop-8.jpg</image>
     <interiorImage>./assets/images/prop-8-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-8-terrace.jpg</terraceImage>
-    <mapCoords x="74" y="184" />
+    <mapCoords x="104" y="206" />
     <description
       ru="Просторная трёхкомнатная квартира в самом сердце Гродно в 3 минутах ходьбы от парка Жилибера. Натуральный паркет, тёплый пол в санузле, отдельная гардеробная и тихий закрытый двор."
       en="Spacious 3-room apartment in central Grodno, 3 minutes from Gilibert Park. Oak parquet floors, heated bathroom tiles, walk-in wardrobe, and quiet courtyard." />
@@ -986,7 +986,7 @@
     <image>./assets/images/prop-9.jpg</image>
     <interiorImage>./assets/images/prop-9-interior.jpg</interiorImage>
     <terraceImage>./assets/images/prop-9-terrace.jpg</terraceImage>
-    <mapCoords x="69" y="302" />
+    <mapCoords x="95" y="298" />
     <description
       ru="Помещение первого этажа с отдельным входом и витринным остеклением на главной пешеходной улице Бреста. Идеально подойдёт под кофейню, бутик, студию красоты или клиентский офис."
       en="Ground-floor commercial suite with private entrance and showcase windows on Brest's main pedestrian street. Ideal for a cafe, boutique, or client showroom." />

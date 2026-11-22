@@ -155,7 +155,7 @@ function renderHeader(activePage) {
               aria-label="Toggle services menu"
               style="padding:6px 6px;background:none;border:none;color:var(--text-secondary);cursor:pointer;display:inline-flex;align-items:center;"
             >
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="transition:transform $transition-fast;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="transition:transform 0.15s ease;">
                 <polyline points="6 9 12 15 18 9"/>
               </svg>
             </button>
@@ -695,13 +695,24 @@ function ensureScrollEnhancements() {
 
   if (!scrollEnhancementsBound) {
     scrollEnhancementsBound = true;
+    const revealVisibleSections = () => {
+      document.querySelectorAll('main > .section.reveal-on-scroll:not(.is-revealed)').forEach((sec) => {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top <= window.innerHeight + 60) {
+          sec.classList.add('is-revealed');
+        }
+      });
+    };
+
     const syncScrollProgress = () => {
       const btn = document.getElementById('scroll-top-btn');
-      if (!btn) return;
-      const docHeight = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      const ratio = Math.min(1, Math.max(0, window.scrollY / docHeight));
-      btn.style.setProperty('--scroll-pct', `${Math.round(ratio * 100)}%`);
-      btn.classList.toggle('is-visible', window.scrollY > 300);
+      if (btn) {
+        const docHeight = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        const ratio = Math.min(1, Math.max(0, window.scrollY / docHeight));
+        btn.style.setProperty('--scroll-pct', `${Math.round(ratio * 100)}%`);
+        btn.classList.toggle('is-visible', window.scrollY > 300);
+      }
+      revealVisibleSections();
     };
 
     window.addEventListener('scroll', syncScrollProgress, {passive: true});
@@ -720,12 +731,12 @@ function ensureScrollEnhancements() {
             }
           });
         },
-        {threshold: 0.08, rootMargin: '0px 0px -32px 0px'}
+        {threshold: 0.02, rootMargin: '0px 0px 40px 0px'}
       );
 
       sections.forEach((sec) => {
         const rect = sec.getBoundingClientRect();
-        if (rect.top > window.innerHeight * 0.92) {
+        if (rect.top > window.innerHeight * 0.96) {
           sec.classList.add('reveal-on-scroll');
           observer.observe(sec);
         }

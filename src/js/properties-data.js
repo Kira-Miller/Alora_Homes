@@ -1743,8 +1743,8 @@ export const PROPERTIES_DATA = [
     "interiorImage": "./assets/images/prop-8-interior.jpg",
     "terraceImage": "./assets/images/prop-8-terrace.jpg",
     "mapCoords": {
-      "x": 74,
-      "y": 184
+      "x": 104,
+      "y": 206
     },
     "description": {
       "ru": "Просторная трёхкомнатная квартира в самом сердце Гродно в 3 минутах ходьбы от парка Жилибера. Натуральный паркет, тёплый пол в санузле, отдельная гардеробная и тихий закрытый двор.",
@@ -1798,8 +1798,8 @@ export const PROPERTIES_DATA = [
     "interiorImage": "./assets/images/prop-9-interior.jpg",
     "terraceImage": "./assets/images/prop-9-terrace.jpg",
     "mapCoords": {
-      "x": 69,
-      "y": 302
+      "x": 95,
+      "y": 298
     },
     "description": {
       "ru": "Помещение первого этажа с отдельным входом и витринным остеклением на главной пешеходной улице Бреста. Идеально подойдёт под кофейню, бутик, студию красоты или клиентский офис.",

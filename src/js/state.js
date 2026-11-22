@@ -28,17 +28,48 @@ const DEFAULT_STATE = {
 let state = loadState();
 const listeners = new Set();
 
+function cloneDefaultState() {
+  return JSON.parse(JSON.stringify(DEFAULT_STATE));
+}
+
 function loadState() {
+  const base = cloneDefaultState();
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_STATE));
-      return structuredClone(DEFAULT_STATE);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(base));
+      return base;
     }
     const parsed = JSON.parse(raw);
-    return {...structuredClone(DEFAULT_STATE), ...parsed};
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      return base;
+    }
+    const userObj = parsed.user && typeof parsed.user === 'object' ? parsed.user : {};
+    return {
+      ...base,
+      ...parsed,
+      theme: parsed.theme === 'light' ? 'light' : 'dark',
+      lang: parsed.lang === 'en' ? 'en' : 'ru',
+      currency: parsed.currency === 'USD' ? 'USD' : 'BYN',
+      user: {
+        ...base.user,
+        ...userObj,
+        mode: userObj.mode === 'registered' ? 'registered' : 'guest',
+        name: typeof userObj.name === 'string' && userObj.name ? userObj.name : base.user.name,
+        email: typeof userObj.email === 'string' ? userObj.email : '',
+        phone: typeof userObj.phone === 'string' ? userObj.phone : '',
+      },
+      registeredUsers: Array.isArray(parsed.registeredUsers) ? parsed.registeredUsers : [],
+      favorites: Array.isArray(parsed.favorites) ? parsed.favorites : [],
+      compareList: Array.isArray(parsed.compareList) ? parsed.compareList : base.compareList,
+      viewingRequests: Array.isArray(parsed.viewingRequests) ? parsed.viewingRequests : [],
+      sellRequests: Array.isArray(parsed.sellRequests) ? parsed.sellRequests : [],
+      consultationRequests: Array.isArray(parsed.consultationRequests) ? parsed.consultationRequests : [],
+      userReviews: Array.isArray(parsed.userReviews) ? parsed.userReviews : [],
+      userListings: Array.isArray(parsed.userListings) ? parsed.userListings : [],
+    };
   } catch {
-    return structuredClone(DEFAULT_STATE);
+    return base;
   }
 }
 
@@ -166,8 +197,8 @@ export function addUserListing(payload) {
   const REGION_COORDS = {
     minsk: {x: 258, y: 186},
     'minsk-region': {x: 245, y: 196},
-    brest: {x: 72, y: 300},
-    grodno: {x: 76, y: 186},
+    brest: {x: 88, y: 300},
+    grodno: {x: 100, y: 205},
     vitebsk: {x: 345, y: 88},
     gomel: {x: 375, y: 295},
     mogilev: {x: 382, y: 185},
