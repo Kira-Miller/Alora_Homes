@@ -11,6 +11,7 @@ import {
   addUserListing,
   addViewingRequest,
   advanceViewingStage,
+  approveUserListing,
   cancelViewingRequest,
   continueAsGuest,
   getState,
@@ -36,7 +37,8 @@ initLayout('cabinet');
 
 let baseProperties = FALLBACK_PROPERTIES;
 let allProperties = mergeWithUserListings(FALLBACK_PROPERTIES);
-let activeTab = 'saved';
+const urlTab = new URLSearchParams(window.location.search).get('tab');
+let activeTab = ['saved', 'compare', 'requests', 'myListings'].includes(urlTab) ? urlTab : 'saved';
 let savedSort = 'default';
 let showListingComposer = false;
 let uploadedListingPhoto = '';
@@ -435,8 +437,15 @@ function renderCabinet() {
     panel.innerHTML = `
       <div class="section-header-row">
         <div>
-          <span class="section-kicker">${lang === 'ru' ? 'Публикация без посредников' : 'Direct Publishing'}</span>
+          <span class="section-kicker">${lang === 'ru' ? 'Публикация с модерацией' : 'Moderated Publishing'}</span>
           <h2 class="section-title">${t('tabMyListings', lang)}</h2>
+          <p class="section-subtitle" style="margin-top:4px;">
+            ${
+              lang === 'ru'
+                ? 'Новые объявления сначала проходят проверку данных и только после одобрения появляются в общем каталоге и на карте.'
+                : 'New listings go through verification first and become visible in the public catalog and map once approved.'
+            }
+          </p>
         </div>
         <button type="button" class="btn btn--primary btn--sm" id="cab-toggle-composer">
           ${getIconSvg('plus', 16)} <span>${t('publishListingBtn', lang)}</span>
@@ -566,8 +575,8 @@ function renderCabinet() {
       showListingComposer = false;
       showToast(
         lang === 'ru'
-          ? 'Объявление опубликовано в каталоге и на карте Беларуси!'
-          : 'Listing published to the catalog and Belarus map!',
+          ? 'Объявление отправлено на проверку! После одобрения оно появится в общем каталоге.'
+          : 'Listing submitted for review! It will appear in the public catalog once approved.',
         'success'
       );
     });
@@ -575,20 +584,83 @@ function renderCabinet() {
     const myGrid = document.getElementById('cab-my-listings-grid');
     if (myGrid && userListings.length) {
       userListings.forEach((p) => {
-        const card = createPropertyCard(p);
+        const isApproved = p.moderationStatus === 'approved';
+        const card = createPropertyCard(p, {showCompare: isApproved});
+        const badgeEl = card.querySelector('.property-card__badge');
+        if (badgeEl && !isApproved) {
+          badgeEl.textContent = lang === 'ru' ? 'На проверке' : 'Pending Review';
+        }
+
         const body = card.querySelector('.property-card__body');
+        const statusBox = document.createElement('div');
+        statusBox.className = `listing-moderation ${isApproved ? 'is-approved' : 'is-pending'}`;
+        statusBox.innerHTML = isApproved
+          ? `
+            <div class="listing-moderation__status">
+              <span>${lang === 'ru' ? 'Одобрено модератором' : 'Approved by Moderator'}</span>
+              <span>✓</span>
+            </div>
+            <div class="listing-moderation__steps">
+              <span class="is-done">1. ${lang === 'ru' ? 'Подано' : 'Submitted'} ✓</span>
+              <span>→</span>
+              <span class="is-done">2. ${lang === 'ru' ? 'Проверка' : 'Reviewed'} ✓</span>
+              <span>→</span>
+              <span class="is-done">3. ${lang === 'ru' ? 'В каталоге' : 'Live'}</span>
+            </div>
+          `
+          : `
+            <div class="listing-moderation__status">
+              <span>${lang === 'ru' ? 'Ожидает одобрения' : 'Awaiting Approval'}</span>
+              <span>⏳</span>
+            </div>
+            <div class="listing-moderation__steps">
+              <span class="is-done">1. ${lang === 'ru' ? 'Подано' : 'Submitted'} ✓</span>
+              <span>→</span>
+              <span class="is-active">2. ${lang === 'ru' ? 'Проверка' : 'Review'}</span>
+              <span>→</span>
+              <span>3. ${lang === 'ru' ? 'Каталог' : 'Public'}</span>
+            </div>
+            <div class="listing-moderation__hint">
+              ${
+                lang === 'ru'
+                  ? 'Пока скрыто из общего каталога и карты Беларуси до завершения проверки.'
+                  : 'Hidden from the public catalog and Belarus map until approved.'
+              }
+            </div>
+          `;
+        body?.appendChild(statusBox);
+
         const btnBar = document.createElement('div');
-        btnBar.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:8px;margin-top:8px;';
-        btnBar.innerHTML = `
-          <button type="button" class="btn btn--secondary btn--sm js-map-listing">${t('mapResultsBtn', lang)}</button>
-          <button type="button" class="btn btn--secondary btn--sm js-del-listing">${t('deleteListingBtn', lang)}</button>
-        `;
+        btnBar.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:8px;';
+        btnBar.innerHTML = isApproved
+          ? `
+            <button type="button" class="btn btn--secondary btn--sm js-map-listing">${t('mapResultsBtn', lang)}</button>
+            <button type="button" class="btn btn--secondary btn--sm js-del-listing">${t('deleteListingBtn', lang)}</button>
+          `
+          : `
+            <button type="button" class="btn btn--primary btn--sm js-approve-listing">${
+              lang === 'ru' ? 'Одобрить (демо)' : 'Approve (Demo)'
+            }</button>
+            <button type="button" class="btn btn--secondary btn--sm js-del-listing">${
+              lang === 'ru' ? 'Удалить' : 'Delete'
+            }</button>
+          `;
+
+        btnBar.querySelector('.js-approve-listing')?.addEventListener('click', () => {
+          approveUserListing(p.id);
+          showToast(
+            lang === 'ru'
+              ? 'Объявление одобрено и опубликовано в общем каталоге и на карте!'
+              : 'Listing approved and published to the public catalog & map!',
+            'success'
+          );
+        });
         btnBar.querySelector('.js-map-listing')?.addEventListener('click', () => {
           openBelarusMapModal([p], allProperties);
         });
         btnBar.querySelector('.js-del-listing')?.addEventListener('click', () => {
           removeUserListing(p.id);
-          showToast(lang === 'ru' ? 'Объявление снято с публикации' : 'Listing unpublished');
+          showToast(lang === 'ru' ? 'Объявление удалено' : 'Listing removed');
         });
         body?.appendChild(btnBar);
         myGrid.appendChild(card);

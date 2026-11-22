@@ -8,7 +8,9 @@ import {getState} from './state.js';
 let cachedCatalog = null;
 
 export function mergeWithUserListings(baseList = PROPERTIES_DATA) {
-  const custom = getState()?.userListings || [];
+  const custom = (getState()?.userListings || []).filter(
+    (item) => item?.moderationStatus === 'approved'
+  );
   return [...custom, ...baseList];
 }
 
@@ -22,7 +24,7 @@ export async function loadPropertiesFromXml() {
     return mergeWithUserListings(cachedCatalog);
   }
 
-  const cacheTag = 'v=20261122b';
+  const cacheTag = 'v=20261122c';
   const candidateUrls = [
     `./data/properties.xml?${cacheTag}`,
     `/data/properties.xml?${cacheTag}`,

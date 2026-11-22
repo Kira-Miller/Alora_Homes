@@ -1077,6 +1077,25 @@ function bindHomeInteractions() {
 
   // Форма консультации «Ответим на ваши вопросы» с проверкой вводимых данных
   const consultForm = document.getElementById('home-consult-form');
+  const selectHomeConsultIntent = (intentVal) => {
+    const radio = consultForm?.querySelector(`input[name="consult-intent"][value="${intentVal}"]`);
+    if (radio) {
+      radio.checked = true;
+      radio.dispatchEvent(new Event('change', {bubbles: true}));
+    }
+  };
+  const homeParams = new URLSearchParams(window.location.search);
+  const homeIntent = homeParams.get('intent') || homeParams.get('service');
+  if (homeIntent === 'exchange' || window.location.hash.includes('exchange')) {
+    selectHomeConsultIntent('exchange');
+  }
+  document.querySelectorAll('[data-select-intent]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const intentVal = el.getAttribute('data-select-intent');
+      if (intentVal) selectHomeConsultIntent(intentVal);
+    });
+  });
+
   attachPhoneMask(document.getElementById('consult-phone'), false);
   consultForm?.querySelectorAll('input').forEach((inp) => {
     inp.addEventListener('input', () => setFieldError(inp, ''));

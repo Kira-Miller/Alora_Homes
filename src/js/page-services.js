@@ -24,9 +24,17 @@ const wizardRoot = document.getElementById('sell-wizard-body');
 const uploadedFiles = [];
 const uploadedDataUrls = [];
 
+function selectConsultIntent(intent = 'exchange') {
+  const radio = document.querySelector(`input[name="srv-intent"][value="${intent}"]`);
+  if (radio) {
+    radio.checked = true;
+    radio.dispatchEvent(new Event('change', {bubbles: true}));
+  }
+}
+
 function applyUrlServiceParam() {
   const params = new URLSearchParams(window.location.search);
-  const srv = params.get('service');
+  const srv = params.get('service') || params.get('intent');
   if (srv === 'sell-house') calcData.type = 'house';
   else if (srv === 'sell-land') calcData.type = 'land';
   else if (srv === 'sell-apartment') calcData.type = 'apartment';
@@ -36,9 +44,8 @@ function applyUrlServiceParam() {
     typeSelect.value = calcData.type;
   }
 
-  if (srv === 'exchange') {
-    const exRadio = document.querySelector('input[name="srv-intent"][value="exchange"]');
-    if (exRadio) exRadio.checked = true;
+  if (srv === 'exchange' || window.location.hash.includes('exchange')) {
+    selectConsultIntent('exchange');
   }
 }
 
@@ -249,6 +256,16 @@ function bindServicesInteractions() {
     });
   });
 
+  document.querySelectorAll('[data-select-intent]').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const intent = link.getAttribute('data-select-intent') || 'exchange';
+      selectConsultIntent(intent);
+      document.getElementById('consultation')?.scrollIntoView({behavior: 'smooth'});
+      setTimeout(() => document.getElementById('srv-consult-name')?.focus({preventScroll: true}), 350);
+    });
+  });
+
   const dropzone = document.getElementById('sell-dropzone');
   const fileInput = document.getElementById('sell-file-input');
   const previewBox = document.getElementById('sell-previews');
@@ -385,8 +402,8 @@ function bindServicesInteractions() {
     showToast(
       publishedProp
         ? lang === 'ru'
-          ? 'Заявка принята, а объект уже опубликован в каталоге и разделе «Мои объявления»!'
-          : 'Request saved and your property is now live in the catalog!'
+          ? 'Заявка принята! Объявление отправлено на модерацию и появится в каталоге после одобрения.'
+          : 'Request saved! Your listing is pending review and will appear publicly once approved.'
         : lang === 'ru'
           ? 'Заявка отправлена! Агент Alora Homes свяжется с вами сегодня.'
           : 'Request submitted! An Alora Homes advisor will reach out today.',

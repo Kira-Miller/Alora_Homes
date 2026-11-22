@@ -1573,9 +1573,9 @@ export const PROPERTIES_DATA = [
       "newbuild": true
     },
     "visualTheme": "minsk-tower",
-    "image": "./assets/images/prop-11.jpg",
-    "interiorImage": "./assets/images/prop-11-interior.jpg",
-    "terraceImage": "./assets/images/prop-11-terrace.jpg",
+    "image": "./src/assets/images/rent_minsk_apt_1795362780931.jpg",
+    "interiorImage": "./assets/images/prop-23-interior.jpg",
+    "terraceImage": "./assets/images/prop-23-terrace.jpg",
     "mapCoords": {
       "x": 255,
       "y": 191
@@ -1629,9 +1629,9 @@ export const PROPERTIES_DATA = [
       "newbuild": false
     },
     "visualTheme": "forest-cottage",
-    "image": "./assets/images/prop-15.jpg",
-    "interiorImage": "./assets/images/prop-15-interior.jpg",
-    "terraceImage": "./assets/images/prop-15-terrace.jpg",
+    "image": "./src/assets/images/rent_ratomka_barn_1795362781300.jpg",
+    "interiorImage": "./assets/images/prop-22-interior.jpg",
+    "terraceImage": "./assets/images/prop-22-terrace.jpg",
     "mapCoords": {
       "x": 242,
       "y": 180
@@ -1684,9 +1684,9 @@ export const PROPERTIES_DATA = [
       "newbuild": false
     },
     "visualTheme": "glass-office",
-    "image": "./assets/images/prop-5.jpg",
-    "interiorImage": "./assets/images/prop-5-interior.jpg",
-    "terraceImage": "./assets/images/prop-5-terrace.jpg",
+    "image": "./src/assets/images/rent_minsk_office_1795362780435.jpg",
+    "interiorImage": "./assets/images/prop-20-interior.jpg",
+    "terraceImage": "./assets/images/prop-20-terrace.jpg",
     "mapCoords": {
       "x": 261,
       "y": 186
@@ -1739,9 +1739,9 @@ export const PROPERTIES_DATA = [
       "newbuild": false
     },
     "visualTheme": "waterfront-loft",
-    "image": "./assets/images/prop-8.jpg",
-    "interiorImage": "./assets/images/prop-8-interior.jpg",
-    "terraceImage": "./assets/images/prop-8-terrace.jpg",
+    "image": "./src/assets/images/rent_grodno_flat_1795362781519.jpg",
+    "interiorImage": "./assets/images/prop-13-interior.jpg",
+    "terraceImage": "./assets/images/prop-13-terrace.jpg",
     "mapCoords": {
       "x": 104,
       "y": 206
@@ -1794,9 +1794,9 @@ export const PROPERTIES_DATA = [
       "newbuild": false
     },
     "visualTheme": "glass-office",
-    "image": "./assets/images/prop-9.jpg",
-    "interiorImage": "./assets/images/prop-9-interior.jpg",
-    "terraceImage": "./assets/images/prop-9-terrace.jpg",
+    "image": "./src/assets/images/rent_brest_retail_1795362781299.jpg",
+    "interiorImage": "./assets/images/prop-17-interior.jpg",
+    "terraceImage": "./assets/images/prop-17-terrace.jpg",
     "mapCoords": {
       "x": 95,
       "y": 298

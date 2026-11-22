@@ -66,7 +66,12 @@ function loadState() {
       sellRequests: Array.isArray(parsed.sellRequests) ? parsed.sellRequests : [],
       consultationRequests: Array.isArray(parsed.consultationRequests) ? parsed.consultationRequests : [],
       userReviews: Array.isArray(parsed.userReviews) ? parsed.userReviews : [],
-      userListings: Array.isArray(parsed.userListings) ? parsed.userListings : [],
+      userListings: Array.isArray(parsed.userListings)
+        ? parsed.userListings.map((item) => ({
+            ...item,
+            moderationStatus: item?.moderationStatus === 'approved' ? 'approved' : 'pending',
+          }))
+        : [],
     };
   } catch {
     return base;
@@ -240,6 +245,8 @@ export function addUserListing(payload) {
   const newProp = {
     id: `user-${Date.now()}`,
     isUserListing: true,
+    moderationStatus: 'pending',
+    submittedAt: new Date().toISOString().slice(0, 10),
     featured: true,
     dealGroup,
     dealType,
@@ -291,6 +298,19 @@ export function addUserListing(payload) {
   state.userListings = [newProp, ...(state.userListings || [])];
   notify();
   return newProp;
+}
+
+export function approveUserListing(listingId) {
+  state.userListings = (state.userListings || []).map((item) =>
+    String(item.id) === String(listingId)
+      ? {
+          ...item,
+          moderationStatus: 'approved',
+          approvedAt: new Date().toISOString().slice(0, 10),
+        }
+      : item
+  );
+  notify();
 }
 
 export function removeUserListing(listingId) {

@@ -493,6 +493,19 @@ function renderPropertyPage() {
       }
     </div>
 
+    ${
+      p.isUserListing && p.moderationStatus !== 'approved'
+        ? `<div class="moderation-preview-banner" role="status">
+            <span><strong>${lang === 'ru' ? 'Предпросмотр: на проверке модератором.' : 'Preview: Pending Moderation.'}</strong> ${
+              lang === 'ru'
+                ? 'Объявление пока скрыто из общего каталога и карты Беларуси до одобрения.'
+                : 'This listing is hidden from the public catalog and Belarus map until approved.'
+            }</span>
+            <a href="./cabinet.html?tab=myListings" class="btn btn--secondary btn--sm">${lang === 'ru' ? 'Перейти в «Мои объявления»' : 'Open My Listings'}</a>
+          </div>`
+        : ''
+    }
+
     <div class="property-hero">
       <div>
         <h1 class="property-hero__title">${p.title[lang]}</h1>
@@ -1024,7 +1037,8 @@ async function initPropertyDetail() {
     const loaded = await loadPropertiesFromXml();
     baseCatalog = loaded.filter((p) => !p.isUserListing);
     allCatalog = mergeWithUserListings(baseCatalog);
-    currentProperty = allCatalog.find((item) => String(item.id) === String(id)) || allCatalog[0];
+    const pendingMatch = (getState().userListings || []).find((item) => String(item.id) === String(id));
+    currentProperty = allCatalog.find((item) => String(item.id) === String(id)) || pendingMatch || allCatalog[0];
     document.title = `${currentProperty.title[getState().lang]} — Alora Homes`;
     renderPropertyPage();
     [currentProperty.interiorImage, currentProperty.terraceImage].forEach((src) => {
@@ -1043,7 +1057,8 @@ async function initPropertyDetail() {
 
   subscribe(() => {
     allCatalog = mergeWithUserListings(baseCatalog);
-    currentProperty = allCatalog.find((item) => String(item.id) === String(id)) || allCatalog[0];
+    const pendingMatch = (getState().userListings || []).find((item) => String(item.id) === String(id));
+    currentProperty = allCatalog.find((item) => String(item.id) === String(id)) || pendingMatch || allCatalog[0];
     renderPropertyPage();
   });
 }

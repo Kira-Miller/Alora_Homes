@@ -846,9 +846,9 @@
       <newbuild>true</newbuild>
     </specs>
     <visualTheme>minsk-tower</visualTheme>
-    <image>./assets/images/prop-11.jpg</image>
-    <interiorImage>./assets/images/prop-11-interior.jpg</interiorImage>
-    <terraceImage>./assets/images/prop-11-terrace.jpg</terraceImage>
+    <image>./src/assets/images/rent_minsk_apt_1795362780931.jpg</image>
+    <interiorImage>./assets/images/prop-23-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-23-terrace.jpg</terraceImage>
     <mapCoords x="255" y="191" />
     <description
       ru="Стильная 2-комнатная квартира в долгосрочную аренду в современном квартале Минска. Полностью укомплектована техникой Bosch, посудомоечной машиной, кондиционером и рабочим местом у панорамного окна."
@@ -881,9 +881,9 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>forest-cottage</visualTheme>
-    <image>./assets/images/prop-15.jpg</image>
-    <interiorImage>./assets/images/prop-15-interior.jpg</interiorImage>
-    <terraceImage>./assets/images/prop-15-terrace.jpg</terraceImage>
+    <image>./src/assets/images/rent_ratomka_barn_1795362781300.jpg</image>
+    <interiorImage>./assets/images/prop-22-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-22-terrace.jpg</terraceImage>
     <mapCoords x="242" y="180" />
     <description
       ru="Светлый одноэтажный барнхаус среди сосен в 8 км от МКАД для комфортного семейного проживания. Газовое отопление, камин, баня на дровах, крытая терраса и ухоженный участок 11 соток."
@@ -915,9 +915,9 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>glass-office</visualTheme>
-    <image>./assets/images/prop-5.jpg</image>
-    <interiorImage>./assets/images/prop-5-interior.jpg</interiorImage>
-    <terraceImage>./assets/images/prop-5-terrace.jpg</terraceImage>
+    <image>./src/assets/images/rent_minsk_office_1795362780435.jpg</image>
+    <interiorImage>./assets/images/prop-20-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-20-terrace.jpg</terraceImage>
     <mapCoords x="261" y="186" />
     <description
       ru="Готовый к заезду офис на проспекте Независимости: open space на 18 рабочих мест, переговорная со звукоизоляцией, оборудованная кухня, оптоволокно и круглосуточный доступ СКУД."
@@ -949,9 +949,9 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>waterfront-loft</visualTheme>
-    <image>./assets/images/prop-8.jpg</image>
-    <interiorImage>./assets/images/prop-8-interior.jpg</interiorImage>
-    <terraceImage>./assets/images/prop-8-terrace.jpg</terraceImage>
+    <image>./src/assets/images/rent_grodno_flat_1795362781519.jpg</image>
+    <interiorImage>./assets/images/prop-13-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-13-terrace.jpg</terraceImage>
     <mapCoords x="104" y="206" />
     <description
       ru="Просторная трёхкомнатная квартира в самом сердце Гродно в 3 минутах ходьбы от парка Жилибера. Натуральный паркет, тёплый пол в санузле, отдельная гардеробная и тихий закрытый двор."
@@ -983,9 +983,9 @@
       <newbuild>false</newbuild>
     </specs>
     <visualTheme>glass-office</visualTheme>
-    <image>./assets/images/prop-9.jpg</image>
-    <interiorImage>./assets/images/prop-9-interior.jpg</interiorImage>
-    <terraceImage>./assets/images/prop-9-terrace.jpg</terraceImage>
+    <image>./src/assets/images/rent_brest_retail_1795362781299.jpg</image>
+    <interiorImage>./assets/images/prop-17-interior.jpg</interiorImage>
+    <terraceImage>./assets/images/prop-17-terrace.jpg</terraceImage>
     <mapCoords x="95" y="298" />
     <description
       ru="Помещение первого этажа с отдельным входом и витринным остеклением на главной пешеходной улице Бреста. Идеально подойдёт под кофейню, бутик, студию красоты или клиентский офис."
